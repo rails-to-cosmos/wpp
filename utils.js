@@ -70,12 +70,27 @@ var filterRequests = function(requestData, request, config) {
 
 };
 
+function get_page_content(page) {
+  return new Promise((resolve, reject) => {
+    if (is_object(page)) {
+      page.property('content').then((content) => {
+        resolve(content);
+      });
+    } else if (is_string(page)) {
+      resolve(page);
+    } else {
+      resolve('');
+    }
+  });
+}
+
 module.exports = {
   filterRequests: function(page, config) {
     page.property('onResourceRequested', filterRequests, config);
   },
   with_jq: (page) => (page.injectJs('jquery.js')),
-  is_array: (obj) => Object.prototype.toString.call( obj ) == '[object Array]',
-  is_object: (obj) => Object.prototype.toString.call( obj ) == '[object Object]',
-  is_string: (obj) => Object.prototype.toString.call( obj ) == '[object String]'
+  get_page_content: get_page_content,
+  is_array: (obj) => Object.prototype.toString.call(obj) == '[object Array]',
+  is_object: (obj) => Object.prototype.toString.call(obj) == '[object Object]',
+  is_string: (obj) => Object.prototype.toString.call(obj) == '[object String]'
 };

@@ -1,25 +1,29 @@
-var oop = require('oop-module'),
-    Webpage = oop.class('../webpage/Webpage');
+var Action = require('./Action'),
+    Webpage = require('../webpage/Webpage');
 
-exports.constructor = (_config, _result_store, _browser_instance) => {
-  exports.config = _config;
-  exports.result_store = _result_store;
-  exports.browser_instance = _browser_instance;
+function ActionDownload() {
+  Action.apply(this, Array.prototype.slice.call(arguments));
 };
 
-exports.do = () => {
+ActionDownload.prototype = new Action();
+
+ActionDownload.prototype.main = function() {
+  var BROWSER = this.browser,
+      CONFIG = this.config,
+      STORE = this.store;
+
   return new Promise((resolve, reject) => {
-    var wp = new Webpage(exports.browser_instance);
+    var wp = new Webpage(BROWSER);
     wp.create().then((page) => {
       // important! do not use () => {}, use function(requestData, networkRequest) instead
-      if (exports.config.settings && exports.config.settings.filters) {
+      // this function runs in phantomjs layer
+
+      if (CONFIG.settings && CONFIG.settings.filters) {
         page.property('onResourceRequested', function(requestData, networkRequest, filters) {
           var url = requestData.url;
 
           for (var filter_name in filters) {
-            switch(filter_name) {
-
-            case 'WhitelistUrlFilter':
+            if (filter_name == 'WhitelistUrlFilter') {
               var url_in_wl = false;
               var re;
 
@@ -37,10 +41,7 @@ exports.do = () => {
                 networkRequest.abort();
                 return;
               }
-
-              break;
-
-            case 'BlacklistUrlFilter':
+            } else if (filter_name == 'BlacklistUrlFilter') {
               for (var blre_index in filters[filter_name].urls) {
                 var blre = filters[filter_name].urls[blre_index];
                 re = new RegExp(blre);
@@ -51,21 +52,21 @@ exports.do = () => {
                   return;
                 }
               }
-
-              break;
             }
           }
 
           console.log('Accept: ' + url);
-        }, exports.config.settings.filters);
+        }, CONFIG.settings.filters);
       };
 
-      page.open(exports.config.data.url).then((status) => {
+      page.open(CONFIG.data.url).then((status) => {
         page.property('content').then((content) => {
-          exports.result_store.push(exports.config.name, page, false);
+          STORE.push(CONFIG.name, page, false);
           resolve();
         });
       });
     });
   });
 };
+
+module.exports = ActionDownload;

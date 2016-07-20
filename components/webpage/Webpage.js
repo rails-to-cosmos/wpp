@@ -1,14 +1,12 @@
-var oop = require('oop-module'),
-    settings = require('./Settings'),
+var settings = require('./Settings'),
     browser,
     config;
 
-exports.constructor = (_browser, _config) => {
-  browser = _browser;
-  config = _config;
+function Webpage() {
+
 };
 
-exports.create = () => {
+Webpage.prototype.create = function() {
   return new Promise((resolve, reject) => {
     browser.createPage().then((page) => {
       settings.default_settings(page, config);
@@ -16,3 +14,5 @@ exports.create = () => {
     });
   });
 };
+
+module.exports = Webpage;

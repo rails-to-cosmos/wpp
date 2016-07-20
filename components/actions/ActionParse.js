@@ -1,50 +1,43 @@
-var oop = require('oop-module'),
+var Action = require('./Action'),
     cheerio = require('cheerio'),
-
     is_object = require('../../utils').is_object,
-    is_string = require('../../utils').is_string;
+    is_string = require('../../utils').is_string,
+    get_page_content = require('../../utils').get_page_content;
 
-exports.constructor = (_config, _result_store, _browser_instance) => {
-  exports.config = _config;
-  exports.result_store = _result_store;
-  exports.browser_instance = _browser_instance;
-};
+function ActionParse() {
+  Action.apply(this, Array.prototype.slice.call(arguments));
+}
 
-exports.do = () => {
+ActionParse.prototype = new Action();
+
+ActionParse.prototype.main = function() {
+  var BROWSER = this.browser,
+      CONFIG = this.config,
+      STORE = this.store;
+
   return new Promise((resolve, reject) => {
-    var selector = exports.config.data.selector;
-    var pages = exports.result_store.get(exports.config.target);
-    selector = selector.replace('[outerHTML]', '');
-    exports.result_store.push(exports.config.name, 'hello', true);
-    console.log(pages);
-    resolve();
-
+    var selector = CONFIG.data.selector;
+    var pages = STORE.get(CONFIG.target);
     var parse_actions = pages.map((page) => {
       return new Promise((resolveParse) => {
-        resolveParse();
-        // if (is_object(page)) {
-        //   page.evaluate(function(selector) {
-        //     var result = [];
-        //     var elems = document.querySelectorAll(selector);
-        //     for (var i=0; i < elems.length; i++) {
-        //       result.push(elems[i].innerHTML);
-        //     }
-        //     return result;
-        //   }, selector).then(function(items) {
-        //     exports.result_store.push(exports.config.name, items, true);
-        //     resolveParse();
-        //   });
-        // } else if (is_string(page)) {
-        //   var $ = cheerio.load(page);
-        //   exports.result_store.push(exports.config.name, $(selector).attr('id'), true);
-        //   resolveParse();
-        // }
+        get_page_content(page).then((content) => {
+          var result = [];
+          var $ = cheerio.load(content);
+
+          $(selector).each((id, el) => {
+            result.push($.html(el));
+          });
+
+          STORE.push(CONFIG.name, result, true);
+          resolveParse();
+        });
       });
     });
 
-    // Promise.all(parse_actions).then(() => {
-    //   resolve();
-    //   // resolveSubactions(action.actions, resolveAction);
-    // });
+    Promise.all(parse_actions).then(() => {
+      resolve();
+    });
   });
 };
+
+module.exports = ActionParse;

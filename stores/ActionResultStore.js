@@ -1,35 +1,39 @@
-var oop = require('oop-module');
-var _super = oop.extends('./CacheStore');
+var CacheStore = require('./CacheStore');
 
+var ActionResultStore = function() {
+  CacheStore.apply(this, Array.prototype.slice.call(arguments));
 
-var flags = {};
+  this.flags = {};
+};
 
-var set_flag = function(key, flag, value) {
-  if (!flags[key]) {
-    flags[key] = {};
+ActionResultStore.prototype.set_flag = function(key, flag, value) {
+  if (!this.flags[key]) {
+    this.flags[key] = {};
   }
 
-  flags[key][flag] = value;
+  this.flags[key][flag] = value;
 };
 
-var get_flag = function(key, flag) {
-  return flags[key][flag];
+ActionResultStore.prototype.get_flag = function(key, flag) {
+  return this.flags[key][flag];
 };
 
-exports.push = (key, value, visibility) => {
-  set_flag(key, 'visibility', visibility);
-  return _super.push(key, value);
+ActionResultStore.prototype.push = function(key, value, visibility) {
+  this.set_flag(key, 'visibility', visibility);
+  return this.push(key, value);
 };
 
-exports.get_visible_data = () => {
-  var data = _super.get_data();
+ActionResultStore.prototype.get_visible_data = function() {
+  var data = this.get_data();
   var visible_data = {};
 
   for (var key in data) {
-    if (get_flag(key, 'visibility') === true) {
+    if (this.get_flag(key, 'visibility') === true) {
       visible_data[key] = data[key];
     }
   }
 
   return visible_data;
 };
+
+module.exports = ActionResultStore;

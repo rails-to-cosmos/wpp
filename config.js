@@ -4,9 +4,9 @@ module.exports = {
       "type": "ADownload",
       "name": "article",
       "data": {
-        //"url": "http://echo.msk.ru/programs/just_think/1778076-echo/"
-        //"url": "https://habrahabr.ru/post/302372/"
-        "url": "http://allhockey.ru/article/show/257019-Dozayavochka"
+        // "url": "http://echo.msk.ru/programs/just_think/1778076-echo/"
+        "url": "https://habrahabr.ru/post/302372/"
+        // "url": "http://allhockey.ru/article/show/257019-Dozayavochka"
       },
       "settings": {
         "filters": {

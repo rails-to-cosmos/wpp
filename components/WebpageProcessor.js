@@ -1,16 +1,14 @@
 "use strict";
 
-var oop = require('oop-module'),
-    phantom = require("phantom"),
+var phantom = require("phantom"),
 
-    ActionFactory = oop.class('./ActionFactory'),
-    ActionResultStore = oop.class('../stores/ActionResultStore'),
+    ActionFactory = require('./ActionFactory'),
+    ActionResultStore = require('../stores/ActionResultStore'),
 
     filterRequests = require('../utils').filterRequests,
     is_array = require('../utils').is_array;
 
-// prepare actions data structure (hash map)
-var prepare_actions = (actions, action_factory, result_store, browser) => {
+var group_actions = (actions, action_factory, result_store, browser) => {
   var groupped_actions = {
     __main__: []
   };
@@ -32,6 +30,8 @@ var prepare_actions = (actions, action_factory, result_store, browser) => {
 };
 
 var resolve_actions = (actions, key) => {
+  console.log(actions, key);
+
   key = key || '__main__';
 
   if (!actions[key]) {
@@ -41,15 +41,16 @@ var resolve_actions = (actions, key) => {
   console.log('Resolving subactions for ' + key);
   let promises = actions[key].map((action) => {
     return new Promise((resolve, reject) => {
-      action.do().then(() => {
-
-        if (actions[action.config.name]) {
-          resolve_actions(actions, action.config.name).then(() => {
-            console.log('Resolved ' + action.config.name);
+      console.log(action.get_config().name);
+      action.main().then(() => {
+        var action_config = action.get_config();
+        if (actions[action_config.name]) {
+          resolve_actions(actions, action_config.name).then(() => {
+            console.log('Resolved ' + action_config.name);
             resolve();
           });
         } else {
-          console.log('Resolved ' + action.config.name);
+          console.log('Resolved ' + action_config.name);
           resolve();
         }
       });
@@ -71,7 +72,7 @@ exports.process = (config) => {
 
     var result_store = new ActionResultStore();
     var action_factory = new ActionFactory();
-    var actions = prepare_actions(config.actions, action_factory, result_store, browser);
+    var actions = group_actions(config.actions, action_factory, result_store, browser); // ?
 
     return new Promise((resolve, reject) => {
       resolve_actions(actions).then(() => {
@@ -83,5 +84,7 @@ exports.process = (config) => {
         resolve(result);
       });
     });
+  }).catch(error => {
+    console.log(error);
   });
 };

@@ -1,7 +1,8 @@
 var os = require('os');
 var cluster = require('cluster');
+var debug = true;
 
-if (cluster.isMaster) {
+if (cluster.isMaster && !debug) {
   var cpuCount = os.cpus().length;
 
   for (var i = 0; i < cpuCount; i++) {
@@ -14,19 +15,19 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 
-} else {
+} else if (!cluster.isMaster || debug) {
   var express = require("express"),
       serve = express(),
 
       oop = require('oop-module'),
       WebpageProcessor = oop.class("./components/WebpageProcessor"),
-      w2p = new WebpageProcessor(),
+      wpp = new WebpageProcessor(),
 
       config = require('./config'),
-      port = 8008;
+      port = 8000;
 
   serve.get('/', (req, res) => {
-    w2p.process(config).then((result) => {
+    wpp.process(config).then((result) => {
       res.json(result);
     });
   }).listen(port);

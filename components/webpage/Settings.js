@@ -1,5 +1,3 @@
-var oop = require('oop-module');
-
 var default_settings = (page, config) => {
   // page.setting('userAgent', userAgent);
   page.setting('loadImages', false);

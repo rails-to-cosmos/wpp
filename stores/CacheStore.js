@@ -1,26 +1,27 @@
 var is_array = require('../utils').is_array;
-var data = {};
 
-exports.constructor = function() {
+function CacheStore() {
+  this.data = {};
+}
 
-};
-
-exports.push = function(key, value, flags) {
+CacheStore.prototype.push = function(key, value, flags) {
   if( !is_array(value) ) {
     value = [value];
   }
 
-  if (data[key]) {
-    data[key].push.apply(data[key], value);
+  if (this.data[key]) {
+    this.data[key].push.apply(this.data[key], value);
   } else {
-    data[key] = value;
+    this.data[key] = value;
   }
 };
 
-exports.get = function(key) {
-  return data[key];
+CacheStore.prototype.get = function(key) {
+  return this.data[key];
 };
 
-exports.get_data = function() {
-  return data;
+CacheStore.prototype.get_data = function() {
+  return this.data;
 };
+
+module.exports = CacheStore;
