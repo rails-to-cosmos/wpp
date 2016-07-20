@@ -13,12 +13,11 @@ ActionDownload.prototype.main = function() {
       STORE = this.store;
 
   return new Promise((resolve, reject) => {
-    var wp = new Webpage(BROWSER);
-    wp.create().then((page) => {
-      // important! do not use () => {}, use function(requestData, networkRequest) instead
-      // this function runs in phantomjs layer
-
+    var webpage = new Webpage(BROWSER);
+    webpage.create().then((page) => {
       if (CONFIG.settings && CONFIG.settings.filters) {
+        // important! do not use () => {}, use function(requestData, networkRequest) instead
+        // this function runs in phantomjs layer
         page.property('onResourceRequested', function(requestData, networkRequest, filters) {
           var url = requestData.url;
 

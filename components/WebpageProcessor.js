@@ -41,16 +41,16 @@ var resolve_actions = (actions, key) => {
   console.log('Resolving subactions for ' + key);
   let promises = actions[key].map((action) => {
     return new Promise((resolve, reject) => {
-      console.log(action.get_config().name);
       action.main().then(() => {
-        var action_config = action.get_config();
-        if (actions[action_config.name]) {
-          resolve_actions(actions, action_config.name).then(() => {
-            console.log('Resolved ' + action_config.name);
+        console.log('1');
+        if (actions[action.config.name]) {
+          console.log('2');
+          resolve_actions(actions, action.config.name).then(() => {
+            console.log('Resolved ' + action.config.name);
             resolve();
           });
         } else {
-          console.log('Resolved ' + action_config.name);
+          console.log('Resolved ' + action.config.name);
           resolve();
         }
       });

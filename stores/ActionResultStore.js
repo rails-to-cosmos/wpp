@@ -20,7 +20,7 @@ ActionResultStore.prototype.get_flag = function(key, flag) {
 
 ActionResultStore.prototype.push = function(key, value, visibility) {
   this.set_flag(key, 'visibility', visibility);
-  return this.push(key, value);
+  return CacheStore.prototype.push.call(this, key, value);
 };
 
 ActionResultStore.prototype.get_visible_data = function() {
