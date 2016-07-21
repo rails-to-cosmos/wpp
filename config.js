@@ -50,6 +50,17 @@ module.exports = {
       "settings": {
         "visible": true
       }
+    },
+    {
+      "name": "attr",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".post__flow[href]"
+      },
+      "target": "article",
+      "settings": {
+        "visible": true
+      }
     }
     // {
     //   "type": "AClick",

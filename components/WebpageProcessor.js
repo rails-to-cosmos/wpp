@@ -72,7 +72,7 @@ WebpageProcessor.prototype.process = function(config) {
     var result_store = new ActionResultStore();
     var action_factory = new ActionFactory();
 
-    var actions = group_actions(config.actions, action_factory, result_store, browser); // ?
+    var actions = group_actions(config.actions, action_factory, result_store, browser);
 
     return new Promise((resolve, reject) => {
       resolve_actions(actions).then(() => {
