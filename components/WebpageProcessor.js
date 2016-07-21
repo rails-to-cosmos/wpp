@@ -60,13 +60,18 @@ var resolve_actions = (actions, key) => {
 };
 
 
-exports.process = (config) => {
+function WebpageProcessor() {
+
+}
+
+WebpageProcessor.prototype.process = function(config) {
   return phantom.create().then((browser) => {
     console.log('');
     console.log('Hello.');
 
     var result_store = new ActionResultStore();
     var action_factory = new ActionFactory();
+
     var actions = group_actions(config.actions, action_factory, result_store, browser); // ?
 
     return new Promise((resolve, reject) => {
@@ -83,3 +88,6 @@ exports.process = (config) => {
     console.log(error);
   });
 };
+
+
+module.exports = WebpageProcessor;

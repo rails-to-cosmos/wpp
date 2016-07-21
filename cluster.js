@@ -17,16 +17,12 @@ if (cluster.isMaster && !debug) {
 
 } else if (!cluster.isMaster || debug) {
   var express = require("express"),
-      serve = express(),
-
-      oop = require('oop-module'),
-      WebpageProcessor = oop.class("./components/WebpageProcessor"),
+      WebpageProcessor = require("./components/WebpageProcessor"),
       wpp = new WebpageProcessor(),
-
       config = require('./config'),
       port = 8000;
 
-  serve.get('/', (req, res) => {
+  express().get('/', (req, res) => {
     wpp.process(config).then((result) => {
       res.json(result);
     });
