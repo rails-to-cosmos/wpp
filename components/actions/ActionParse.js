@@ -38,10 +38,11 @@ ActionParse.prototype.main = function() {
           var $ = cheerio.load(content);
 
           $(selector).each((id, el) => {
-            result.push($.html(el));
+            result.push($(el).html());
           });
 
           STORE.push(CONFIG.name, result, true);
+
           resolveParse();
         });
       });
