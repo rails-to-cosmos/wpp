@@ -5,7 +5,6 @@ var phantom = require("phantom"),
     ActionFactory = require('./ActionFactory'),
     ActionResultStore = require('../stores/ActionResultStore'),
 
-    filterRequests = require('../utils').filterRequests,
     is_array = require('../utils').is_array;
 
 var group_actions = (actions, action_factory, result_store, browser) => {

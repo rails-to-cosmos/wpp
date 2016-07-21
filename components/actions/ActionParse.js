@@ -1,8 +1,21 @@
 var Action = require('./Action'),
     cheerio = require('cheerio'),
     is_object = require('../../utils').is_object,
-    is_string = require('../../utils').is_string,
-    get_page_content = require('../../utils').get_page_content;
+    is_string = require('../../utils').is_string;
+
+function get_page_content(page) {
+  return new Promise((resolve, reject) => {
+    if (is_object(page)) {
+      page.property('content').then((content) => {
+        resolve(content);
+      });
+    } else if (is_string(page)) {
+      resolve(page);
+    } else {
+      resolve('');
+    }
+  });
+}
 
 function ActionParse() {
   Action.apply(this, Array.prototype.slice.call(arguments));

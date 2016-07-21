@@ -18,6 +18,10 @@ ActionResultStore.prototype.get_flag = function(key, flag) {
   return this.flags[key][flag];
 };
 
+ActionResultStore.prototype.get = function(key) {
+  return CacheStore.prototype.get.call(this, key);
+};
+
 ActionResultStore.prototype.push = function(key, value, visibility) {
   this.set_flag(key, 'visibility', visibility);
   return CacheStore.prototype.push.call(this, key, value);
