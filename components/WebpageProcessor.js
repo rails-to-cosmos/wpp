@@ -29,8 +29,6 @@ var group_actions = (actions, action_factory, result_store, browser) => {
 };
 
 var resolve_actions = (actions, key) => {
-  console.log(actions, key);
-
   key = key || '__main__';
 
   if (!actions[key]) {
@@ -41,9 +39,7 @@ var resolve_actions = (actions, key) => {
   let promises = actions[key].map((action) => {
     return new Promise((resolve, reject) => {
       action.main().then(() => {
-        console.log('1');
         if (actions[action.config.name]) {
-          console.log('2');
           resolve_actions(actions, action.config.name).then(() => {
             console.log('Resolved ' + action.config.name);
             resolve();
