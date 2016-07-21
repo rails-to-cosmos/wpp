@@ -47,6 +47,21 @@ AttributeRepresentation.prototype.repr = function() {
   return this.$(this.element).attr(this.selector.attribute);
 };
 
+function get_representation(selector) {
+  var representation = TextRepresentation;
+  if (selector.attribute) {
+    switch(selector.attribute) {
+    case 'outerHTML':
+      representation = OuterHTMLRepresentation;
+      break;
+    default:
+      representation = AttributeRepresentation;
+    }
+  }
+
+  return representation;
+}
+
 function ComplexSelector(selector) {
   this.selector = selector;
   this.attribute = '';
@@ -71,18 +86,7 @@ ActionParse.prototype.main = function() {
 
   return new Promise((resolve, reject) => {
     var selector = new ComplexSelector(CONFIG.data.selector);
-
-    var representation = TextRepresentation;
-    if (selector.attribute) {
-      switch(selector.attribute) {
-      case 'outerHTML':
-        representation = OuterHTMLRepresentation;
-        break;
-      default:
-        representation = AttributeRepresentation;
-      }
-    }
-
+    var representation = get_representation(selector);
     var pages = STORE.get(CONFIG.target);
     var parse_actions = pages.map((page) => {
       return new Promise((resolveParse) => {

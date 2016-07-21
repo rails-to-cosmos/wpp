@@ -61,6 +61,17 @@ module.exports = {
       "settings": {
         "visible": true
       }
+    },
+    {
+      "name": "class",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".post__flow[class]"
+      },
+      "target": "article",
+      "settings": {
+        "visible": true
+      }
     }
     // {
     //   "type": "AClick",
