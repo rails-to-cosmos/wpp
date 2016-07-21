@@ -28,7 +28,7 @@ ActionResultStore.prototype.push = function(key, value, visibility) {
 };
 
 ActionResultStore.prototype.get_visible_data = function() {
-  var data = this.get_data();
+  var data = CacheStore.prototype.get_data.call(this);
   var visible_data = {};
 
   for (var key in data) {
