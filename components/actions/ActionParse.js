@@ -1,5 +1,4 @@
 var Action = require('./Action'),
-    ComplexSelector = require('../ComplexSelector'),
     cheerio = require('cheerio'),
     is_object = require('../../utils').is_object,
     is_string = require('../../utils').is_string;
@@ -16,6 +15,37 @@ function get_page_content(page) {
       resolve('');
     }
   });
+}
+
+function ElementRepresentation($, el) {
+  this.$ = $;
+  this.element = el;
+}
+
+function OuterHTMLRepresentation() {
+  ElementRepresentation.apply(this, Array.prototype.slice.call(arguments));
+}
+
+OuterHTMLRepresentation.prototype.repr = function() {
+  return this.$(this.element).html();
+};
+
+function TextRepresentation() {
+  ElementRepresentation.apply(this, Array.prototype.slice.call(arguments));
+}
+
+TextRepresentation.prototype.repr = function() {
+  return this.$(this.element).text();
+};
+
+function ComplexSelector(selector) {
+  this.selector = selector;
+  this.representation = TextRepresentation;
+
+  if (this.selector.indexOf('[outerHTML]') > -1) {
+    this.representation = OuterHTMLRepresentation;
+    this.selector = this.selector.replace('[outerHTML]', '');
+  }
 }
 
 function ActionParse() {
@@ -40,11 +70,8 @@ ActionParse.prototype.main = function() {
           var $ = cheerio.load(content);
 
           $(selector.selector).each((id, el) => {
-            if (selector.flags.outer_html == true) {
-              result.push($(el).html());
-            } else {
-              result.push($(el).text());
-            }
+            var er = new selector.representation($, el);
+            result.push(er.repr());
           });
 
           STORE.push(CONFIG.name, result, true);
