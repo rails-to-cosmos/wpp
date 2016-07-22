@@ -19,7 +19,7 @@ if (cluster.isMaster && !debug) {
   var express = require("express"),
       WebpageProcessor = require("./components/WebpageProcessor"),
       wpp = new WebpageProcessor(),
-      config = require('./config'),
+      config = require('./ajax-config'),
       port = 8000;
 
   express().get('/', (req, res) => {

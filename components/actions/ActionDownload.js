@@ -7,17 +7,26 @@ function ActionDownload() {
 
 ActionDownload.prototype = new Action();
 
+ActionDownload.prototype.get_url = function() {
+  return this.config.data.url;
+};
+
+ActionDownload.prototype.get_filters = function() {
+  if (this.config.settings && this.config.settings.filters) {
+    return this.config.settings.filters;
+  } else {
+    return 0;
+  }
+};
+
 ActionDownload.prototype.main = function() {
-  var BROWSER = this.browser,
-      CONFIG = this.config,
-      STORE = this.store;
+  var ACTION = this;
 
   return new Promise((resolve, reject) => {
-    var webpage = new Webpage(BROWSER);
+    var webpage = new Webpage(ACTION.get_browser());
     webpage.create().then((page) => {
-      if (CONFIG.settings && CONFIG.settings.filters) {
-        // important! do not use () => {}, use function(requestData, networkRequest) instead
-        // this function runs in phantomjs layer
+      var filters = ACTION.get_filters();
+      if (filters) {
         page.property('onResourceRequested', function(requestData, networkRequest, filters) {
           var url = requestData.url;
 
@@ -55,12 +64,12 @@ ActionDownload.prototype.main = function() {
           }
 
           console.log('Accept: ' + url);
-        }, CONFIG.settings.filters);
+        }, filters);
       };
 
-      page.open(CONFIG.data.url).then((status) => {
+      page.open(ACTION.get_url()).then((status) => {
         page.property('content').then((content) => {
-          STORE.push(CONFIG.name, page, false);
+          ACTION.push_to_store(page);
           resolve();
         });
       });

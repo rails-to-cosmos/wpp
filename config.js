@@ -9,6 +9,7 @@ module.exports = {
         // "url": "http://allhockey.ru/article/show/257019-Dozayavochka"
       },
       "settings": {
+        "visible": true,
         "filters": {
           WhitelistUrlFilter: {
             urls: ['.*habrahabr\.ru\/post\/.*',
@@ -72,15 +73,26 @@ module.exports = {
       "settings": {
         "visible": true
       }
-    }
-    // {
-    //   "type": "AClick",
-    //   "data": {
-    //     "selector": "section.content .actionBlock a.comm"
-    //   },
-    //   "target": "article",
-    //   "name": "article_with_comments"
-    // },
+    },
+    {
+      "name": "link",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "a[href^='#dynamic-heteroheneous-containers'][href]"
+      },
+      "target": "article",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "type": "AClick",
+      "data": {
+        "selector": "a.post__flow"
+      },
+      "target": "article",
+      "name": "article_with_comments"
+    },
     // {
     //   "name": "comment",
     //   "type": "AParseBySelector",

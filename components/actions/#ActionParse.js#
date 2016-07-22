@@ -54,7 +54,7 @@ AttributeRepresentation.prototype.repr = function() {
 };
 
 function get_representation(selector) {
-  var representation = TextRepresentation;
+  var representation;
   if (selector.attribute) {
     switch(selector.attribute) {
     case 'outerHTML':
@@ -63,7 +63,7 @@ function get_representation(selector) {
     default:
       representation = AttributeRepresentation;
     }
-  }
+  } e
 
   return representation;
 }
@@ -85,17 +85,15 @@ function ActionParse() {
 
 ActionParse.prototype = new Action();
 
-ActionParse.prototype.get_selector = function() {
-  return this.config.data.selector;
-};
-
 ActionParse.prototype.main = function() {
-  var ACTION = this;
+  var BROWSER = this.browser,
+      CONFIG = this.config,
+      STORE = this.store;
 
   return new Promise((resolve, reject) => {
-    var selector = new ComplexSelector(ACTION.get_selector());
+    var selector = new ComplexSelector(CONFIG.data.selector);
     var representation = get_representation(selector);
-    var pages = ACTION.get_from_store(ACTION.get_target());
+    var pages = STORE.get(CONFIG.target);
     var parse_actions = pages.map((page) => {
       return new Promise((resolveParse) => {
         get_page_content(page).then((content) => {
@@ -107,7 +105,7 @@ ActionParse.prototype.main = function() {
             result.push(er.repr());
           });
 
-          ACTION.push_to_store(result);
+          STORE.push(CONFIG.name, result, CONFIG.settings.visible);
 
           resolveParse();
         });
