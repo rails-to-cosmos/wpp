@@ -21,9 +21,6 @@ ActionClick.prototype.main = function() {
   return new Promise(function(resolve, reject) {
     var pages = ACTION.get_from_store(ACTION.get_target());
     var selector = ACTION.get_selector();
-    var urls = [];
-    var clicked_elements_count = 0;
-    var navigated_elements_count = 0;
 
     var requested_resources = new Set();
     var received_resources = new Set();
@@ -71,9 +68,7 @@ ActionClick.prototype.main = function() {
           }
 
           return elements.length;
-        }, selector).then(function(ce_count) {
-          clicked_elements_count = ce_count;
-        });
+        }, selector);
       });
     });
 
