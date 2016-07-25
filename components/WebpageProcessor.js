@@ -3,9 +3,10 @@
 var phantom = require("phantom"),
 
     ActionFactory = require('./ActionFactory'),
-    ActionResultStore = require('../stores/ActionResultStore'),
+    ActionResultStore = require('./stores/ActionResultStore'),
 
-    is_array = require('../utils').is_array;
+    is_array = require('./utils').is_array;
+
 
 function ActionTree(actions, factory, store, browser) {
   var tree = {
@@ -25,13 +26,14 @@ function ActionTree(actions, factory, store, browser) {
     }
   }
 
-  this.tree = tree;
+  this.data = tree;
 }
 
-ActionTree.prototype.resolve = function (actions, key) {
-  key = key || '__main__';
-  actions = actions || this.tree;
+function WebpageProcessor() {
 
+}
+
+WebpageProcessor.prototype.resolve_actions = function(actions, key) {
   if (!actions[key]) {
     return new Promise(function(resolve, reject) {
       resolve();
@@ -40,12 +42,12 @@ ActionTree.prototype.resolve = function (actions, key) {
 
   // console.log('Resolving subactions for ' + key);
 
-  var ACTION_TREE = this;
-  let promises = actions[key].map((action) => {
+  var WEBPAGE_PROCESSOR = this;
+  let promises = actions[key].map(function(action) {
     return new Promise(function(resolve, reject) {
       action.main().then(function() {
         if (actions[action.config.name]) {
-          ACTION_TREE.resolve(actions, action.config.name).then(() => {
+          WEBPAGE_PROCESSOR.resolve_actions(actions, action.config.name).then(function() {
             // console.log('Resolved ' + action.config.name);
             resolve();
           });
@@ -57,20 +59,21 @@ ActionTree.prototype.resolve = function (actions, key) {
     });
   });
 
-  return new Promise((resolve, reject) => {
+  return new Promise(function(resolve, reject) {
     Promise.all(promises).then(() => {
       resolve();
     });
   });
 };
 
-
-function WebpageProcessor() {
-
-}
+WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
+  return this.resolve_actions(action_tree.data, '__main__');
+};
 
 WebpageProcessor.prototype.process = function(config) {
+  var WEBPAGE_PROCESSOR = this;
   var phantom_instance = null;
+
   return phantom.create().then((instance) => {
     console.log('');
     console.log('Hello.');
@@ -82,7 +85,7 @@ WebpageProcessor.prototype.process = function(config) {
     var action_tree = new ActionTree(config.actions, action_factory, result_store, phantom_instance);
 
     return new Promise((resolve, reject) => {
-      action_tree.resolve().then(() => {
+      WEBPAGE_PROCESSOR.resolve_action_tree(action_tree).then(() => {
         console.log('My watch has ended.');
         var result = result_store.get_visible_data();
         console.log(result);

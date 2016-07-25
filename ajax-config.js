@@ -11,17 +11,6 @@ module.exports = {
       }
     },
     {
-      "name": "html",
-      "type": "AParseBySelector",
-      "data": {
-        "selector": "blockquote"
-      },
-      "target": "article",
-      "settings": {
-        "visible": true
-      }
-    },
-    {
       "name": "page",
       "type": "AClick",
       "data": {
@@ -43,16 +32,5 @@ module.exports = {
         "visible": true
       }
     },
-    {
-      "name": "rrr2",
-      "type": "AParseBySelector",
-      "data": {
-        "selector": "form[name=f1] div#result[outerHTML]"
-      },
-      "target": "article",
-      "settings": {
-        "visible": true
-      }
-    }
   ]
 };
