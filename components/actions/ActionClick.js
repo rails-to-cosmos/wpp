@@ -1,5 +1,6 @@
 var Action = require('./Action'),
-    Webpage = require('../webpage/Webpage');
+    Webpage = require('../webpage/Webpage'),
+    sleep = require('sleep');
 
 function ActionClick() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -7,13 +8,19 @@ function ActionClick() {
 
 ActionClick.prototype = new Action();
 
+ActionClick.prototype.get_selector = function() {
+  return this.config.data.selector;
+};
+
 ActionClick.prototype.main = function() {
-  var STORE = this.store,
-      CONFIG = this.config;
+  const RSTAGE_START = 'start',
+        RSTAGE_END = 'end';
+
+  var ACTION = this;
 
   return new Promise(function(resolve, reject) {
-    var pages = STORE.get(CONFIG.target);
-    var selector = CONFIG.data.selector;
+    var pages = ACTION.get_from_store(ACTION.get_target());
+    var selector = ACTION.get_selector();
     var urls = [];
     var clicked_elements_count = 0;
     var navigated_elements_count = 0;
@@ -25,33 +32,24 @@ ActionClick.prototype.main = function() {
       return new Promise(function(resolveClick) {
         function resolveTrigger() {
           if (requested_resources.size == received_resources.size) {
-            console.log('');
-            console.log('Requested:', requested_resources);
-            console.log('Received:', received_resources);
-
-            // STORE.push(CONFIG.name, urls, true);
+            // console.log('');
+            // console.log('Requested:', requested_resources);
+            // console.log('Received:', received_resources);
+            ACTION.push_to_store(page);
             resolveClick();
           }
         }
-
-        // page.on('onNavigationRequested', function(status) {
-        //   // urls.push(status);
-        //   // navigated_elements_count++;
-        //   // console.log('NavigationRequested: ' + status);
-        //   // console.log(clicked_elements_count, navigated_elements_count);
-        //   // resolveTrigger();
-        // });
 
         page.on('onResourceRequested', function(requestData, networkRequest) {
           requested_resources.add(requestData.url);
         });
 
         page.on('onResourceReceived', function(responseData, networkRequest) {
-          if (responseData.stage == 'start') {
+          if (responseData.stage == RSTAGE_START) {
             requested_resources.add(responseData.url);
           }
 
-          if (responseData.stage == 'end') {
+          if (responseData.stage == RSTAGE_END) {
             received_resources.add(responseData.url);
             resolveTrigger();
           }
@@ -60,7 +58,10 @@ ActionClick.prototype.main = function() {
         page.evaluate(function(selector) {
           function click(el) {
             var mouse_event = document.createEvent('MouseEvents');
-            mouse_event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            mouse_event.initMouseEvent('click', true, true, window,
+                                       0, 0, 0, 0, 0,
+                                       false, false, false, false,
+                                       0, null);
             el.dispatchEvent(mouse_event);
           }
 

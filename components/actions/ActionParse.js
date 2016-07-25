@@ -108,7 +108,6 @@ ActionParse.prototype.main = function() {
           });
 
           ACTION.push_to_store(result);
-
           resolveParse();
         });
       });

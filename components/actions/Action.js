@@ -8,8 +8,8 @@ Action.prototype.get_browser = function() {
   return this.browser;
 };
 
-Action.prototype.get_from_store = function(id) {
-  return this.store.get(id);
+Action.prototype.get_from_store = function(obj) {
+  return this.store.get(obj);
 };
 
 Action.prototype.push_to_store = function(value) {
