@@ -1,8 +1,9 @@
 var os = require('os');
 var cluster = require('cluster');
-var debug = true;
 
-if (cluster.isMaster && !debug) {
+const DEBUG = true;
+
+if (cluster.isMaster && !DEBUG) {
   var cpuCount = os.cpus().length;
 
   for (var i = 0; i < cpuCount; i++) {
@@ -15,14 +16,15 @@ if (cluster.isMaster && !debug) {
     cluster.fork();
   });
 
-} else if (!cluster.isMaster || debug) {
+} else if (!cluster.isMaster || DEBUG) {
   var express = require("express"),
+      app = express(),
       WebpageProcessor = require("./components/WebpageProcessor"),
       wpp = new WebpageProcessor(),
       config = require('./ajax-config'),
       port = 8000;
 
-  express().get('/', (req, res) => {
+  app.get('/', (req, res) => {
     wpp.process(config).then((result) => {
       res.json(result);
     });

@@ -35,17 +35,17 @@ var resolve_actions = (actions, key) => {
     return new Promise((resolve, reject) => resolve());
   }
 
-  console.log('Resolving subactions for ' + key);
+  // console.log('Resolving subactions for ' + key);
   let promises = actions[key].map((action) => {
     return new Promise((resolve, reject) => {
       action.main().then(() => {
         if (actions[action.config.name]) {
           resolve_actions(actions, action.config.name).then(() => {
-            console.log('Resolved ' + action.config.name);
+            // console.log('Resolved ' + action.config.name);
             resolve();
           });
         } else {
-          console.log('Resolved ' + action.config.name);
+          // console.log('Resolved ' + action.config.name);
           resolve();
         }
       });
@@ -65,27 +65,33 @@ function WebpageProcessor() {
 }
 
 WebpageProcessor.prototype.process = function(config) {
-  return phantom.create().then((browser) => {
+  var phantom_instance = null;
+  return phantom.create().then((instance) => {
     console.log('');
     console.log('Hello.');
+
+    phantom_instance = instance;
 
     var result_store = new ActionResultStore();
     var action_factory = new ActionFactory();
 
-    var actions = group_actions(config.actions, action_factory, result_store, browser);
+    var actions = group_actions(config.actions, action_factory, result_store, phantom_instance);
+
+    console.log(actions);
 
     return new Promise((resolve, reject) => {
       resolve_actions(actions).then(() => {
         console.log('My watch has ended.');
         var result = result_store.get_visible_data();
         console.log(result);
-        browser.exit();
-        console.log('Bye.\n');
+        phantom_instance.exit();
         resolve(result);
+        console.log('Bye.\n');
       });
     });
   }).catch(error => {
     console.log(error);
+    phantom_instance.exit();
   });
 };
 

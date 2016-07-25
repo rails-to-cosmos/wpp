@@ -13,9 +13,9 @@ ActionFactory.prototype.create_action = function(action_config, result_store, br
   case 'AParseBySelector':
     return new ActionParse(action_config, result_store, browser_instance);
   case 'AClick':
-    return new ActionClick(action_config, result_store);
+    return new ActionClick(action_config, result_store, browser_instance);
   default:
-    console.log('Unknown action resolved: ' + action_config.type);
+    console.log('Unknown action received: ' + action_config.type);
     return null;
   }
 };

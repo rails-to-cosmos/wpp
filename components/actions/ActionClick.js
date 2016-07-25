@@ -22,8 +22,8 @@ ActionClick.prototype.main = function() {
     var pages = ACTION.get_from_store(ACTION.get_target());
     var selector = ACTION.get_selector();
 
-    var requested_resources = new Set();
-    var received_resources = new Set();
+    var requested_resources = new Set(),
+        received_resources = new Set();
 
     var actions = pages.map(function(page) {
       return new Promise(function(resolveClick) {
