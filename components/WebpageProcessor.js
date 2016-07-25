@@ -29,6 +29,31 @@ function ActionTree(actions, factory, store, browser) {
   this.data = tree;
 }
 
+function GarbageCollector(data_storage) {
+  this.data_storage = data_storage;
+}
+
+GarbageCollector.prototype.collect = function() {
+  var data = this.data_storage.get_data();
+
+  for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+      var result_list = data[key];
+      result_list.forEach(function(element) {
+        if(element.hasOwnProperty('__collected__'))
+          return;
+
+        switch (element.constructor.name) {
+        case 'Page':
+          element.__collected__ = true;
+          element.close();
+          break;
+        }
+      });
+    }
+  }
+};
+
 function WebpageProcessor() {
 
 }
@@ -40,7 +65,7 @@ WebpageProcessor.prototype.resolve_actions = function(actions, key) {
     });
   }
 
-  // console.log('Resolving subactions for ' + key);
+  console.log('Resolving subactions for ' + key);
 
   var WEBPAGE_PROCESSOR = this;
   let promises = actions[key].map(function(action) {
@@ -48,11 +73,11 @@ WebpageProcessor.prototype.resolve_actions = function(actions, key) {
       action.main().then(function() {
         if (actions[action.config.name]) {
           WEBPAGE_PROCESSOR.resolve_actions(actions, action.config.name).then(function() {
-            // console.log('Resolved ' + action.config.name);
+            console.log('Resolved ' + action.config.name);
             resolve();
           });
         } else {
-          // console.log('Resolved ' + action.config.name);
+          console.log('Resolved ' + action.config.name);
           resolve();
         }
       });
@@ -81,14 +106,20 @@ WebpageProcessor.prototype.process = function(config) {
     phantom_instance = instance;
 
     var result_store = new ActionResultStore();
+    var garbage_collector = new GarbageCollector(result_store);
     var action_factory = new ActionFactory();
     var action_tree = new ActionTree(config.actions, action_factory, result_store, phantom_instance);
 
     return new Promise((resolve, reject) => {
       WEBPAGE_PROCESSOR.resolve_action_tree(action_tree).then(() => {
         console.log('My watch has ended.');
+
+        console.log('1');
         var result = result_store.get_visible_data();
+        console.log('2');
+
         console.log(result);
+        garbage_collector.collect();
         phantom_instance.exit();
         resolve(result);
         console.log('Bye.\n');

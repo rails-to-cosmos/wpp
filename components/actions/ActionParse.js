@@ -96,6 +96,7 @@ ActionParse.prototype.main = function() {
     var selector = new ComplexSelector(ACTION.get_selector());
     var representation = get_representation(selector);
     var pages = ACTION.get_from_store(ACTION.get_target());
+
     var parse_actions = pages.map((page) => {
       return new Promise((resolveParse) => {
         get_page_content(page).then((content) => {

@@ -5,7 +5,7 @@ function CacheStore() {
 }
 
 CacheStore.prototype.push = function(key, value, flags) {
-  if( !is_array(value) ) {
+  if (!is_array(value)) {
     value = [value];
   }
 
@@ -17,7 +17,7 @@ CacheStore.prototype.push = function(key, value, flags) {
 };
 
 CacheStore.prototype.get = function(key) {
-  return this.data[key];
+  return this.data[key] || [];
 };
 
 CacheStore.prototype.get_data = function() {

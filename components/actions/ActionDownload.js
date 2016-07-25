@@ -65,7 +65,7 @@ ActionDownload.prototype.main = function() {
 
           console.log('Accept: ' + url);
         }, filters);
-      };
+      } // if filters
 
       page.open(ACTION.get_url()).then((status) => {
         page.property('content').then((content) => {
