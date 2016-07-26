@@ -37,4 +37,5 @@ jspm_packages
 .node_repl_history
 
 # Site configs
-configs/
+# configs/
+*.jsc
