@@ -4,52 +4,9 @@ var phantom = require("phantom"),
 
     ActionFactory = require('./ActionFactory'),
     ActionResultStore = require('./stores/ActionResultStore'),
-    ExtendedDataStructures = require('./stores/ExtendedDataStructures');
+    GarbageCollector = require('./utils/GarbageCollector'),
+    ActionTree = require('./data_structures/ActionTree');
 
-
-function ActionTree(actions, factory, store, browser) {
-  var tree = {
-    __main__: []
-  };
-
-  for (var action_index in actions) {
-    var action_config = actions[action_index];
-    var action = factory.create_action(action_config, store, browser);
-    if (action_config.target) {
-      if (!tree[action_config.target]) {
-        tree[action_config.target] = [];
-      }
-      tree[action_config.target].push(action);
-    } else {
-      tree.__main__.push(action);
-    }
-  }
-
-  this.data = tree;
-}
-
-function GarbageCollector(data_storage) {
-  this.data_storage = data_storage;
-}
-
-GarbageCollector.prototype.collect = function() {
-  var data = this.data_storage.get_data();
-
-  for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-      var result_list = data[key];
-      result_list.forEach(function(element) {
-        if(element.hasOwnProperty('__collected__'))
-          return;
-
-        if (element.constructor.name in ExtendedDataStructures) {
-          ExtendedDataStructures[element.constructor.name].gc(element);
-          element.__collected__ = true;
-        }
-      });
-    }
-  }
-};
 
 function WebpageProcessor() {
 
@@ -89,7 +46,7 @@ WebpageProcessor.prototype.resolve_actions = function(actions, key) {
 };
 
 WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
-  return this.resolve_actions(action_tree.data, '__main__');
+  return this.resolve_actions(action_tree.data, action_tree.root);
 };
 
 WebpageProcessor.prototype.process = function(config) {

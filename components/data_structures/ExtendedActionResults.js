@@ -1,4 +1,4 @@
-var ExtendedDataStructures = {
+var ExtendedActionResults = {
   Page: {
     repr: '<Page object>',
     gc: function(el) {
@@ -7,4 +7,4 @@ var ExtendedDataStructures = {
   }
 };
 
-module.exports = ExtendedDataStructures;
+module.exports = ExtendedActionResults;

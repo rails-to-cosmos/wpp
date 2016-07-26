@@ -1,7 +1,7 @@
 var is_array = require('../utils').is_array;
 
 var CacheStore = require('./CacheStore');
-var ExtendedDataStructures = require('./ExtendedDataStructures');
+var ExtendedActionResults = require('../data_structures/ExtendedActionResults');
 
 
 var ActionResultStore = function() {
@@ -42,8 +42,8 @@ ActionResultStore.prototype.get_visible_data = function() {
 
     if (this.get_flag(key, 'visibility') === true) {
       data[key].forEach(function(element) {
-        if (element.constructor.name in ExtendedDataStructures) {
-          filtered_data.push(ExtendedDataStructures[element.constructor.name].repr);
+        if (element.constructor.name in ExtendedActionResults) {
+          filtered_data.push(ExtendedActionResults[element.constructor.name].repr);
         } else {
           filtered_data.push(element);
         }
