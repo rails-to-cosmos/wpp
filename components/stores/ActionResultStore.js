@@ -1,10 +1,13 @@
+var is_array = require('../utils').is_array;
+
 var CacheStore = require('./CacheStore');
+var ExtendedDataStructures = require('./ExtendedDataStructures');
+
 
 var ActionResultStore = function() {
   CacheStore.apply(this, Array.prototype.slice.call(arguments));
 
   this.flags = {};
-  this.garbage = {};
 };
 
 ActionResultStore.prototype = new CacheStore();
@@ -25,7 +28,7 @@ ActionResultStore.prototype.get = function(key) {
   return CacheStore.prototype.get.call(this, key);
 };
 
-ActionResultStore.prototype.push = function(key, value, visibility) {
+ActionResultStore.prototype.push = function(key, value, visibility, repr, howto_collect) {
   this.set_flag(key, 'visibility', visibility);
   var result = CacheStore.prototype.push.call(this, key, value);
   return result;
@@ -39,11 +42,9 @@ ActionResultStore.prototype.get_visible_data = function() {
 
     if (this.get_flag(key, 'visibility') === true) {
       data[key].forEach(function(element) {
-        switch(element.constructor.name) {
-        case 'Page':
-          filtered_data.push('<Page object>');
-          break;
-        default:
+        if (element.constructor.name in ExtendedDataStructures) {
+          filtered_data.push(ExtendedDataStructures[element.constructor.name].repr);
+        } else {
           filtered_data.push(element);
         }
       });

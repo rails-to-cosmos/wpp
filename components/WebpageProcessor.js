@@ -4,8 +4,7 @@ var phantom = require("phantom"),
 
     ActionFactory = require('./ActionFactory'),
     ActionResultStore = require('./stores/ActionResultStore'),
-
-    is_array = require('./utils').is_array;
+    ExtendedDataStructures = require('./stores/ExtendedDataStructures');
 
 
 function ActionTree(actions, factory, store, browser) {
@@ -43,11 +42,9 @@ GarbageCollector.prototype.collect = function() {
         if(element.hasOwnProperty('__collected__'))
           return;
 
-        switch (element.constructor.name) {
-        case 'Page':
+        if (element.constructor.name in ExtendedDataStructures) {
+          ExtendedDataStructures[element.constructor.name].gc(element);
           element.__collected__ = true;
-          element.close();
-          break;
         }
       });
     }
@@ -114,14 +111,11 @@ WebpageProcessor.prototype.process = function(config) {
       WEBPAGE_PROCESSOR.resolve_action_tree(action_tree).then(() => {
         console.log('My watch has ended.');
 
-        console.log('1');
         var result = result_store.get_visible_data();
-        console.log('2');
-
-        console.log(result);
         garbage_collector.collect();
         phantom_instance.exit();
         resolve(result);
+
         console.log('Bye.\n');
       });
     });
