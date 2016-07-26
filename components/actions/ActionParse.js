@@ -1,7 +1,7 @@
 var Action = require('./Action'),
     cheerio = require('cheerio'),
-    is_object = require('../utils').is_object,
-    is_string = require('../utils').is_string;
+    is_object = require('../utils/TypeHints').is_object,
+    is_string = require('../utils/TypeHints').is_string;
 
 function get_page_content(page) {
   return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-var is_array = require('../utils').is_array;
+var is_array = require('../utils/TypeHints').is_array;
 
 function CacheStore() {
   this.data = {};
