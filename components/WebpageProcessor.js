@@ -12,6 +12,7 @@ function WebpageProcessor() {
 
 }
 
+// resolve actions recursively
 WebpageProcessor.prototype.resolve_actions = function(actions, key) {
   if (!actions[key]) {
     return new Promise(function(resolve, reject) {
@@ -25,13 +26,13 @@ WebpageProcessor.prototype.resolve_actions = function(actions, key) {
   let promises = actions[key].map(function(action) {
     return new Promise(function(resolve, reject) {
       action.main().then(function() {
-        if (actions[action.config.name]) {
-          WEBPAGE_PROCESSOR.resolve_actions(actions, action.config.name).then(function() {
-            console.log('Resolved ' + action.config.name);
+        if (actions[action.get_name()]) {
+          WEBPAGE_PROCESSOR.resolve_actions(actions, action.get_name()).then(function() {
+            console.log('Resolved ' + action.get_name());
             resolve();
           });
         } else {
-          console.log('Resolved ' + action.config.name);
+          console.log('Resolved ' + action.get_name());
           resolve();
         }
       });
