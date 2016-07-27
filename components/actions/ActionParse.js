@@ -89,10 +89,10 @@ ActionParse.prototype.get_selector = function() {
   return this.config.data.selector;
 };
 
-ActionParse.prototype.main = function() {
+ActionParse.prototype.main = function* () {
   var ACTION = this;
 
-  return new Promise((resolve, reject) => {
+  yield new Promise((resolve, reject) => {
     var selector = new ComplexSelector(ACTION.get_selector());
     var representation = get_representation(selector);
     var pages = ACTION.get_from_store(ACTION.get_target());

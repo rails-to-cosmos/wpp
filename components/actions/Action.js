@@ -2,14 +2,15 @@ function Action(config, store, browser) {
   this.config = config;
   this.store = store;
   this.browser = browser;
+  this.async = true;
 };
 
 Action.prototype.get_browser = function() {
   return this.browser;
 };
 
-Action.prototype.get_from_store = function(obj) {
-  return this.store.get(obj);
+Action.prototype.get_from_store = function(value) {
+  return this.store.get(value);
 };
 
 Action.prototype.push_to_store = function(value) {
@@ -28,7 +29,7 @@ Action.prototype.is_visible = function() {
   return this.config.settings && this.config.settings.visible;
 };
 
-Action.prototype.main = function () {
+Action.prototype.main = function* () {
 
 };
 

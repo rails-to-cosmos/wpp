@@ -7,47 +7,76 @@ var phantom = require("phantom"),
     GarbageCollector = require('./utils/GarbageCollector'),
     ActionTree = require('./data_structures/ActionTree');
 
+function* dfs(action_tree, start) {
+  var visited = new Set();
+  var stack = [start];
+
+  while (stack.length > 0) {
+    var vertex = stack.pop();
+    if (vertex && !(vertex in visited) && (action_tree.has_children(vertex))) {
+      for(var action of action_tree.get_children(vertex)) {
+        stack.push(action.get_name()); // run child actions
+      }
+
+      visited.add(vertex);
+    }
+    // console.log(action_tree.get_action(vertex));
+    yield vertex;
+  }
+}
 
 function WebpageProcessor() {
 
 }
 
 // resolve actions recursively
-WebpageProcessor.prototype.resolve_actions = function(actions, key) {
+WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
+  var actions = action_tree.data,
+      key = action_tree.root;
+
   if (!actions[key]) {
     return new Promise(function(resolve, reject) {
       resolve();
     });
   }
 
-  console.log('Resolving subactions for ' + key);
-
-  var WEBPAGE_PROCESSOR = this;
-  let promises = actions[key].map(function(action) {
-    return new Promise(function(resolve, reject) {
-      action.main().then(function() {
-        if (actions[action.get_name()]) {
-          WEBPAGE_PROCESSOR.resolve_actions(actions, action.get_name()).then(function() {
-            console.log('Resolved ' + action.get_name());
-            resolve();
-          });
-        } else {
-          console.log('Resolved ' + action.get_name());
-          resolve();
-        }
-      });
-    });
-  });
+  for (var vertex of dfs(action_tree, key)) {
+    console.log(vertex);
+  }
 
   return new Promise(function(resolve, reject) {
-    Promise.all(promises).then(() => {
-      resolve();
-    });
+    resolve();
   });
-};
 
-WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
-  return this.resolve_actions(action_tree.data, action_tree.root);
+  // var WEBPAGE_PROCESSOR = this;
+  // let promises = actions[key].map(function(action) {
+  //   return new Promise(function(resolve, reject) {
+  //     for (var action_result of action.main()) {
+  //       console.log(1);
+  //       // var resolve_action = function() {
+  //       //   console.log('Resolved ' + action.get_name());
+  //       //   if (actions[action.get_name()]) {
+  //       //     WEBPAGE_PROCESSOR.resolve_actions(actions, action.get_name()).then(resolve);
+  //       //   } else {
+  //       //     resolve();
+  //       //   }
+  //       // };
+
+  //       // if (action.async) {
+  //       //   action_result.then(resolve_action);
+  //       // } else { // wait for action resolve
+  //       //   action_result.then(resolve_action);
+  //       // }
+  //     }
+  //     resolve();
+  //   });
+  // });
+
+  // return new Promise(function(resolve, reject) {
+  //   Promise.all(promises).then(function() {
+  //     resolve();
+  //   });
+  // });
 };
 
 WebpageProcessor.prototype.process = function(config) {
@@ -66,7 +95,7 @@ WebpageProcessor.prototype.process = function(config) {
     var action_tree = new ActionTree(config.actions, action_factory, result_store, phantom_instance);
 
     return new Promise((resolve, reject) => {
-      WEBPAGE_PROCESSOR.resolve_action_tree(action_tree).then(() => {
+      WEBPAGE_PROCESSOR.resolve_action_tree(action_tree).then(function() {
         console.log('My watch has ended.');
 
         var result = result_store.get_visible_data();

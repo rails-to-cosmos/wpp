@@ -20,21 +20,21 @@ ActionDownload.prototype.get_filters = function() {
   }
 };
 
-ActionDownload.prototype.main = function() {
+ActionDownload.prototype.main = function* () {
   var ACTION = this;
 
-  return new Promise((resolve, reject) => {
+  yield new Promise(function(resolve, reject) {
     var webpage = new Webpage(ACTION.get_browser());
-    webpage.create().then((page) => {
+    webpage.create().then(function(page) {
       var filters = ACTION.get_filters();
       if (filters) {
         Filters.applyFiltersOnPage(page, filters);
       }
 
-      page.open(ACTION.get_url()).then((status) => {
-        page.property('content').then((content) => {
+      page.open(ACTION.get_url()).then(function(status) {
+        page.property('content').then(function(content) {
           ACTION.push_to_store(page);
-          resolve();
+          resolve(page);
         });
       });
     });
