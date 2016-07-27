@@ -29,9 +29,6 @@ ActionClick.prototype.main = function() {
       return new Promise(function(resolveClick) {
         function resolveTrigger() {
           if (requested_resources.size == received_resources.size) {
-            // console.log('');
-            // console.log('Requested:', requested_resources);
-            // console.log('Received:', received_resources);
             ACTION.push_to_store(page);
             resolveClick();
           }
