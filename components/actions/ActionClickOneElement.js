@@ -1,14 +1,29 @@
 var Action = require('./Action'),
     Webpage = require('../webpage/Webpage');
 
+// Click Element Searching Strategies
+const CELS_SELECTOR = 1;
+const CELS_XPATH = 2;
+
+
 function ActionClickOneElement() {
   Action.apply(this, Array.prototype.slice.call(arguments));
+
+  this.strategy = CELS_SELECTOR;
+
+  if (this.config.data.xpath) {
+    this.strategy = CELS_XPATH;
+  }
 }
 
 ActionClickOneElement.prototype = new Action();
 
 ActionClickOneElement.prototype.get_selector = function() {
   return this.config.data.selector;
+};
+
+ActionClickOneElement.prototype.get_xpath = function() {
+  return this.config.data.xpath;
 };
 
 ActionClickOneElement.prototype.main = function (subactions) {
@@ -18,9 +33,23 @@ ActionClickOneElement.prototype.main = function (subactions) {
   var ACTION = this;
 
   var pages = ACTION.get_from_store(ACTION.get_target());
-  var selector = ACTION.get_selector();
 
-  var clickons = {};
+  var path;
+
+  switch(this.strategy) {
+  case CELS_SELECTOR:
+    path = ACTION.get_selector();
+    break;
+  case CELS_XPATH:
+    path = ACTION.get_xpath();
+    break;
+  default:
+    // raise exception
+    path = ACTION.get_selector();
+    break;
+  }
+
+  console.log('CLICK ON ONE ELEMENT:', path);
 
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {

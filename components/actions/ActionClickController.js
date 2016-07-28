@@ -26,7 +26,6 @@ ActionClickController.prototype.create_new_click_action = function(selector) {
   new_config.type = 'AClickOneElement';
 
   var new_action = this.factory.create_action(new_config, this.store, this.browser);
-
   this.spawned_actions.push(new_action);
   return new_action;
 };
