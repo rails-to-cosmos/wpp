@@ -7,25 +7,6 @@ var phantom = require("phantom"),
     GarbageCollector = require('./utils/GarbageCollector'),
     ActionTree = require('./data_structures/ActionTree');
 
-function* dfs(action_tree, start) {
-  var visited = new Set();
-  var stack = [start];
-
-  while (stack.length > 0) {
-    var vertex = stack.pop();
-    if (vertex && !(vertex in visited)) {
-      for(var action of action_tree.get_children(vertex)) {
-        stack.push(action.get_name()); // run child actions
-      }
-
-      visited.add(vertex);
-
-      yield vertex;
-    }
-    // console.log(action_tree.get_action(vertex));
-  }
-}
-
 function WebpageProcessor() {
 
 }
@@ -41,7 +22,7 @@ WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
     });
   }
 
-  for (var vertex of dfs(action_tree, key)) {
+  for (var vertex of action_tree.dfs()) {
     console.log(vertex);
   }
 
