@@ -1,6 +1,7 @@
 var is_array = require('../utils/TypeHints').is_array;
 
-function Action(config, store, browser) {
+function Action(factory, config, store, browser) {
+  this.factory = factory;
   this.config = config;
   this.store = store;
   this.browser = browser;
@@ -43,7 +44,12 @@ Action.prototype.run_subactions = function(subactions) {
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
 
+  var acts = [];
+  for (var act of tail) {
+    acts.push(act.get_name());
+  }
   console.log(head.get_name());
+
   return head.main(tail);
 };
 
