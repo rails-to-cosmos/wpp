@@ -70,6 +70,7 @@ ActionClickController.prototype.main = function (subactions) {
               }
             }
 
+            console.log('EXPLODE ACTION:');
             var clickons = Object.keys(clickon).map(function(path) {
               // for each clickon create action and push into stack
               var new_action = ACTION.create_new_click_action(path);
@@ -85,8 +86,8 @@ ActionClickController.prototype.main = function (subactions) {
                 sclones.push(sclone);
               }
 
-              for (var repeat_action of sclones) {
-                subactions.unshift(repeat_action);
+              for (var clone_action of sclones) {
+                subactions.unshift(clone_action);
               }
 
               subactions.unshift(new_action);
