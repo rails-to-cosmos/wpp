@@ -1,5 +1,5 @@
 var ActionDownload = require('./actions/ActionDownload'),
-    ActionClick = require('./actions/ActionClick'),
+    ActionClickController = require('./actions/ActionClickController'),
     ActionParse = require('./actions/ActionParse');
 
 function ActionFactory() {
@@ -13,7 +13,8 @@ ActionFactory.prototype.create_action = function(action_config, result_store, br
   case 'AParseBySelector':
     return new ActionParse(action_config, result_store, browser_instance);
   case 'AClick':
-    return new ActionClick(action_config, result_store, browser_instance);
+    return new ActionClickController(action_config, result_store, browser_instance);
+    // return new ActionClick(action_config, result_store, browser_instance);
   default:
     console.log('Unknown action received: ' + action_config.type);
     return null;

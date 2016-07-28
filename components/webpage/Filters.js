@@ -1,3 +1,26 @@
+// TODO refactor
+
+function Filter() {
+
+}
+
+function WhitelistFilter() {
+
+}
+
+WhitelistFilter.prototype = new Filter();
+
+function BlacklistFilter() {
+
+}
+
+BlacklistFilter.prototype = new Filter();
+
+function FilterFactory() {
+
+}
+
+
 function applyFiltersOnPage(page, filters) {
   page.property('onResourceRequested', function(requestData, networkRequest, filters) {
     var url = requestData.url;

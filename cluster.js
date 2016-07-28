@@ -18,15 +18,31 @@ if (cluster.isMaster && !DEBUG) {
 
 } else if (!cluster.isMaster || DEBUG) {
   var express = require("express"),
+      phantom = require('phantom'),
       app = express(),
       WebpageProcessor = require("./components/WebpageProcessor"),
-      wpp = new WebpageProcessor(),
       config = require('./configs/click-config.jsc'),
-      port = 8000;
+      port = 8000,
+      browser = null;
 
   app.get('/', (req, res) => {
-    wpp.process(config).then((result) => {
-      res.json(result);
+    phantom.create().then(function(_browser) {
+      console.log('');
+      console.log('Hello.');
+
+      browser = _browser;
+
+      var wpp = new WebpageProcessor();
+      var action_tree = wpp.grow_action_tree(config, browser);
+      wpp.process_action_tree(action_tree).then(function(result) {
+        res.json(result);
+        browser.exit();
+        console.log('Bye.');
+      });
     });
+
+    // wpp.process_config(config).then((result) => {
+    //   res.json(result);
+    // });
   }).listen(port);
 }

@@ -37,17 +37,18 @@ ActionResultStore.prototype.push = function(key, value, visibility, repr, howto_
 ActionResultStore.prototype.get_visible_data = function() {
   var data = CacheStore.prototype.get_data.call(this);
   var visible_data = {};
+
   for (var key in data) {
     var filtered_data = [];
 
     if (this.get_flag(key, 'visibility') === true) {
-      data[key].forEach(function(element) {
+      for (var element of data[key]) {
         if (element.constructor.name in ExtendedActionResults) {
           filtered_data.push(ExtendedActionResults[element.constructor.name].repr);
         } else {
           filtered_data.push(element);
         }
-      });
+      }
       visible_data[key] = filtered_data;
     }
   }

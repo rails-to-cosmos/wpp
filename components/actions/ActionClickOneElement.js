@@ -1,20 +1,17 @@
 var Action = require('./Action'),
-    Webpage = require('../webpage/Webpage'),
-    sleep = require('sleep');
+    Webpage = require('../webpage/Webpage');
 
-function ActionClick() {
+function ActionClickOneElement() {
   Action.apply(this, Array.prototype.slice.call(arguments));
-
-  this.async = false;
 }
 
-ActionClick.prototype = new Action();
+ActionClickOneElement.prototype = new Action();
 
-ActionClick.prototype.get_selector = function() {
+ActionClickOneElement.prototype.get_selector = function() {
   return this.config.data.selector;
 };
 
-ActionClick.prototype.main = function* () {
+ActionClickOneElement.prototype.main = function (subactions) {
   const RSTAGE_START = 'start',
         RSTAGE_END = 'end';
 
@@ -25,62 +22,53 @@ ActionClick.prototype.main = function* () {
 
   var clickons = {};
 
-  for(var page of pages) {
-    yield new Promise(function(resolve) {
-      page.evaluate(function(selector){
-        var xpath = function(node) {
-          if (node && node.id)
-            return '//*[@id="' + node.id + '"]';
-          else
-            return getNodeTreeXPath(node);
-        };
-
-        var getNodeTreeXPath = function(node) {
-          var paths = [];
-          for (; node && (node.nodeType == 1 || node.nodeType == 3) ; node = node.parentNode)  {
-            var index = 0;
-            if (node && node.id) {
-              paths.splice(0, 0, '/*[@id="' + node.id + '"]');
-              break;
-            }
-            for (var sibling = node.previousSibling; sibling; sibling = sibling.previousSibling) {
-              if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
-                continue;
-
-              if (sibling.nodeName == node.nodeName)
-                ++index;
-            }
-            var tagName = (node.nodeType == 1 ? node.nodeName.toLowerCase() : "text()");
-            var pathIndex = (index ? "[" + (index+1) + "]" : "");
-            paths.splice(0, 0, tagName + pathIndex);
-          }
-          return paths.length ? "/" + paths.join("/") : null;
-        };
-
-        var result = {};
-        var elements = document.querySelectorAll(selector);
-        for (var ei=0; ei<elements.length; ei++) {
-          if (result[xpath(elements[ei])]) {
-            result[xpath(elements[ei])]++;
-          } else {
-            result[xpath(elements[ei])] = 1;
-          }
-        }
-
-        return result;
-      }, selector).then(function(result) {
-        console.log('here');
-        clickons[page.target] = new Set();
-        for (var clickon in result) {
-          clickons[page.target].add(clickon);
-        }
-        console.log(clickons);
-        resolve();
+  return new Promise(function(resolveAllPages) {
+    var actions = pages.map(function(page) {
+      return new Promise(function(resolve) {
+        // Get elements for Click
+        // For each spawn OneElementClick action
+        // Add spawned actions to subactions stack
+        ACTION.push_to_store(page);
+        ACTION.run_subactions(subactions).then(function(result) {
+          resolve(result);
+        });
       });
     });
-  }
 
-  // for (var page of pages) {
+    Promise.all(actions).then(function(result) {
+      // get only first result
+      // to avoid duplicate pointer to datastorage in result
+      resolveAllPages(result[0]);
+    });
+  });
+
+  // for(var page of pages) {
+  //   return new Promise(function(resolve) {
+  //     ACTION.run_subactions(subactions).then(resolve);
+      // page.evaluate(function(selector) {
+
+      //   var result = {};
+      //   var elements = document.querySelectorAll(selector);
+      //   for (var ei=0; ei<elements.length; ei++) {
+      //     if (result[xpath(elements[ei])]) {
+      //       result[xpath(elements[ei])]++;
+      //     } else {
+      //       result[xpath(elements[ei])] = 1;
+      //     }
+      //   }
+
+      //   return result;
+      // }
+      //               , selector).then(function(result) {
+      //   console.log('here');
+      //   clickons[page.target] = new Set();
+      //   for (var clickon in result) {
+      //     clickons[page.target].add(clickon);
+      //   }
+      //   console.log(clickons);
+      //   resolve();
+      // });
+    // });
   // }
 
   // yield new Promise(function(resolve, reject) {
@@ -189,4 +177,4 @@ ActionClick.prototype.main = function* () {
   //);
 };
 
-module.exports = ActionClick;
+module.exports = ActionClickOneElement;

@@ -1,6 +1,7 @@
 "use strict";
 
-var phantom = require("phantom"),
+var phantom = require('phantom'),
+    is_array = require('./utils/TypeHints').is_array,
 
     ActionFactory = require('./ActionFactory'),
     ActionResultStore = require('./stores/ActionResultStore'),
@@ -8,27 +9,40 @@ var phantom = require("phantom"),
     ActionTree = require('./data_structures/ActionTree');
 
 function WebpageProcessor() {
-
+  this.result_store = new ActionResultStore();
+  this.garbage_collector = new GarbageCollector(this.result_store);
+  this.action_factory = new ActionFactory();
 }
 
-// resolve actions recursively
-WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
-  var actions = action_tree.data,
-      key = action_tree.root;
+WebpageProcessor.prototype.process_action_stack = function(action_stack) {
+  // if (!is_array(action_stack) || action_stack.length == 0) {
+  //   return new Promise(function(resolve, reject) {
+  //     resolve({
+  //       hello: 'there'
+  //     });
+  //   });
+  // }
 
-  if (!actions[key]) {
-    return new Promise(function(resolve, reject) {
-      resolve();
-    });
-  }
+  var head = action_stack[0],
+      tail = action_stack.splice(1, action_stack.length);
 
-  for (var vertex of action_tree.dfs()) {
-    console.log(vertex);
-  }
+  return head.main(tail);
 
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+  // this.process_action_stack(args);
+  // var action = action_tree.get_action(action_name);
+};
+
+WebpageProcessor.prototype.grow_action_tree = function(config, browser) {
+  var action_tree = new ActionTree(config.actions,
+                                   this.action_factory,
+                                   this.result_store,
+                                   browser);
+  return action_tree;
+};
+
+WebpageProcessor.prototype.process_action_tree = function(action_tree) {
+  var action_stack = action_tree.as_stack();
+  return this.process_action_stack(action_stack);
 
   // var WEBPAGE_PROCESSOR = this;
   // let promises = actions[key].map(function(action) {
@@ -61,38 +75,31 @@ WebpageProcessor.prototype.resolve_action_tree = function(action_tree) {
   // });
 };
 
-WebpageProcessor.prototype.process = function(config) {
-  var WEBPAGE_PROCESSOR = this;
-  var phantom_instance = null;
+// WebpageProcessor.prototype.process_config = function(config) {
+//   var WPP = this;
 
-  return phantom.create().then((instance) => {
-    console.log('');
-    console.log('Hello.');
+//   return phantom.create().then((instance) => {
+//     browser = instance;
 
-    phantom_instance = instance;
+//     var action_tree = WPP.grow_action_tree(config, browser);
 
-    var result_store = new ActionResultStore();
-    var garbage_collector = new GarbageCollector(result_store);
-    var action_factory = new ActionFactory();
-    var action_tree = new ActionTree(config.actions, action_factory, result_store, phantom_instance);
+//     return new Promise((resolve, reject) => {
+//       WPP.process_tree(action_tree).then(function() {
+//         console.log('My watch has ended.');
 
-    return new Promise((resolve, reject) => {
-      WEBPAGE_PROCESSOR.resolve_action_tree(action_tree).then(function() {
-        console.log('My watch has ended.');
+//         var result = WPP.result_store.get_visible_data();
+//         WPP.garbage_collector.collect();
+//         browser.exit();
+//         resolve(result);
 
-        var result = result_store.get_visible_data();
-        garbage_collector.collect();
-        phantom_instance.exit();
-        resolve(result);
-
-        console.log('Bye.\n');
-      });
-    });
-  }).catch(error => {
-    console.log(error);
-    phantom_instance.exit();
-  });
-};
+//         console.log('Bye.\n');
+//       });
+//     });
+//   }).catch(error => {
+//     console.log(error);
+//     browser.exit();
+//   });
+// };
 
 
 module.exports = WebpageProcessor;

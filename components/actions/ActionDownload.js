@@ -1,6 +1,8 @@
 var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
-    Filters = require('../webpage/Filters');
+    Filters = require('../webpage/Filters'),
+
+    is_array = require('../utils/TypeHints').is_array;
 
 function ActionDownload() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -12,18 +14,21 @@ ActionDownload.prototype.get_url = function() {
   return this.config.data.url;
 };
 
+// TODO refactor filters
 ActionDownload.prototype.get_filters = function() {
+  var filters = {};
+
   if (this.config.settings && this.config.settings.filters) {
-    return this.config.settings.filters;
-  } else {
-    return 0;
+    filters = this.config.settings.filters;
   }
+
+  return filters;
 };
 
-ActionDownload.prototype.main = function* () {
+ActionDownload.prototype.main = function (subactions) {
   var ACTION = this;
 
-  yield new Promise(function(resolve, reject) {
+  return new Promise(function(resolve, reject) {
     var webpage = new Webpage(ACTION.get_browser());
     webpage.create().then(function(page) {
       var filters = ACTION.get_filters();
@@ -34,7 +39,9 @@ ActionDownload.prototype.main = function* () {
       page.open(ACTION.get_url()).then(function(status) {
         page.property('content').then(function(content) {
           ACTION.push_to_store(page);
-          resolve(page);
+          ACTION.run_subactions(subactions).then(function(result) {
+            resolve(result);
+          });
         });
       });
     });

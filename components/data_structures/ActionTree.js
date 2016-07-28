@@ -1,4 +1,6 @@
 function ActionTree(actions, factory, store, browser) {
+  // TODO check duplicates
+
   this.root = '__main__';
 
   var tree = {};
@@ -49,10 +51,21 @@ ActionTree.prototype.dfs = function* () {
 
       visited.add(vertex);
 
-      yield vertex;
+      if (vertex != this.root) {
+        yield this.get_action(vertex);
+      }
     }
-    // console.log(action_tree.get_action(vertex));
   }
+};
+
+ActionTree.prototype.as_stack = function() {
+  var action_stack = [];
+  for (var action of this.dfs()) {
+    if (action != this.root) {
+      action_stack.push(action);
+    }
+  }
+  return action_stack;
 };
 
 
