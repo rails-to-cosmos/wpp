@@ -13,15 +13,16 @@ function* dfs(action_tree, start) {
 
   while (stack.length > 0) {
     var vertex = stack.pop();
-    if (vertex && !(vertex in visited) && (action_tree.has_children(vertex))) {
+    if (vertex && !(vertex in visited)) {
       for(var action of action_tree.get_children(vertex)) {
         stack.push(action.get_name()); // run child actions
       }
 
       visited.add(vertex);
+
+      yield vertex;
     }
     // console.log(action_tree.get_action(vertex));
-    yield vertex;
   }
 }
 

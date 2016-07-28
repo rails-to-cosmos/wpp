@@ -29,7 +29,7 @@ ActionTree.prototype.get_action = function(key) {
 };
 
 ActionTree.prototype.get_children = function(key) {
-  return this.data[key];
+  return this.data[key] || [];
 };
 
 ActionTree.prototype.has_children = function(key) {
