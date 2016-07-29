@@ -12,9 +12,6 @@ function ActionPaginate() {
 ActionPaginate.prototype = new ActionClickController();
 
 ActionPaginate.prototype.main = function (subactions) {
-  const RSTAGE_START = 'start',
-        RSTAGE_END = 'end';
-
   var ACTION = this;
 
   var pages = ACTION.get_from_store(ACTION.get_target());
