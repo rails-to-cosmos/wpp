@@ -60,7 +60,7 @@ ActionClickController.prototype.main = function (subactions) {
             }
 
             return result;
-          }, ACTION.get_selector()).then(function(clickon) {
+          }, ACTION.get_selector()).then(function(click_element) {
             ACTION.push_to_store(page);
 
             var dependent_actions = [];
@@ -70,12 +70,12 @@ ActionClickController.prototype.main = function (subactions) {
               }
             }
 
-            console.log('EXPLODE ACTION:');
-            var clickons = Object.keys(clickon).map(function(path) {
-              // for each clickon create action and push into stack
+            console.log('EXPLODE ACTION:', ACTION.get_name());
+            var click_actions = Object.keys(click_element).map(function(path) {
+              // for each click_element create action and push into stack
               var new_action = ACTION.create_new_click_action(path);
 
-              var sclones = [];
+              var cloned_children = [];
               for(var daction of dependent_actions) {
                 // TODO change target to click[0], etc
                 var sclone_config = deepcopy(daction.config);
@@ -83,17 +83,17 @@ ActionClickController.prototype.main = function (subactions) {
                 sclone_config.name = daction.get_name() + '__' + new_action.get_name();
 
                 var sclone = ACTION.factory.create_action(sclone_config, ACTION.store, ACTION.browser);
-                sclones.push(sclone);
+                cloned_children.push(sclone);
               }
 
-              for (var clone_action of sclones) {
-                subactions.unshift(clone_action);
+              for (var clone_child of cloned_children) {
+                subactions.unshift(clone_child);
               }
 
               subactions.unshift(new_action);
             });
 
-            Promise.all(clickons).then(function(result) {
+            Promise.all(click_actions).then(function(result) {
               var remove_indexes = [];
               for (var si in subactions) {
                 if (subactions[si].config.target == ACTION.get_name()) {

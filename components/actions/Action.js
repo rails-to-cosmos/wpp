@@ -48,7 +48,9 @@ Action.prototype.run_subactions = function(subactions) {
   for (var act of tail) {
     acts.push(act.get_name());
   }
-  console.log(head.get_name());
+
+  console.log('');
+  console.log('TIME FOR ACTION:', head.get_name(), 'TARGET:', head.config.target);
 
   return head.main(tail);
 };
