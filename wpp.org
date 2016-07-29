@@ -2,3 +2,24 @@
 * TODO IFrames
 * Automatic white/black lists
 * Clicks
+* Description
+пройти в папку
+npm install
+node --debug cluster.js
+nodemon cluster.js
+
+** nodemon cluster.js
+** Links
+- https://github.com/amir20/phantomjs-node
+** TODOs
+*** [#A] Сделать ActionPaginate(ActionClickController)
+- Принимает селектор элемента, начинает по ним кликать.
+*** [#B] Чернобелые листы для действия Click
+*** [#B] Зависают урлы, решается списками (черным и белым)
+*** [#C] Сделать таймауты запросов
+*** Сделать setting repeat
+*** Решить проблему с результатами
+*** Сделать, чтобы принимал json конфига через http
+*** Попробовать сделать рекурсивную отдачу html в phantomjs
+*** Поискать стек-машину в npm
+*** Для каждого explode-действия все ссылки на него становятся ссылками на дочерние действия и клонируются по количеству действий

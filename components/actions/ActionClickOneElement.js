@@ -63,8 +63,8 @@ ActionClickOneElement.prototype.main = function (subactions) {
             resolve_started = false;
 
         function resolveTrigger() {
-          console.log('resolve', resolve_started, 'reqs', requested_resources.size, 'recs', received_resources.size);
-          console.log('pending', pending_requests);
+          // console.log('resolve', resolve_started, 'reqs', requested_resources.size, 'recs', received_resources.size);
+          // console.log('pending', pending_requests);
           if (resolve_started && requested_resources.size == received_resources.size) {
             ACTION.push_to_store(page);
             ACTION.run_subactions(subactions).then(function(result) {
