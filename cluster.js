@@ -21,7 +21,7 @@ if (cluster.isMaster && !DEBUG) {
       phantom = require('phantom'),
       app = express(),
       WebpageProcessor = require("./components/WebpageProcessor"),
-      config = require('./configs/click-config.jsc'),
+      config = require('./configs/paginate-config.js'),
       port = 8000,
       browser = null;
 

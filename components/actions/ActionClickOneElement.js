@@ -11,12 +11,6 @@ const CELS_SELECTOR = 1,
 
 function ActionClickOneElement() {
   Action.apply(this, Array.prototype.slice.call(arguments));
-
-  this.strategy = CELS_SELECTOR;
-
-  if (this.config.data.xpath) {
-    this.strategy = CELS_XPATH;
-  }
 }
 
 ActionClickOneElement.prototype = new Action();
@@ -37,18 +31,7 @@ ActionClickOneElement.prototype.main = function (subactions) {
 
   var path;
 
-  switch(this.strategy) {
-  case CELS_SELECTOR:
-    path = ACTION.get_selector();
-    break;
-  case CELS_XPATH:
-    path = ACTION.get_xpath();
-    break;
-  default:
-    // raise exception
-    path = ACTION.get_selector();
-    break;
-  }
+  path = ACTION.get_xpath();
 
   console.log('CLICK ON ONE ELEMENT:', path);
 
@@ -97,43 +80,21 @@ ActionClickOneElement.prototype.main = function (subactions) {
         var xpath_module = null;
         var click_module = null;
 
-        switch(ACTION.strategy) {
-        case CELS_SELECTOR:
-          xpath_module = new XPathInjection();
-          click_module = new ClickInjection();
+        // ACTION.push_to_store('<PAGE from', path, '>');
+        resolveClick('PAGE FROM ' + path);
+        // xpath_module = new XPathInjection();
+        // click_module = new ClickInjection();
 
-          xpath_module.apply(page).then(function() {
-            click_module.apply(page).then(function() {
-              page.evaluate(function(selector) {
-                var element = document.querySelector(selector);
-                window.__wpp__.click(element);
-              }, path).then(function() {
-                resolve_started = true;
-              });
-            });
-          });
-          break;
-
-        case CELS_XPATH:
-          xpath_module = new XPathInjection();
-          click_module = new ClickInjection();
-
-          xpath_module.apply(page).then(function() {
-            click_module.apply(page).then(function() {
-              page.evaluate(function(path) {
-                var element = window.__wpp__.get_element_by_xpath(path);
-                window.__wpp__.click(element);
-              }, path).then(function() {
-                resolve_started = true;
-              });
-            });
-          });
-          break;
-
-        default:
-          // raise exception
-          break;
-        }
+        // xpath_module.apply(page).then(function() {
+        //   click_module.apply(page).then(function() {
+        //     page.evaluate(function(path) {
+        //       var element = window.__wpp__.get_element_by_xpath(path);
+        //       window.__wpp__.click(element);
+        //     }, path).then(function() {
+        //       resolve_started = true;
+        //     });
+        //   });
+        // });
       });
     });
 

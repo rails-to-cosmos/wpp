@@ -6,28 +6,12 @@ var Action = require('./Action'),
 
 function ActionClickController() {
   Action.apply(this, Array.prototype.slice.call(arguments));
-
-  this.spawned_actions = [];
 }
 
 ActionClickController.prototype = new Action();
 
 ActionClickController.prototype.get_selector = function() {
   return this.config.data.selector;
-};
-
-ActionClickController.prototype.create_new_click_action = function(selector) {
-  var ACTION = this;
-
-  var new_config = deepcopy(this.config);
-  delete new_config.data.selector;
-  new_config.data.xpath = selector;
-  new_config.name = ACTION.get_name() + '[' + ACTION.spawned_actions.length + ']';
-  new_config.type = 'AClickOneElement';
-
-  var new_action = this.factory.create_action(new_config, this.store, this.browser);
-  this.spawned_actions.push(new_action);
-  return new_action;
 };
 
 ActionClickController.prototype.main = function (subactions) {
@@ -48,66 +32,40 @@ ActionClickController.prototype.main = function (subactions) {
         var xpath_module = new XPathInjection();
         xpath_module.apply(page).then(function() {
           page.evaluate(function(selector) {
-            var result = {};
+            var result = [];
             var elements = document.querySelectorAll(selector);
             for (var ei=0; ei<elements.length; ei++) {
               var xpel = window.__wpp__.xpath(elements[ei]);
-              if (result[xpel]) {
-                result[xpel]++;
-              } else {
-                result[xpel] = 1;
-              }
+              result.push(xpel);
             }
 
             return result;
-          }, ACTION.get_selector()).then(function(click_element) {
-            ACTION.push_to_store(page);
+          }, ACTION.get_selector()).then(function(buttons) {
+            var config = deepcopy(ACTION.config);
+            config.name = ACTION.get_name() + '_copy';
+            config.type = 'AClickOneElement';
 
-            var dependent_actions = [];
-            for(var subaction of subactions) {
-              if (subaction.config.target == ACTION.get_name()) {
-                dependent_actions.push(subaction);
-              }
-            }
+            var click = ACTION.factory.create_action(config, ACTION.store, ACTION.browser);
+            console.log(buttons);
 
-            console.log('EXPLODE ACTION:', ACTION.get_name());
-            var click_actions = Object.keys(click_element).map(function(path) {
-              // for each click_element create action and push into stack
-              var new_action = ACTION.create_new_click_action(path);
+            // var head = buttons[0];
+            // var tail = buttons.splice(1, buttons.length);
 
-              var cloned_children = [];
-              for(var daction of dependent_actions) {
-                // TODO change target to click[0], etc
-                var sclone_config = deepcopy(daction.config);
-                sclone_config.target = new_action.get_name();
-                sclone_config.name = daction.get_name() + '__' + new_action.get_name();
+            // click.main().then(function(result) {
 
-                var sclone = ACTION.factory.create_action(sclone_config, ACTION.store, ACTION.browser);
-                cloned_children.push(sclone);
-              }
+            // });
+            // for (var button in buttons) {
+            //   click.config.data.xpath = button;
+            //   click.main().then(function(result) {
+            //     console.log(result);
+            //   });
+            //   break;
+            // }
 
-              for (var clone_child of cloned_children) {
-                subactions.unshift(clone_child);
-              }
+            // Вызываем отсюда клик по каждому элементу
+            // console.log(buttons);
+            resolve();
 
-              subactions.unshift(new_action);
-            });
-
-            Promise.all(click_actions).then(function(result) {
-              var remove_indexes = [];
-              for (var si in subactions) {
-                if (subactions[si].config.target == ACTION.get_name()) {
-                  remove_indexes.push(si);
-                }
-              }
-              for (var ri of remove_indexes) {
-                subactions.splice(ri, 1);
-              }
-
-              ACTION.run_subactions(subactions).then(function(result) {
-                resolve(result);
-              });
-            });
           });
         });
       });
@@ -123,3 +81,53 @@ ActionClickController.prototype.main = function (subactions) {
 };
 
 module.exports = ActionClickController;
+
+// {
+//   ACTION.push_to_store(page);
+
+//   var dependent_actions = [];
+//   for(var subaction of subactions) {
+//     if (subaction.config.target == ACTION.get_name()) {
+//       dependent_actions.push(subaction);
+//     }
+//   }
+
+//   console.log('EXPLODE ACTION:', ACTION.get_name());
+//   var click_actions = Object.keys(click_element).map(function(path) {
+//     // for each click_element create action and push into stack
+//     var new_action = ACTION.create_new_click_action(path);
+
+//     var cloned_children = [];
+//     for(var daction of dependent_actions) {
+//       // TODO change target to click[0], etc
+//       var sclone_config = deepcopy(daction.config);
+//       sclone_config.target = new_action.get_name();
+//       sclone_config.name = daction.get_name() + '__' + new_action.get_name();
+
+//       var sclone = ACTION.factory.create_action(sclone_config, ACTION.store, ACTION.browser);
+//       cloned_children.push(sclone);
+//     }
+
+//     for (var clone_child of cloned_children) {
+//       subactions.unshift(clone_child);
+//     }
+
+//     subactions.unshift(new_action);
+//   });
+
+//   Promise.all(click_actions).then(function(result) {
+//     var remove_indexes = [];
+//     for (var si in subactions) {
+//       if (subactions[si].config.target == ACTION.get_name()) {
+//         remove_indexes.push(si);
+//       }
+//     }
+//     for (var ri of remove_indexes) {
+//       subactions.splice(ri, 1);
+//     }
+
+//     ACTION.run_subactions(subactions).then(function(result) {
+//       resolve(result);
+//     });
+//   });
+// }
