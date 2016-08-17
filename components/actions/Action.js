@@ -15,6 +15,10 @@ Action.prototype.get_from_store = function(value) {
   return this.store.get(value);
 };
 
+Action.prototype.write_to_store = function(value) {
+  return this.store.write(this.get_name(), value, this.is_visible());
+};
+
 Action.prototype.push_to_store = function(value) {
   return this.store.push(this.get_name(), value, this.is_visible());
 };

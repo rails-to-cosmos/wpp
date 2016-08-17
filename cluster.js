@@ -17,21 +17,17 @@ if (cluster.isMaster && !DEBUG) {
   });
 
 } else if (!cluster.isMaster || DEBUG) {
-  var express = require("express"),
+  var express = require('express'),
       phantom = require('phantom'),
       app = express(),
-      WebpageProcessor = require("./components/WebpageProcessor"),
-      config = require('./configs/habraconfig.js'),
-      port = 8000,
-      browser = null;
+      WebpageProcessor = require('./components/WebpageProcessor'),
+      config = require('./configs/testconfig.js'),
+      port = 8000;
 
   app.get('/', (req, res) => {
-    phantom.create().then(function(_browser) {
+    phantom.create().then(function(browser) {
       console.log('');
       console.log('Hello.');
-
-      browser = _browser;
-
       var wpp = new WebpageProcessor();
       var action_tree = wpp.grow_action_tree(config, browser);
       wpp.process_action_tree(action_tree).then(function(result) {

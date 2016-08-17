@@ -28,34 +28,32 @@ ActionParse.prototype.main = function(subactions) {
   var ACTION = this;
 
   return new Promise(function(resolve, reject) {
-    ACTION.run_subactions(subactions).then(function(result) {
-      resolve(result);
+    var selector = new ComplexSelector(ACTION.get_selector());
+    var representation = get_representation(selector);
+    var pages = ACTION.get_from_store(ACTION.get_target());
+
+    var parse_actions = pages.map((page) => {
+      return new Promise((resolveParse) => {
+        get_page_content(page).then((content) => {
+          var result = [];
+          var $ = cheerio.load(content);
+
+          $(selector.selector).each((id, el) => {
+            var er = new representation($, el, selector);
+            result.push(er.repr());
+          });
+
+          ACTION.push_to_store(result);
+          resolveParse();
+        });
+      });
     });
 
-    // var selector = new ComplexSelector(ACTION.get_selector());
-    // var representation = get_representation(selector);
-    // var pages = ACTION.get_from_store(ACTION.get_target());
-
-    // var parse_actions = pages.map((page) => {
-    //   return new Promise((resolveParse) => {
-    //     get_page_content(page).then((content) => {
-    //       var result = [];
-    //       var $ = cheerio.load(content);
-
-    //       $(selector.selector).each((id, el) => {
-    //         var er = new representation($, el, selector);
-    //         result.push(er.repr());
-    //       });
-
-    //       ACTION.push_to_store(result);
-    //       resolveParse();
-    //     });
-    //   });
-    // });
-
-    // Promise.all(parse_actions).then(() => {
-    //   resolve();
-    // });
+    Promise.all(parse_actions).then(() => {
+      ACTION.run_subactions(subactions).then(function(result) {
+        resolve(result);
+      });
+    });
   });
 };
 

@@ -28,9 +28,15 @@ ActionResultStore.prototype.get = function(key) {
   return CacheStore.prototype.get.call(this, key);
 };
 
-ActionResultStore.prototype.push = function(key, value, visibility, repr, howto_collect) {
+ActionResultStore.prototype.push = function(key, value, visibility, repr) {
   this.set_flag(key, 'visibility', visibility);
   var result = CacheStore.prototype.push.call(this, key, value);
+  return result;
+};
+
+ActionResultStore.prototype.write = function(key, value, visibility, repr) {
+  this.set_flag(key, 'visibility', visibility);
+  var result = CacheStore.prototype.write.call(this, key, value);
   return result;
 };
 

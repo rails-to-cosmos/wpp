@@ -37,7 +37,7 @@ ActionClickController.prototype.main = function (subactions) {
 
             return result;
           }, selector).then(function(buttons) {
-
+            console.log(ACTION.config.name, 'controller', 'slave count =', buttons);
             var createSlaves = function() {
               var slaves = [];
               for (var index in buttons) {
@@ -68,9 +68,12 @@ ActionClickController.prototype.main = function (subactions) {
               });
             };
 
+            ACTION.write_to_store(page);
             processSlaves(createSlaves()).then(function() {
               subactions = [];
-              resolve();
+              ACTION.run_subactions(subactions).then(function(result) {
+                resolve(result);
+              });
             });
           });
         });

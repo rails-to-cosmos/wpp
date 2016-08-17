@@ -16,6 +16,14 @@ CacheStore.prototype.push = function(key, value, flags) {
   }
 };
 
+CacheStore.prototype.write = function(key, value, flags) {
+  if (!is_array(value)) {
+    value = [value];
+  }
+
+  this.data[key] = value;
+};
+
 CacheStore.prototype.get = function(key) {
   return this.data[key] || [];
 };
