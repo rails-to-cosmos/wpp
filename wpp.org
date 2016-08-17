@@ -2,12 +2,12 @@
 * TODO IFrames
 * Automatic white/black lists
 * Clicks
+** TODO Сделать действие HistoryBack после действия Click
 * Description
 пройти в папку
 npm install
 node --debug cluster.js
 nodemon cluster.js
-
 ** nodemon cluster.js
 ** Links
 - https://github.com/amir20/phantomjs-node

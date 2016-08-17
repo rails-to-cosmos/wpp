@@ -4,10 +4,6 @@ var Action = require('./Action'),
     XPathInjection = require('../injections/XPathInjection'),
     ClickInjection = require('../injections/ClickInjection');
 
-// Click Element Searching Strategies
-const CELS_SELECTOR = 1,
-      CELS_XPATH = 2;
-
 function ActionClickOneElement() {
   Action.apply(this, Array.prototype.slice.call(arguments));
 }
@@ -15,11 +11,9 @@ function ActionClickOneElement() {
 ActionClickOneElement.prototype = new Action();
 
 ActionClickOneElement.prototype.main = function (subactions) {
-  const RSTAGE_START = 'start',
-        RSTAGE_END = 'end';
-  const ACTION = this;
-  const path = ACTION.config.data.xpath;
-  const pages = ACTION.get_from_store(ACTION.get_target());
+  const ACTION = this,
+        path = ACTION.config.data.xpath,
+        pages = ACTION.get_from_store(ACTION.get_target());
 
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
@@ -45,7 +39,6 @@ ActionClickOneElement.prototype.main = function (subactions) {
     });
 
     Promise.all(actions).then(function(result) {
-      // get only first result to avoid duplicate pointer to datastorage in result
       resolveAllPages(result);
     });
   });
