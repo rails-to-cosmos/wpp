@@ -49,7 +49,6 @@ Action.prototype.run_subactions = function(subactions) {
     acts.push(act.get_name());
   }
 
-  console.log('');
   console.log(head.get_name(), ' -> ', head.config.target);
 
   return head.main(tail);

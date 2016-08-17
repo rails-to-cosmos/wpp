@@ -1,7 +1,6 @@
 var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
     XPathInjection = require('../injections/XPathInjection'),
-
     deepcopy = require('deepcopy');
 
 function ActionClickController() {
@@ -38,73 +37,41 @@ ActionClickController.prototype.main = function (subactions) {
 
             return result;
           }, selector).then(function(buttons) {
-            var extactions = [];
-            for (var index in buttons) {
-              // Create ClickOneElement action
-              var click_config = deepcopy(ACTION.config);
-              click_config.name = ACTION.get_name() + ' (' + index + ')';
-              click_config.type = 'AClickOneElement';
-              click_config.data = {
-                xpath: buttons[index]
-              };
-              var click = ACTION.factory.create_action(click_config, ACTION.store, ACTION.browser);
 
-              // Create HistoryBack action
-              // var history_back = ACTION.factory.create_action({
-              //   name: 'back',
-              //   type: 'AHistoryBack',
-              //   target: click_config.target
-              // }, ACTION.store, ACTION.browser);
+            var createSlaves = function() {
+              var slaves = [];
+              for (var index in buttons) {
+                // Create ClickOneElement action
+                var click_config = deepcopy(ACTION.config);
+                click_config.type = 'AClickOneElement';
+                click_config.name = ACTION.config.name + ' (' + index + ')';
+                click_config.data = {
+                  xpath: buttons[index]
+                };
+                slaves.push(ACTION.factory.create_action(click_config, ACTION.store, ACTION.browser));
+              }
+              return slaves;
+            };
 
-              // var relactions = [];
-              // var indactions = [];
-              // for (var subaction of subactions) {
-              //   if (subaction.config.target == ACTION.get_name()) {
-              //     var sa_config_clone = deepcopy(subaction.config);
-              //     sa_config_clone.target = click_config.name;
+            var processSlaves = function(slaves) {
+              return new Promise(function(resolveSlave, rejectSlave) {
+                console.log('Processing', slaves.length, 'slaves of master', ACTION.config.name);
+                if (slaves.length == 0) {
+                  resolveSlave();
+                  return;
+                }
 
-              //     var subaction_clone = ACTION.factory.create_action(sa_config_clone, ACTION.store, ACTION.browser);
-              //     relactions.push(subaction_clone);
-              //   } else {
-              //     indactions.push(subaction);
-              //   }
-              // }
+                var slave_action = slaves.pop();
+                slave_action.main(subactions).then(function() {
+                  processSlaves(slaves).then(resolveSlave);
+                });
+              });
+            };
 
-              // extactions.unshift(history_back);
-              // extactions.unshift.apply(extactions, indactions);
-              // extactions.unshift.apply(extactions, relactions);
-              // extactions.unshift(click);
-            }
-
-            console.log();
-            console.log(ACTION.config.name + ':');
-            for (var extaction of extactions) {
-              console.log(extaction.config.name, '->', extaction.config.target);
-            }
-
-            resolve();
-            // ACTION.run_subactions(extactions).then(function(result) {
-            //   resolve(result);
-            // });
-
-            // var head = buttons[0];
-            // var tail = buttons.splice(1, buttons.length);
-
-            // click.main().then(function(result) {
-
-            // });
-
-            // for (var button in buttons) {
-            //   click.config.data.xpath = button;
-            //   click.main().then(function(result) {
-            //     console.log(result);
-            //   });
-            //   break;
-            // }
-
-            // Вызываем отсюда клик по каждому элементу
-            // console.log(buttons);
-            // resolve();
+            processSlaves(createSlaves()).then(function() {
+              subactions = [];
+              resolve();
+            });
           });
         });
       });
@@ -113,60 +80,10 @@ ActionClickController.prototype.main = function (subactions) {
     Promise.all(actions).then(function(result) {
       // Get only first result
       // To avoid duplicate pointer to datastorage in result
-      resolveAllPages(result[0]);
+      resolveAllPages(result);
     });
   });
 
 };
 
 module.exports = ActionClickController;
-
-// {
-//   ACTION.push_to_store(page);
-
-//   var dependent_actions = [];
-//   for(var subaction of subactions) {
-//     if (subaction.config.target == ACTION.get_name()) {
-//       dependent_actions.push(subaction);
-//     }
-//   }
-
-//   console.log('EXPLODE ACTION:', ACTION.get_name());
-//   var click_actions = Object.keys(click_element).map(function(path) {
-//     // for each click_element create action and push into stack
-//     var new_action = ACTION.create_new_click_action(path);
-
-//     var cloned_children = [];
-//     for(var daction of dependent_actions) {
-//       // TODO change target to click[0], etc
-//       var sclone_config = deepcopy(daction.config);
-//       sclone_config.target = new_action.get_name();
-//       sclone_config.name = daction.get_name() + '__' + new_action.get_name();
-
-//       var sclone = ACTION.factory.create_action(sclone_config, ACTION.store, ACTION.browser);
-//       cloned_children.push(sclone);
-//     }
-
-//     for (var clone_child of cloned_children) {
-//       subactions.unshift(clone_child);
-//     }
-
-//     subactions.unshift(new_action);
-//   });
-
-//   Promise.all(click_actions).then(function(result) {
-//     var remove_indexes = [];
-//     for (var si in subactions) {
-//       if (subactions[si].config.target == ACTION.get_name()) {
-//         remove_indexes.push(si);
-//       }
-//     }
-//     for (var ri of remove_indexes) {
-//       subactions.splice(ri, 1);
-//     }
-
-//     ACTION.run_subactions(subactions).then(function(result) {
-//       resolve(result);
-//     });
-//   });
-// }

@@ -21,7 +21,7 @@ if (cluster.isMaster && !DEBUG) {
       phantom = require('phantom'),
       app = express(),
       WebpageProcessor = require("./components/WebpageProcessor"),
-      config = require('./configs/paginate-config.js'),
+      config = require('./configs/habraconfig.js'),
       port = 8000,
       browser = null;
 
@@ -40,9 +40,5 @@ if (cluster.isMaster && !DEBUG) {
         console.log('Bye.');
       });
     });
-
-    // wpp.process_config(config).then((result) => {
-    //   res.json(result);
-    // });
   }).listen(port);
 }
