@@ -58,7 +58,6 @@ ActionClickOneElement.prototype.main = function (subactions) {
 
         page.off('onResourceRequested');
         page.on('onResourceRequested', function(requestData, networkRequest) {
-          // console.log('Click url requested:', requestData.url);
           requested_resources.add(requestData.url);
           pending_requests.add(requestData.url);
         });
@@ -81,7 +80,10 @@ ActionClickOneElement.prototype.main = function (subactions) {
         var click_module = null;
 
         // ACTION.push_to_store('<PAGE from', path, '>');
-        resolveClick('PAGE FROM ' + path);
+        ACTION.run_subactions(subactions).then(function(result) {
+          resolveClick(result);
+        });
+
         // xpath_module = new XPathInjection();
         // click_module = new ClickInjection();
 

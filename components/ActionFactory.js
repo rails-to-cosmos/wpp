@@ -2,7 +2,8 @@ var ActionDownload = require('./actions/ActionDownload'),
     ActionClickController = require('./actions/ActionClickController'),
     ActionClickOneElement = require('./actions/ActionClickOneElement'),
     ActionPaginate = require('./actions/ActionPaginate'),
-    ActionParse = require('./actions/ActionParse');
+    ActionParse = require('./actions/ActionParse'),
+    ActionHistoryBack = require('./actions/ActionHistoryBack');
 
 function ActionFactory() {
 
@@ -20,6 +21,8 @@ ActionFactory.prototype.create_action = function(action_config, result_store, br
     return new ActionClickController(this, action_config, result_store, browser_instance);
   case 'APaginate':
     return new ActionPaginate(this, action_config, result_store, browser_instance);
+  case 'AHistoryBack':
+    return new ActionHistoryBack(this, action_config, result_store, browser_instance);
   default:
     console.log('Unknown action received: ' + action_config.type);
     return null;

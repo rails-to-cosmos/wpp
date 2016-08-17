@@ -31,6 +31,7 @@ ActionParse.prototype.main = function(subactions) {
     ACTION.run_subactions(subactions).then(function(result) {
       resolve(result);
     });
+
     // var selector = new ComplexSelector(ACTION.get_selector());
     // var representation = get_representation(selector);
     // var pages = ACTION.get_from_store(ACTION.get_target());

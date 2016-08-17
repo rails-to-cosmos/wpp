@@ -10,15 +10,11 @@ function ActionClickController() {
 
 ActionClickController.prototype = new Action();
 
-ActionClickController.prototype.get_selector = function() {
-  return this.config.data.selector;
-};
-
 ActionClickController.prototype.main = function (subactions) {
   const RSTAGE_START = 'start',
         RSTAGE_END = 'end';
 
-  var ACTION = this;
+  const ACTION = this;
 
   var pages = ACTION.get_from_store(ACTION.get_target());
 
@@ -26,11 +22,12 @@ ActionClickController.prototype.main = function (subactions) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolve) {
         // Get elements for Click
-        // For each one spawn OneElementClick action
+        // For each spawn OneElementClick action
         // Add spawned actions to subactions stack
 
-        var xpath_module = new XPathInjection();
-        xpath_module.apply(page).then(function() {
+        var xpath_injection = new XPathInjection();
+        xpath_injection.apply(page).then(function() {
+          const selector = ACTION.config.data.selector;
           page.evaluate(function(selector) {
             var result = [];
             var elements = document.querySelectorAll(selector);
@@ -40,13 +37,55 @@ ActionClickController.prototype.main = function (subactions) {
             }
 
             return result;
-          }, ACTION.get_selector()).then(function(buttons) {
-            var config = deepcopy(ACTION.config);
-            config.name = ACTION.get_name() + '_copy';
-            config.type = 'AClickOneElement';
+          }, selector).then(function(buttons) {
+            var extactions = [];
+            for (var index in buttons) {
+              // Create ClickOneElement action
+              var click_config = deepcopy(ACTION.config);
+              click_config.name = ACTION.get_name() + ' (' + index + ')';
+              click_config.type = 'AClickOneElement';
+              click_config.data = {
+                xpath: buttons[index]
+              };
+              var click = ACTION.factory.create_action(click_config, ACTION.store, ACTION.browser);
 
-            var click = ACTION.factory.create_action(config, ACTION.store, ACTION.browser);
-            console.log(buttons);
+              // Create HistoryBack action
+              // var history_back = ACTION.factory.create_action({
+              //   name: 'back',
+              //   type: 'AHistoryBack',
+              //   target: click_config.target
+              // }, ACTION.store, ACTION.browser);
+
+              // var relactions = [];
+              // var indactions = [];
+              // for (var subaction of subactions) {
+              //   if (subaction.config.target == ACTION.get_name()) {
+              //     var sa_config_clone = deepcopy(subaction.config);
+              //     sa_config_clone.target = click_config.name;
+
+              //     var subaction_clone = ACTION.factory.create_action(sa_config_clone, ACTION.store, ACTION.browser);
+              //     relactions.push(subaction_clone);
+              //   } else {
+              //     indactions.push(subaction);
+              //   }
+              // }
+
+              // extactions.unshift(history_back);
+              // extactions.unshift.apply(extactions, indactions);
+              // extactions.unshift.apply(extactions, relactions);
+              // extactions.unshift(click);
+            }
+
+            console.log();
+            console.log(ACTION.config.name + ':');
+            for (var extaction of extactions) {
+              console.log(extaction.config.name, '->', extaction.config.target);
+            }
+
+            resolve();
+            // ACTION.run_subactions(extactions).then(function(result) {
+            //   resolve(result);
+            // });
 
             // var head = buttons[0];
             // var tail = buttons.splice(1, buttons.length);
@@ -54,6 +93,7 @@ ActionClickController.prototype.main = function (subactions) {
             // click.main().then(function(result) {
 
             // });
+
             // for (var button in buttons) {
             //   click.config.data.xpath = button;
             //   click.main().then(function(result) {
@@ -64,8 +104,7 @@ ActionClickController.prototype.main = function (subactions) {
 
             // Вызываем отсюда клик по каждому элементу
             // console.log(buttons);
-            resolve();
-
+            // resolve();
           });
         });
       });

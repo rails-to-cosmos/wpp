@@ -50,7 +50,7 @@ Action.prototype.run_subactions = function(subactions) {
   }
 
   console.log('');
-  console.log('TIME FOR ACTION:', head.get_name(), 'TARGET:', head.config.target);
+  console.log(head.get_name(), ' -> ', head.config.target);
 
   return head.main(tail);
 };

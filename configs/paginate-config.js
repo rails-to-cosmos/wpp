@@ -38,7 +38,7 @@ module.exports = {
       name: "click1",
       target: "download1",
       data: {
-        selector: ".menulink",
+        selector: ".menulink"
       },
       settings: {
         visible: true
