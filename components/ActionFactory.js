@@ -5,28 +5,26 @@ var ActionDownload = require('./actions/ActionDownload'),
     ActionParse = require('./actions/ActionParse'),
     ActionHistoryBack = require('./actions/ActionHistoryBack');
 
+const ActionAssoc = {
+  ADownload: ActionDownload,
+  AParseBySelector: ActionParse,
+  AClickOneElement: ActionClickOneElement,
+  AClick: ActionClickController,
+  APaginate: ActionPaginate,
+  AHistoryBack: ActionHistoryBack
+};
+
 function ActionFactory() {
 
 };
 
 ActionFactory.prototype.create_action = function(action_config, result_store, browser_instance) {
-  switch (action_config.type) {
-  case 'ADownload':
-    return new ActionDownload(this, action_config, result_store, browser_instance);
-  case 'AParseBySelector':
-    return new ActionParse(this, action_config, result_store, browser_instance);
-  case 'AClickOneElement':
-    return new ActionClickOneElement(this, action_config, result_store, browser_instance);
-  case 'AClick':
-    return new ActionClickController(this, action_config, result_store, browser_instance);
-  case 'APaginate':
-    return new ActionPaginate(this, action_config, result_store, browser_instance);
-  case 'AHistoryBack':
-    return new ActionHistoryBack(this, action_config, result_store, browser_instance);
-  default:
+  if (!action_config.type in ActionAssoc) {
     console.log('Unknown action received: ' + action_config.type);
     return null;
   }
+
+  return new ActionAssoc[action_config.type](this, action_config, result_store, browser_instance);
 };
 
 module.exports = ActionFactory;
