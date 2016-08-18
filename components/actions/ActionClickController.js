@@ -10,10 +10,7 @@ function ActionClickController() {
 ActionClickController.prototype = new Action();
 
 ActionClickController.prototype.main = function (subactions) {
-  const RSTAGE_START = 'start',
-        RSTAGE_END = 'end',
-
-        ACTION = this,
+  const ACTION = this,
         SLAVE_ACTION_TYPE = 'AClickOneElement';
 
   var pages = ACTION.get_from_store(ACTION.get_target());
