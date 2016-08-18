@@ -14,13 +14,14 @@ ActionPaginate.prototype = new ActionClickController();
 ActionPaginate.prototype.main = function (subactions) {
   const ACTION = this,
         SLAVE_ACTION_TYPE = 'AClickOneElement',
-        PAGINATION_LIMIT = 20;
+        PAGINATION_LIMIT = 25;
 
   var pages = ACTION.get_from_store(ACTION.get_target());
   var visited = [];
 
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
+      ACTION.write_to_store(page);
       return new Promise(function(resolve) {
         var scanPaginationButtons = function() {
           var xpath_injection = new XPathInjection();
@@ -50,7 +51,6 @@ ActionPaginate.prototype.main = function (subactions) {
               }
 
               if (!found) {
-                ACTION.write_to_store(page);
                 subactions = [];
                 ACTION.run_subactions(subactions).then(function(result) {
                   resolve(result);
@@ -71,7 +71,6 @@ ActionPaginate.prototype.main = function (subactions) {
                 visited.push(name);
 
                 if (visited.length >= PAGINATION_LIMIT) {
-                  ACTION.write_to_store(page);
                   subactions = [];
                   ACTION.run_subactions(subactions).then(function(result) {
                     resolve(result);
