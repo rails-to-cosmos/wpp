@@ -7,10 +7,19 @@ var ActionDownload = require('./actions/ActionDownload'),
 
 const ActionAssoc = {
   ADownload: ActionDownload,
-  AParseBySelector: ActionParse,
-  AClickOneElement: ActionClickOneElement,
+
+  // Parse actions
+  AParse: ActionParse,
+  AParseBySelector: ActionParse, // deprecated
+
+  // Click controllers
   AClick: ActionClickController,
   APaginate: ActionPaginate,
+
+  // Base click action
+  AClickOneElement: ActionClickOneElement,
+
+  // Webpage actions
   AHistoryBack: ActionHistoryBack
 };
 

@@ -28,7 +28,7 @@ module.exports = {
       }
     },
     {
-      type: 'AParseBySelector',
+      type: 'AParse',
       name: 'parse',
       target: 'pages',
       data: {
