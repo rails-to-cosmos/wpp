@@ -14,7 +14,7 @@ ActionPaginate.prototype = new ActionClickController();
 ActionPaginate.prototype.main = function (subactions) {
   const ACTION = this,
         SLAVE_ACTION_TYPE = 'AClickOneElement',
-        PAGINATION_LIMIT = 25;
+        PAGINATION_LIMIT = 10;
 
   var pages = ACTION.get_from_store(ACTION.get_target());
   var visited = [];

@@ -7,7 +7,7 @@ module.exports = {
         "url": "https://habrahabr.ru/"
       },
       "settings": {
-        "visible": false,
+        "visible": true,
         "filters":  {
           WhitelistUrlFilter: {
             urls: ['.*habrahabr\.ru.*',
@@ -24,7 +24,7 @@ module.exports = {
         selector: '#nav-pages li a'
       },
       settings: {
-        visible: false
+        visible: true
       }
     },
     {

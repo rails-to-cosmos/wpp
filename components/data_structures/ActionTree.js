@@ -3,8 +3,8 @@ function ActionTree(actions, factory, store, browser) {
 
   this.root = '__main__';
 
-  var tree = {};
-  var hash = {};
+  var tree = {},
+      hash = {};
 
   tree[this.root] = [];
 

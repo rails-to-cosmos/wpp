@@ -1,12 +1,12 @@
-var settings = require('./Settings');
+const settings = require('./Settings');
 
 function Webpage(browser, config) {
   this.browser = browser;
 };
 
 Webpage.prototype.create = function() {
-  var BROWSER = this.browser,
-      CONFIG = this.config;
+  const BROWSER = this.browser,
+        CONFIG = this.config;
 
   return new Promise((resolve, reject) => {
     BROWSER.createPage().then((page) => {

@@ -50,7 +50,7 @@ ActionResultStore.prototype.get_visible_data = function() {
     if (this.get_flag(key, 'visibility') === true) {
       for (var element of data[key]) {
         if (element.constructor.name in ExtendedActionResults) {
-          filtered_data.push(ExtendedActionResults[element.constructor.name].repr);
+          filtered_data.push(ExtendedActionResults[element.constructor.name].repr(element));
         } else {
           filtered_data.push(element);
         }

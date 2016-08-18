@@ -1,6 +1,8 @@
 var ExtendedActionResults = {
   Page: {
-    repr: '<Page object>',
+    repr: function(obj) {
+      return obj.property('plainText');
+    },
     gc: function(el) {
       el.close();
     }
