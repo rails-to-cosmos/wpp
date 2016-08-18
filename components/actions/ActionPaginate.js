@@ -51,8 +51,7 @@ ActionPaginate.prototype.main = function (subactions) {
               }
 
               if (!found) {
-                subactions = [];
-                ACTION.run_subactions(subactions).then(function(result) {
+                ACTION.finalize().then(function(result) {
                   resolve(result);
                 });
                 return;
@@ -71,8 +70,7 @@ ActionPaginate.prototype.main = function (subactions) {
                 visited.push(name);
 
                 if (visited.length >= PAGINATION_LIMIT) {
-                  subactions = [];
-                  ACTION.run_subactions(subactions).then(function(result) {
+                  ACTION.finalize().then(function(result) {
                     resolve(result);
                   });
                 } else {

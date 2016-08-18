@@ -64,8 +64,7 @@ ActionClickController.prototype.main = function (subactions) {
 
             ACTION.write_to_store(page);
             processSlaves(createSlaves()).then(function() {
-              subactions = [];
-              ACTION.run_subactions(subactions).then(function(result) {
+              ACTION.finalize().then(function(result) {
                 resolve(result);
               });
             });

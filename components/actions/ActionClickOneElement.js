@@ -57,8 +57,7 @@ ActionClickOneElement.prototype.main = function (subactions) {
             }, path).then(function (result) {
               if (!result) {
                 console.error('Unable to click on ', path, ACTION.config.name, '->', ACTION.config.target);
-                subactions = [];
-                ACTION.run_subactions(subactions).then(function(result) {
+                ACTION.finalize().then(function(result) {
                   resolveClick(result);
                 });
               }

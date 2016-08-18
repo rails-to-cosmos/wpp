@@ -35,13 +35,19 @@ Action.prototype.is_visible = function() {
   return this.config.settings && this.config.settings.visible;
 };
 
+Action.prototype.finalize = function() {
+  var ACTION = this;
+
+  return new Promise(function(resolve, reject) {
+    resolve(ACTION.store.get_visible_data());
+  });
+};
+
 Action.prototype.run_subactions = function(subactions) {
   var ACTION = this;
 
   if (!is_array(subactions) || subactions.length == 0) {
-    return new Promise(function(resolve, reject) {
-      resolve(ACTION.store.get_visible_data());
-    });
+    return ACTION.finalize();
   }
 
   var clone = subactions.slice(),
