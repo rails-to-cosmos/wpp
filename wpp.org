@@ -1,7 +1,33 @@
-* TODO Передавать JSON GET-запросом
+* TODOs
+*** DONE [#A] Сделать ActionPaginate(ActionClickController)
+CLOSED: [2016-08-18 Thu 17:35]
+- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+- Принимает селектор элемента, начинает по ним кликать.
+*** DONE [#B] Чернобелые листы для действия Click
+CLOSED: [2016-08-18 Thu 17:35]
+- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+*** DONE [#B] Зависают урлы, решается списками (черным и белым)
+CLOSED: [2016-08-18 Thu 17:35]
+- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+*** TODO [#C] Сделать таймауты запросов
+*** TODO Сделать setting repeat
+*** DONE Решить проблему с результатами
+CLOSED: [2016-08-18 Thu 17:35]
+- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+*** TODO Сделать, чтобы принимал json конфига с помощью get-запроса
+*** CANCELLED Попробовать сделать рекурсивную отдачу html в phantomjs
+CLOSED: [2016-08-18 Thu 17:35]
+- State "CANCELLED"  from ""           [2016-08-18 Thu 17:35]
+*** DONE Поискать стек-машину в npm
+CLOSED: [2016-08-18 Thu 17:35]
+- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+*** CANCELLED Для каждого explode-действия все ссылки на него становятся ссылками на дочерние действия и клонируются по количеству действий
+CLOSED: [2016-08-18 Thu 17:35]
+- State "CANCELLED"  from "DONE"       [2016-08-18 Thu 17:35]
+- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+
 * TODO IFrames
 * Automatic white/black lists
-* Clicks
 ** TODO Сделать действие HistoryBack после действия Click
 * Description
 пройти в папку
@@ -12,14 +38,3 @@ nodemon cluster.js
 ** Links
 - https://github.com/amir20/phantomjs-node
 ** TODOs
-*** [#A] Сделать ActionPaginate(ActionClickController)
-- Принимает селектор элемента, начинает по ним кликать.
-*** [#B] Чернобелые листы для действия Click
-*** [#B] Зависают урлы, решается списками (черным и белым)
-*** [#C] Сделать таймауты запросов
-*** Сделать setting repeat
-*** Решить проблему с результатами
-*** Сделать, чтобы принимал json конфига через http
-*** Попробовать сделать рекурсивную отдачу html в phantomjs
-*** Поискать стек-машину в npm
-*** Для каждого explode-действия все ссылки на него становятся ссылками на дочерние действия и клонируются по количеству действий
