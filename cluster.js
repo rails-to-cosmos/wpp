@@ -21,7 +21,7 @@ if (cluster.isMaster && !DEBUG) {
       BodyParser = require('body-parser'),
       phantom = require('phantom'),
       app = express(),
-      port = 8000,
+      port = 9263,
 
       WebpageProcessor = require('./components/WebpageProcessor'),
       ActionFactory = require('./components/ActionFactory'),
