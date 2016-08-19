@@ -4,8 +4,14 @@ var Action = require('./Action'),
     get_representation = require('../webpage/ElementRepresentations').get_representation;
 
 function ComplexSelector(selector) {
-  this.selector = selector;
+  this.selector = '';
   this.attribute = '';
+
+  if (!selector) {
+    return;
+  }
+
+  this.selector = selector;
 
   var sel_attr_list = selector.match(/(.*?)\[([a-zA-Z\-]+)\]/);
   if (sel_attr_list) {
@@ -37,10 +43,19 @@ ActionParse.prototype.main = function(subactions) {
         get_page_content(page).then(function(content) {
           var result = [];
           var $ = cheerio.load(content);
-          $(selector.selector).each(function(id, el) {
+
+          if (selector.selector) {
+            $(selector.selector).each(function(id, el) {
+              var er = new representation($, el, selector);
+              result.push(er.repr());
+            });
+          } else if (selector.attribute) {
+            var el = $(content);
             var er = new representation($, el, selector);
             result.push(er.repr());
-          });
+          } else {
+            result.push($.html(content));
+          }
 
           ACTION.push_to_store(result);
 

@@ -42,6 +42,9 @@ function get_representation(selector) {
     case 'outerHTML':
       representation = OuterHTMLRepresentation;
       break;
+    case 'text':
+      representation = TextRepresentation;
+      break;
     default:
       representation = AttributeRepresentation;
     }
