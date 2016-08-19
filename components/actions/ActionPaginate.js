@@ -39,8 +39,6 @@ ActionPaginate.prototype.main = function (subactions) {
 
               return result;
             }, selector).then(function(buttons) {
-              console.log(ACTION.config.name, 'controller', 'slaves', buttons);
-
               var found = false;
               for (var name in buttons) {
                 if (name in visited) {
@@ -65,7 +63,6 @@ ActionPaginate.prototype.main = function (subactions) {
               };
 
               var slave = ACTION.factory.create_action(click_config);
-              console.log('Spawn slave', slave.config.data);
               slave.main(subactions).then(function() {
                 visited.push(name);
 
