@@ -1,27 +1,31 @@
-* TODOs
-*** DONE [#A] Сделать ActionPaginate(ActionClickController)
+* TODO BUG: OuterHTML в результатах не всегда группируется с дочерними действиями
+* DONE Add representation: AttributeWithoutElement?
+CLOSED: [2016-08-19 Fri 15:13]
+- State "DONE"       from "TODO"       [2016-08-19 Fri 15:13]
+* DONE [#A] Сделать ActionPaginate(ActionClickController)
 CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
 - Принимает селектор элемента, начинает по ним кликать.
-*** DONE [#B] Чернобелые листы для действия Click
+* DONE [#B] Чернобелые листы для действия Click
 CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
-*** DONE [#B] Зависают урлы, решается списками (черным и белым)
+* DONE [#B] Зависают урлы, решается списками (черным и белым)
 CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
-*** TODO [#C] Сделать таймауты запросов
-*** TODO Сделать setting repeat
-*** DONE Решить проблему с результатами
-CLOSED: [2016-08-18 Thu 17:35]
+* TODO [#C] Сделать таймауты запросов
+* TODO Сделать setting repeat
+* STARTED Решить проблему с результатами
+CLOCK: [2016-08-19 Fri 14:22]
+- State "STARTED"    from "DONE"       [2016-08-19 Fri 14:22]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
-*** TODO Сделать, чтобы принимал json конфига с помощью get-запроса
-*** CANCELLED Попробовать сделать рекурсивную отдачу html в phantomjs
+* TODO Сделать, чтобы принимал json конфига с помощью get-запроса
+* CANCELLED Попробовать сделать рекурсивную отдачу html в phantomjs
 CLOSED: [2016-08-18 Thu 17:35]
 - State "CANCELLED"  from ""           [2016-08-18 Thu 17:35]
-*** DONE Поискать стек-машину в npm
+* DONE Поискать стек-машину в npm
 CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
-*** CANCELLED Для каждого explode-действия все ссылки на него становятся ссылками на дочерние действия и клонируются по количеству действий
+* CANCELLED Для каждого explode-действия все ссылки на него становятся ссылками на дочерние действия и клонируются по количеству действий
 CLOSED: [2016-08-18 Thu 17:35]
 - State "CANCELLED"  from "DONE"       [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
