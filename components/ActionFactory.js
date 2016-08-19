@@ -6,6 +6,11 @@ var ActionDownload = require('./actions/ActionDownload'),
     ActionHistoryBack = require('./actions/ActionHistoryBack');
 
 const ActionAssoc = {
+  Download: ActionDownload,
+  Parse: ActionParse,
+  Click: ActionClickController,
+  Paginate: ActionPaginate,
+
   ADownload: ActionDownload,
 
   // Parse actions
