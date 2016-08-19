@@ -42,24 +42,31 @@ ActionResultStore.prototype.write = function(key, value, visibility, repr) {
 
 ActionResultStore.prototype.get_visible_data = function() {
   var data = CacheStore.prototype.get_data.call(this);
-  var visible_data = {};
+  var groupped_data = [];
 
   for (var key in data) {
     var filtered_data = [];
 
     if (this.get_flag(key, 'visibility') === true) {
-      for (var element of data[key]) {
+      for (var elindex in data[key]) {
+        var element = data[key][elindex];
+        var elres = element;
         if (element.constructor.name in ExtendedActionResults) {
-          filtered_data.push(ExtendedActionResults[element.constructor.name].repr(element));
+          elres = ExtendedActionResults[element.constructor.name].repr(element);
+        }
+
+        if (groupped_data[elindex]) {
+          groupped_data[elindex][key] = elres;
         } else {
-          filtered_data.push(element);
+          var newitem = {};
+          newitem[key] = elres;
+          groupped_data.push(newitem);
         }
       }
-      visible_data[key] = filtered_data;
     }
   }
 
-  return visible_data;
+  return groupped_data;
 };
 
 module.exports = ActionResultStore;
