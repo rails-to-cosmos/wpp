@@ -1,7 +1,7 @@
 var ExtendedActionResults = {
   Page: {
     repr: function(obj) {
-      return obj.property('plainText');
+      return '<Page>';
     },
     gc: function(el) {
       el.close();
