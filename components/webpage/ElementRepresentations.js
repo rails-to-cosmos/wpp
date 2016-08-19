@@ -11,7 +11,8 @@ function OuterHTMLRepresentation() {
 OuterHTMLRepresentation.prototype = new ElementRepresentation();
 
 OuterHTMLRepresentation.prototype.repr = function() {
-  return this.$(this.element).html();
+  var element = this.$(this.element);
+  return this.$.html(element);
 };
 
 function TextRepresentation() {
