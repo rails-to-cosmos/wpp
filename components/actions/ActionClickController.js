@@ -41,7 +41,7 @@ ActionClickController.prototype.main = function (subactions) {
                 click_config.data = {
                   xpath: buttons[index]
                 };
-                slaves.push(ACTION.factory.create_action(click_config, ACTION.store, ACTION.browser));
+                slaves.push(ACTION.factory.create_action(click_config));
               }
               return slaves;
             };

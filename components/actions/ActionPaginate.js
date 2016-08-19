@@ -64,7 +64,7 @@ ActionPaginate.prototype.main = function (subactions) {
                 xpath: buttons[name]
               };
 
-              var slave = ACTION.factory.create_action(click_config, ACTION.store, ACTION.browser);
+              var slave = ACTION.factory.create_action(click_config);
               console.log('Spawn slave', slave.config.data);
               slave.main(subactions).then(function() {
                 visited.push(name);

@@ -1,4 +1,4 @@
-function ActionTree(actions, factory, store, browser) {
+function ActionTree(actions, factory) {
   // TODO check duplicates
 
   this.root = '__main__';
@@ -9,7 +9,7 @@ function ActionTree(actions, factory, store, browser) {
   tree[this.root] = [];
 
   for (var action_config of actions) {
-    var action = factory.create_action(action_config, store, browser);
+    var action = factory.create_action(action_config);
     if (action_config.target) {
       if (!tree[action_config.target]) {
         tree[action_config.target] = [];

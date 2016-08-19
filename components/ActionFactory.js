@@ -23,17 +23,18 @@ const ActionAssoc = {
   AHistoryBack: ActionHistoryBack
 };
 
-function ActionFactory() {
-
+function ActionFactory(browser, storage) {
+  this.browser = browser;
+  this.storage = storage;
 };
 
-ActionFactory.prototype.create_action = function(action_config, result_store, browser_instance) {
-  if (!action_config.type in ActionAssoc) {
-    console.log('Unknown action received: ' + action_config.type);
+ActionFactory.prototype.create_action = function(config) {
+  if (!config.type in ActionAssoc) {
+    console.log('Unknown action received: ' + config.type);
     return null;
   }
 
-  return new ActionAssoc[action_config.type](this, action_config, result_store, browser_instance);
+  return new ActionAssoc[config.type](this, config, this.storage, this.browser);
 };
 
 module.exports = ActionFactory;
