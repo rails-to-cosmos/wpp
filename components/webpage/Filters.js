@@ -40,7 +40,7 @@ function applyFiltersOnPage(page, filters) {
         }
 
         if(!url_in_wl && filters[filter_name] && filters[filter_name].urls) {
-          console.log('Abort (wl, url): ' + requestData.url);
+          // console.log('Abort (wl, url): ' + requestData.url);
           networkRequest.abort();
           return;
         }
@@ -50,7 +50,7 @@ function applyFiltersOnPage(page, filters) {
           re = new RegExp(blre);
 
           if (re.test(url)) {
-            console.log('Abort (bl, url): ' + requestData.url);
+            // console.log('Abort (bl, url): ' + requestData.url);
             networkRequest.abort();
             return;
           }
@@ -58,7 +58,7 @@ function applyFiltersOnPage(page, filters) {
       }
     }
 
-    console.log('Accept: ' + url);
+    // console.log('Accept: ' + url);
   }, filters);
 }
 
