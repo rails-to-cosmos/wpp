@@ -47,17 +47,12 @@ Action.prototype.run_subactions = function(subactions) {
   var ACTION = this;
 
   if (!is_array(subactions) || subactions.length == 0) {
-    return ACTION.finalize();
+     return ACTION.finalize();
   }
 
   var clone = subactions.slice(),
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
-
-  var acts = [];
-  for (var act of tail) {
-    acts.push(act.get_name());
-  }
 
   console.log(head.get_name(), ' -> ', head.config.target);
 

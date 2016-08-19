@@ -83,7 +83,7 @@ ActionPaginate.prototype.main = function (subactions) {
     });
 
     Promise.all(actions).then(function(result) {
-      resolveAllPages(result);
+      resolveAllPages(result[0]);
     });
   });
 };

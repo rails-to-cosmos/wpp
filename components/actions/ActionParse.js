@@ -26,15 +26,11 @@ function ActionParse() {
 
 ActionParse.prototype = new Action();
 
-ActionParse.prototype.get_selector = function() {
-  return this.config.data.selector;
-};
-
 ActionParse.prototype.main = function(subactions) {
   var ACTION = this;
 
   return new Promise(function(resolve, reject) {
-    var selector = new ComplexSelector(ACTION.get_selector());
+    var selector = new ComplexSelector(ACTION.config.data.selector);
     var representation = get_representation(selector);
     var pages = ACTION.get_from_store(ACTION.get_target());
 
@@ -53,8 +49,6 @@ ActionParse.prototype.main = function(subactions) {
             var el = $(content);
             var er = new representation($, el, selector);
             result.push(er.repr());
-          } else {
-            result.push($.html(content));
           }
 
           ACTION.push_to_store(result);
