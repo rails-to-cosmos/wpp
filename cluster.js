@@ -18,6 +18,7 @@ if (cluster.isMaster && !DEBUG) {
 
 } else if (!cluster.isMaster || DEBUG) {
   var express = require('express'),
+      BodyParser = require('body-parser'),
       phantom = require('phantom'),
       app = express(),
       port = 8000,
@@ -25,18 +26,29 @@ if (cluster.isMaster && !DEBUG) {
       WebpageProcessor = require('./components/WebpageProcessor'),
       ActionFactory = require('./components/ActionFactory'),
       ActionResultStore = require('./components/stores/ActionResultStore'),
-      ActionTree = require('./components/data_structures/ActionTree'),
-      config = require('./configs/paginate-config.js');
+      ActionTree = require('./components/data_structures/ActionTree');
+
+  app.use(BodyParser.json());
 
   app.get('/', (req, res) => {
+    console.log('');
+    console.log('Hello.');
+
+    var config = req.body;
+    if (!config.actions) {
+      console.log('Nothing to do.');
+      console.log('Bye.');
+      res.json({});
+      return;
+    }
+
     phantom.create().then(function(browser) {
-      console.log('');
-      console.log('Hello.');
+      console.log('Request', req.body);
+
       var wpp = new WebpageProcessor();
       var storage = new ActionResultStore();
       var factory = new ActionFactory(browser, storage);
-      var action_tree = new ActionTree(config.actions,
-                                       factory);
+      var action_tree = new ActionTree(config.actions, factory);
 
       wpp.process_action_tree(action_tree).then(function(result) {
         res.json(result);
