@@ -35,7 +35,8 @@ if (cluster.isMaster && !DEBUG) {
 
   app.post('/', (req, res) => {
     console.log('');
-    console.log('Request received.');
+    console.log('Request received:');
+    console.log(req.body);
 
     var config = req.body;
     if (!config.actions) {
