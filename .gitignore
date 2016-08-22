@@ -40,3 +40,7 @@ jspm_packages
 # configs/
 *.jsc
 *.org_archive
+
+# Rsync
+_DelSyncFiles
+/tmp

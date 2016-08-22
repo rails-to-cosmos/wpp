@@ -1,7 +1,7 @@
 (prodigy-define-service
   :name "wpp"
   :command "nodemon"
-  :args '("--debug" "cluster")
+  :args '("--debug" "main")
   :cwd "/Users/akatovda/Documents/Stuff/wpp/"
   :stop-signal 'kill
   :kill-signal 'sigkill

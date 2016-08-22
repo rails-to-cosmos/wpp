@@ -1,4 +1,4 @@
-GET http://localhost:9263/
+GET http://localhost:8283/
 Content-Type: application/json
 {
   "actions": [
