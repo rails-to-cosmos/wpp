@@ -33,7 +33,7 @@ if (cluster.isMaster && !DEBUG) {
 
   app.use(BodyParser.json());
 
-  app.get('/', (req, res) => {
+  app.post('/', (req, res) => {
     console.log('');
     console.log('Request received.');
 
