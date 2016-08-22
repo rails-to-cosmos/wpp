@@ -3,6 +3,9 @@ var cluster = require('cluster');
 
 const DEBUG = true;
 
+console.log('Hello there.');
+console.log('DEBUG', DEBUG);
+
 if (cluster.isMaster && !DEBUG) {
   var cpuCount = os.cpus().length;
 
@@ -32,7 +35,7 @@ if (cluster.isMaster && !DEBUG) {
 
   app.get('/', (req, res) => {
     console.log('');
-    console.log('Hello.');
+    console.log('Request received.');
 
     var config = req.body;
     if (!config.actions) {
@@ -43,8 +46,6 @@ if (cluster.isMaster && !DEBUG) {
     }
 
     phantom.create().then(function(browser) {
-      console.log('Request', req.body);
-
       var wpp = new WebpageProcessor();
       var storage = new ActionResultStore();
       var factory = new ActionFactory(browser, storage);

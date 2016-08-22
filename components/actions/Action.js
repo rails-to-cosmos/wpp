@@ -54,7 +54,7 @@ Action.prototype.run_subactions = function(subactions) {
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
 
-  console.log(head.get_name(), ' -> ', head.config.target);
+  console.log('get', head.get_name(), 'from', head.config.target);
 
   return head.main(tail);
 };
