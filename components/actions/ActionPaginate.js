@@ -2,8 +2,18 @@ var Action = require('./Action'),
     ActionClickController = require('./ActionClickController'),
     Webpage = require('../webpage/Webpage'),
     XPathInjection = require('../injections/XPathInjection'),
-
     deepcopy = require('deepcopy');
+
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
 
 function ActionPaginate() {
   ActionClickController.apply(this, Array.prototype.slice.call(arguments));
@@ -20,6 +30,8 @@ ActionPaginate.prototype.main = function (subactions) {
   var visited = [];
 
   return new Promise(function(resolveAllPages) {
+    var dependent_subactions = [];
+    var independent_subactions = [];
     var actions = pages.map(function(page) {
       ACTION.write_to_store(page);
       return new Promise(function(resolve) {
@@ -41,7 +53,7 @@ ActionPaginate.prototype.main = function (subactions) {
             }, selector).then(function(buttons) {
               var found = false;
               for (var name in buttons) {
-                if (name in visited) {
+                if (visited.indexOf(name.hashCode()) > -1) {
                   continue;
                 }
                 found = true;
@@ -62,9 +74,20 @@ ActionPaginate.prototype.main = function (subactions) {
                 xpath: buttons[name]
               };
 
+              dependent_subactions = [];
+              independent_subactions = [];
+
+              for (var subaction of subactions) {
+                if (subaction.config.target == ACTION.config.name) {
+                  dependent_subactions.push(subaction);
+                } else {
+                  independent_subactions.push(subaction);
+                }
+              }
+
               var slave = ACTION.factory.create_action(click_config);
-              slave.main(subactions).then(function() {
-                visited.push(name);
+              slave.main(dependent_subactions).then(function() {
+                visited.push(name.hashCode());
 
                 if (visited.length >= PAGINATION_LIMIT) {
                   ACTION.finalize().then(function(result) {
@@ -83,7 +106,14 @@ ActionPaginate.prototype.main = function (subactions) {
     });
 
     Promise.all(actions).then(function(result) {
-      resolveAllPages(result[0]);
+      var isl = independent_subactions.length;
+      if (isl > 0) {
+        independent_subactions[0].main(independent_subactions.slice(1, isl)).then(function(result) {
+          resolveAllPages(result[0]);
+        });
+      } else { // nothing to do
+        resolveAllPages(result[0]);
+      }
     });
   });
 };

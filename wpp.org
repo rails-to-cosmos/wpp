@@ -1,3 +1,6 @@
+curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/
+
+
 * TODO BUG: OuterHTML в результатах не всегда группируется с дочерними действиями
 * DONE Add representation: AttributeWithoutElement?
 CLOSED: [2016-08-19 Fri 15:13]

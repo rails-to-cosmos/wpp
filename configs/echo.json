@@ -2,10 +2,10 @@
   "actions": [
     {
       "data": {
-        "url": "http:\/\/echo.msk.ru\/blog\/vadim_klyuvgant\/1820284-echo\/"
+        "url": "http://echo.msk.ru/blog/azubov/1824644-echo"
       },
       "settings": {
-        "visible": true,
+        "visible": false,
         "filters":  {
           "WhitelistUrlFilter": {
             "urls": [".*echo\\.msk\\.ru.*"]
@@ -44,14 +44,25 @@
     },
     {
       "data": {
-        "selector": ".commBlock[outerHTML]"
+        "selector": ".pager a.ajax[href^=\"#comments\"]"
       },
       "settings": {
         "visible": false
       },
+      "type": "APages",
+      "name": "pages",
+      "target": "article_with_comments"
+    },
+    {
+      "data": {
+        "selector": ".commBlock[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
       "type": "AParseBySelector",
       "name": "comment",
-      "target": "article_with_comments"
+      "target": "pages"
     },
     {
       "data": {

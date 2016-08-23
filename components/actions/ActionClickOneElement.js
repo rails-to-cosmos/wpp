@@ -2,7 +2,21 @@ var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
 
     XPathInjection = require('../injections/XPathInjection'),
-    ClickInjection = require('../injections/ClickInjection');
+    ClickInjection = require('../injections/ClickInjection'),
+
+    fs = require('fs'),
+    get_page_content = require('../webpage/Utils').get_page_content;
+
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
 
 function ActionClickOneElement() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -19,7 +33,6 @@ ActionClickOneElement.prototype.main = function (subactions) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolveClick) {
         var load_started = false;
-
         page.off('onLoadStarted');
         page.on('onLoadStarted', function(status) {
           load_started = true;
@@ -34,14 +47,6 @@ ActionClickOneElement.prototype.main = function (subactions) {
           }
         });
 
-        // page.off('onNavigationRequested');
-        // page.on('onNavigationRequested', function(url, type, willNavigate, main) {
-        //   console.log('Trying to navigate to: ' + url);
-        //   console.log('Caused by: ' + type);
-        //   console.log('Will actually navigate: ' + willNavigate);
-        //   console.log('Sent from the page\'s main frame: ' + main);
-        // });
-
         var xpath_module = new XPathInjection();
         var click_module = new ClickInjection();
         xpath_module.apply(page).then(function() {
@@ -53,10 +58,28 @@ ActionClickOneElement.prototype.main = function (subactions) {
               } catch (err) {
                 return false;
               }
-              return Boolean(element);
+              return element.outerHTML;
             }, path).then(function (result) {
+              console.log('Click successfully evaluated on element', result, 'path:', path);
+
+              // TODO refactor. Wait for ajax, research
+              setTimeout(function() {
+                if (!load_started) {
+                  console.log('No requests. Resolving click without calling subactions.');
+                  page.render('render/' + path.hashCode() + '.png');
+                  get_page_content(page).then(function(content) {
+                    fs.writeFile('render/' + path.hashCode() + '.html', content);
+                  });
+                  ACTION.run_subactions(subactions).then(function(result) {
+                    resolveClick(result);
+                  });
+                } else {
+                  console.log('Requests has been sent.');
+                }
+              }, 1000);
+
               if (!result) {
-                console.error('Unable to click on ', path, ACTION.config.name, '->', ACTION.config.target);
+                console.error('Unable to click', path, ACTION.config.name, '->', ACTION.config.target);
                 ACTION.finalize().then(function(result) {
                   resolveClick(result);
                 });

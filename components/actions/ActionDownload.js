@@ -30,6 +30,7 @@ ActionDownload.prototype.main = function (subactions) {
 
   return new Promise(function(resolve, reject) {
     var webpage = new Webpage(ACTION.get_browser());
+
     webpage.create().then(function(page) {
       var filters = ACTION.get_filters();
       if (filters) {
