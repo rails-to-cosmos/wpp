@@ -31,24 +31,30 @@ ActionParse.prototype.main = function(subactions) {
 
   return new Promise(function(resolve, reject) {
     var selector = new ComplexSelector(ACTION.config.data.selector);
-    var representation = get_representation(selector);
+    var Representation = get_representation(selector);
     var pages = ACTION.get_from_store(ACTION.get_target());
 
     var parse_actions = pages.map(function(page) {
       return new Promise(function(resolveParse) {
         get_page_content(page).then(function(content) {
           var result = [];
+          var element, element_representation;
           var $ = cheerio.load(content);
 
-          if (selector.selector) {
+          if (selector.selector[0] == '>') {
+            var clean_selector = selector.selector.slice(1, selector.selector.length);
+            element = $(clean_selector).first();
+            element_representation = new Representation($, element, selector);
+            result.push(element_representation.repr());
+          } else if (selector.selector) {
             $(selector.selector).each(function(id, el) {
-              var er = new representation($, el, selector);
-              result.push(er.repr());
+              element_representation = new Representation($, el, selector);
+              result.push(element_representation.repr());
             });
-          } else if (selector.attribute) {
-            var el = $(content);
-            var er = new representation($, el, selector);
-            result.push(er.repr());
+          } else if (selector.attribute && !selector.selector) {
+            element = $(content);
+            element_representation = new Representation($, element, selector);
+            result.push(element_representation.repr());
           }
 
           ACTION.push_to_store(result);

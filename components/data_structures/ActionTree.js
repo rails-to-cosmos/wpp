@@ -1,6 +1,5 @@
 function ActionTree(actions, factory) {
   console.log('Create ActionTree instance.');
-  console.log('Actions:', actions);
   // TODO check duplicates
 
   this.root = '__root__';
@@ -11,8 +10,14 @@ function ActionTree(actions, factory) {
   tree[this.root] = [];
 
   for (var action_config of actions) {
-    console.log('Create action:', action_config.name, '->', action_config.target ? action_config.target : this.root);
-    var action = factory.create_action(action_config);
+    console.log('Create action:', action_config.name, '(', action_config.type, ')', '->', action_config.target ? action_config.target : this.root);
+
+    try {
+      var action = factory.create_action(action_config);
+    } catch(e) {
+      console.log('Warning:', e.message, 'Ignoring.');
+      continue;
+    }
 
     if (action_config.target) {
       if (!tree[action_config.target]) {

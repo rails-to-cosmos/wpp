@@ -34,7 +34,7 @@ function ActionFactory(browser, storage) {
 
 ActionFactory.prototype.create_action = function(config) {
   if (!(config.type in ActionAssoc)) {
-    throw new Error('Unknown action received: ' + config.type);
+    throw new Error('Unknown action received: ' + config.name + ' (' + config.type + ').');
   }
 
   return new ActionAssoc[config.type](this, config, this.storage, this.browser);

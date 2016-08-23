@@ -1,1 +1,101 @@
-{"actions": [{"data": {"url": "http://echo.msk.ru/blog/vadim_klyuvgant/1820284-echo/"}, "type": "ADownload", "name": "article", "settings": {"visible": true}}, {"type": "AClick", "settings": {"visible": true}, "data": {"selector": "section.content .actionBlock a.comm"}, "target": ":article.result:", "name": "article_with_comments"}, {"type": "APages", "settings": {"visible": true}, "data": {"current_page": 0, "selector": ".pager a.ajax[href=\"#comments-:page:\"]"}, "target": ":article_with_comments.result:", "name": "pages"}, {"type": "AParseBySelector", "settings": {"visible": true}, "data": {"selector": ".commBlock[outerHTML]"}, "name": "comment", "target": ":pages.result:"}, {"type": "AParseBySelector", "data": {"selector": "[id]"}, "target": ":comment.result:", "name": "id", "settings": {"visible": true}}, {"type": "AParseBySelector", "data": {"selector": ">div.onecomm>p.author span.about>strong.name"}, "target": ":comment.result:", "name": "author", "settings": {"visible": true}}, {"type": "AParseBySelector", "data": {"selector": ">div.onecomm>p.commtext"}, "target": ":comment.result:", "name": "body", "settings": {"visible": true}}, {"type": "AParseBySelector", "data": {"selector": ">div.onecomm>p.author>span.datetime.right"}, "target": ":comment.result:", "name": "date", "settings": {"visible": true}}, {"data": {"selector": ".com_titl sup.lite"}, "settings": {"visible": true}, "type": "AParseBySelector", "name": "counter", "target": ":pages.result:"}, {"data": ":counter.result.get(0):", "settings": {"visible": true}, "type": "AAssertEquals", "target": ":body.result.len():", "name": "verify"}]}
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http:\/\/echo.msk.ru\/blog\/vadim_klyuvgant\/1820284-echo\/"
+      },
+      "settings": {
+        "visible": true,
+        "filters":  {
+          "WhitelistUrlFilter": {
+            "urls": [".*echo\\.msk\\.ru.*"]
+          },
+          "BlacklistUrlFilter": {
+            "urls": ["http:\\/\\/.+?\\.css",
+                     ".*banner.*",
+                     ".*vkontakte.*",
+                     ".*vk\\.com.*",
+                     ".*facebook.*",
+                     ".*jquery-ui.*",
+                     ".*2\\.cdn\\.echo\\.msk\\.ru.*",
+                     ".*jquery.*",
+                     ".*ads\\.echo\\.msk.*",
+                     ".*videos.*",
+                     ".*mediatoday.*"]
+          },
+          "BlacklistContentTypeFilter": {
+            "content_types": ["text/css"]
+          }
+        }
+      },
+      "type": "ADownload",
+      "name": "article"
+    },
+    {
+      "data": {
+        "selector": "section.content .actionBlock a.comm"
+      },
+      "settings": {
+        "visible": false
+      },
+      "type": "AClick",
+      "name": "article_with_comments",
+      "target": "article"
+    },
+    {
+      "data": {
+        "selector": ".commBlock[outerHTML]"
+      },
+      "settings": {
+        "visible": false
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "article_with_comments"
+    },
+    {
+      "data": {
+        "selector": "[id]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ">div.onecomm>p.author span.about>strong.name"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ">div.onecomm>p.commtext"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ">div.onecomm>p.author>span.datetime.right"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    }
+  ]
+}

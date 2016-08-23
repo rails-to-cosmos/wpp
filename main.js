@@ -53,6 +53,7 @@ if (cluster.isMaster && !DEBUG) {
     }
 
     phantom.create().then(function(browser) {
+      console.time('Webpage Process');
       phantom_instance = browser;
       var wpp = new WebpageProcessor();
       var storage = new ActionResultStore();
@@ -61,12 +62,15 @@ if (cluster.isMaster && !DEBUG) {
 
       wpp.process_action_tree(action_tree).then(function(result) {
         res.json(result);
+        console.log('Result length:', result.length);
         browser.exit();
         console.log('Bye.');
+        console.timeEnd('Webpage Process');
       });
+
     }).catch(error => {
       ErrorHandler(error, req, res);
       phantom_instance.exit();
-    });;
+    });
   }).listen(port);
 }
