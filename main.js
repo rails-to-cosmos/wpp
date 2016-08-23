@@ -23,6 +23,7 @@ if (cluster.isMaster && !DEBUG) {
   var express = require('express'),
       BodyParser = require('body-parser'),
       phantom = require('phantom'),
+      phantom_instance = null,
       app = express(),
       port = 8283,
 
@@ -31,12 +32,17 @@ if (cluster.isMaster && !DEBUG) {
       ActionResultStore = require('./components/stores/ActionResultStore'),
       ActionTree = require('./components/data_structures/ActionTree');
 
+  const ErrorHandler = function(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  };
+
   app.use(BodyParser.json());
+  app.use(ErrorHandler);
 
   app.post('/', (req, res) => {
     console.log('');
-    console.log('Request received:');
-    console.log(req.body);
+    console.log('Request received.');
 
     var config = req.body;
     if (!config.actions) {
@@ -47,6 +53,7 @@ if (cluster.isMaster && !DEBUG) {
     }
 
     phantom.create().then(function(browser) {
+      phantom_instance = browser;
       var wpp = new WebpageProcessor();
       var storage = new ActionResultStore();
       var factory = new ActionFactory(browser, storage);
@@ -57,6 +64,9 @@ if (cluster.isMaster && !DEBUG) {
         browser.exit();
         console.log('Bye.');
       });
-    });
+    }).catch(error => {
+      ErrorHandler(error, req, res);
+      phantom_instance.exit();
+    });;
   }).listen(port);
 }

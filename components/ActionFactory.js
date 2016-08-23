@@ -19,6 +19,7 @@ const ActionAssoc = {
   // Click controllers
   AClick: ActionClickController,
   APaginate: ActionPaginate,
+  APages: ActionPaginate,
   // Base click action
   AClickOneElement: ActionClickOneElement,
   // Webpage actions
@@ -26,14 +27,14 @@ const ActionAssoc = {
 };
 
 function ActionFactory(browser, storage) {
+  console.log('Create ActionFactory instance.');
   this.browser = browser;
   this.storage = storage;
 };
 
 ActionFactory.prototype.create_action = function(config) {
-  if (!config.type in ActionAssoc) {
-    console.log('Unknown action received: ' + config.type);
-    return null;
+  if (!(config.type in ActionAssoc)) {
+    throw new Error('Unknown action received: ' + config.type);
   }
 
   return new ActionAssoc[config.type](this, config, this.storage, this.browser);
