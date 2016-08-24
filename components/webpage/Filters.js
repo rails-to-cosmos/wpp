@@ -24,7 +24,6 @@ function FilterFactory() {
 function applyFiltersOnPage(page, filters) {
   page.property('onResourceRequested', function(requestData, networkRequest, filters) {
     var url = requestData.url;
-
     for (var filter_name in filters) {
       if (filter_name == 'WhitelistUrlFilter') {
         var url_in_wl = false;
@@ -40,7 +39,7 @@ function applyFiltersOnPage(page, filters) {
         }
 
         if(!url_in_wl && filters[filter_name] && filters[filter_name].urls) {
-          console.log('Abort (wl, url): ' + requestData.url);
+          // console.log('Abort (wl, url): ' + requestData.url);
           networkRequest.abort();
           return;
         }
@@ -50,7 +49,7 @@ function applyFiltersOnPage(page, filters) {
           re = new RegExp(blre);
 
           if (re.test(url)) {
-            console.log('Abort (bl, url): ' + requestData.url);
+            // console.log('Abort (bl, url): ' + requestData.url);
             networkRequest.abort();
             return;
           }

@@ -24,7 +24,7 @@ Action.prototype.push_to_store = function(value) {
 };
 
 Action.prototype.get_name = function() {
-  return this.config.name;
+  return this.config.name.replace(/\r?\n|\r/g, '').replace(/\s/g, '');
 };
 
 Action.prototype.get_target = function() {
@@ -54,8 +54,7 @@ Action.prototype.run_subactions = function(subactions) {
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
 
-  console.log('get', head.get_name(), 'from', head.config.target);
-
+  console.log('>>>', ACTION.get_name(), 'gets', head.get_name(), 'from', head.config.target);
   return head.main(tail);
 };
 

@@ -44,3 +44,4 @@ jspm_packages
 # Rsync
 _DelSyncFiles
 /tmp
+/render/

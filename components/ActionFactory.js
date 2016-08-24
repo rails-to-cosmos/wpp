@@ -27,7 +27,6 @@ const ActionAssoc = {
 };
 
 function ActionFactory(browser, storage) {
-  console.log('Create ActionFactory instance.');
   this.browser = browser;
   this.storage = storage;
 };

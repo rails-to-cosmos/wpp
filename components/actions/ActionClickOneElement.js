@@ -7,17 +7,6 @@ var Action = require('./Action'),
     fs = require('fs'),
     get_page_content = require('../webpage/Utils').get_page_content;
 
-String.prototype.hashCode = function() {
-  var hash = 0, i, chr, len;
-  if (this.length === 0) return hash;
-  for (i = 0, len = this.length; i < len; i++) {
-    chr   = this.charCodeAt(i);
-    hash  = ((hash << 5) - hash) + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
-  return hash;
-};
-
 function ActionClickOneElement() {
   Action.apply(this, Array.prototype.slice.call(arguments));
 }
@@ -32,18 +21,37 @@ ActionClickOneElement.prototype.main = function (subactions) {
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolveClick) {
-        var load_started = false;
+
+
+        const WS_UNDEFINED = 0;
+        const WS_PAGE_LOADING = 1;
+        const WS_JQUERY_ACTIVE_AJAXES = 2;
+        var wait_strategy = WS_UNDEFINED;
+
+        var subactions_running_mutex = 1;
+        var try_to_run_subactions = function() {
+          if (subactions_running_mutex == 0) {
+            return;
+          }
+
+          subactions_running_mutex = 0; // lock mutex
+          ACTION.run_subactions(subactions).then(function(result) {
+            resolveClick(result);
+          });
+        };
+
         page.off('onLoadStarted');
         page.on('onLoadStarted', function(status) {
-          load_started = true;
+          // load may be started many times
+          if (wait_strategy == WS_UNDEFINED) {
+            wait_strategy = WS_PAGE_LOADING;
+          }
         });
 
         page.off('onLoadFinished');
         page.on('onLoadFinished', function(status) {
-          if (load_started) {
-            ACTION.run_subactions(subactions).then(function(result) {
-              resolveClick(result);
-            });
+          if (wait_strategy == WS_PAGE_LOADING) {
+            try_to_run_subactions();
           }
         });
 
@@ -60,30 +68,53 @@ ActionClickOneElement.prototype.main = function (subactions) {
               }
               return element.outerHTML;
             }, path).then(function (result) {
-              console.log('Click successfully evaluated on element', result, 'path:', path);
-
-              // TODO refactor. Wait for ajax, research
-              setTimeout(function() {
-                if (!load_started) {
-                  console.log('No requests. Resolving click without calling subactions.');
-                  page.render('render/' + path.hashCode() + '.png');
-                  get_page_content(page).then(function(content) {
-                    fs.writeFile('render/' + path.hashCode() + '.html', content);
-                  });
-                  ACTION.run_subactions(subactions).then(function(result) {
-                    resolveClick(result);
-                  });
-                } else {
-                  console.log('Requests has been sent.');
-                }
-              }, 1000);
-
               if (!result) {
-                console.error('Unable to click', path, ACTION.config.name, '->', ACTION.config.target);
+                console.error('Unable to click', path, ACTION.get_name(), 'on', ACTION.config.target);
                 ACTION.finalize().then(function(result) {
                   resolveClick(result);
                 });
               }
+
+              var wait_if_needed = function() {
+                if (wait_strategy == WS_UNDEFINED) {
+                  wait_strategy = WS_JQUERY_ACTIVE_AJAXES;
+                } else {
+                  return;
+                }
+
+                const waiting_limit = 10;
+                var current_try = 0;
+
+                var wait_for_active_requests = function() {
+                  return new Promise(function(resolveActiveRequests) {
+                    page.evaluate(function() {
+                      try {
+                        return $.active;
+                      } catch (err) {
+                        return 0;
+                      }
+                    }).then(function(active_requests) {
+                      if(active_requests > 0 && current_try < waiting_limit) {
+                        var resolver = function() {
+                          wait_for_active_requests().then(resolveActiveRequests);
+                        };
+                        setTimeout(resolver, 500);
+                        current_try++;
+                      } else {
+                        resolveActiveRequests();
+                      }
+                    });
+                  });
+                };
+
+                wait_for_active_requests().then(function() {
+                  var filename = ACTION.get_name();
+                  page.render('render/' + filename + '.html');
+                  try_to_run_subactions();
+                });
+              };
+
+              setTimeout(wait_if_needed, 500);
             });
           });
         });

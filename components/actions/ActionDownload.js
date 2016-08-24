@@ -2,7 +2,11 @@ var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
     Filters = require('../webpage/Filters'),
 
-    is_array = require('../utils/TypeHints').is_array;
+    jQueryInjection = require('../injections/jQueryInjection'),
+
+    fs = require('fs'),
+    is_array = require('../utils/TypeHints').is_array,
+    get_page_content = require('../webpage/Utils').get_page_content;;
 
 function ActionDownload() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -38,8 +42,11 @@ ActionDownload.prototype.main = function (subactions) {
       }
 
       page.open(ACTION.get_url()).then(function(status) {
-        page.property('content').then(function(content) {
-          ACTION.push_to_store(page);
+        get_page_content(page, ACTION).then(function(content) {
+          page.render('render/' + ACTION.get_name() + '.png');
+          fs.writeFile('render/' + ACTION.get_name() + '.html', content);
+
+          ACTION.write_to_store(page);
           ACTION.run_subactions(subactions).then(function(result) {
             resolve(result);
           });

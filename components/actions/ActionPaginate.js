@@ -74,27 +74,25 @@ ActionPaginate.prototype.main = function (subactions) {
                 xpath: buttons[name]
               };
 
-              dependent_subactions = [];
-              independent_subactions = [];
-
-              for (var subaction of subactions) {
-                if (subaction.config.target == ACTION.config.name) {
-                  dependent_subactions.push(subaction);
-                } else {
-                  independent_subactions.push(subaction);
+              if (dependent_subactions.length == 0 && independent_subactions.length == 0) {
+                for (var subaction of subactions) {
+                  if (subaction.config.target == ACTION.config.name) {
+                    dependent_subactions.push(subaction);
+                  } else {
+                    independent_subactions.push(subaction);
+                  }
                 }
               }
 
               var slave = ACTION.factory.create_action(click_config);
               slave.main(dependent_subactions).then(function() {
                 visited.push(name.hashCode());
-
-                if (visited.length >= PAGINATION_LIMIT) {
+                if (visited.length < PAGINATION_LIMIT) {
+                  scanPaginationButtons();
+                } else {
                   ACTION.finalize().then(function(result) {
                     resolve(result);
                   });
-                } else {
-                  scanPaginationButtons();
                 }
               });
             });
@@ -108,6 +106,10 @@ ActionPaginate.prototype.main = function (subactions) {
     Promise.all(actions).then(function(result) {
       var isl = independent_subactions.length;
       if (isl > 0) {
+        var iss = [];
+        for (var is of independent_subactions) {
+          iss.push(is.config.name);
+        }
         independent_subactions[0].main(independent_subactions.slice(1, isl)).then(function(result) {
           resolveAllPages(result[0]);
         });

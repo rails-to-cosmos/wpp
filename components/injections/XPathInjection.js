@@ -7,15 +7,19 @@ var XPathInjection = function() {
 XPathInjection.prototype = new Injection();
 
 XPathInjection.prototype.code = function() {
-  if (typeof window.__wpp__ == 'undefined') {
-    window.__wpp__ = {};
+  if (typeof __wpp__ == 'undefined') {
+    __wpp__ = {};
   }
 
-  window.__wpp__.get_element_by_xpath = function(path) {
+  if (__wpp__.xpath) {
+    return;
+  }
+
+  __wpp__.get_element_by_xpath = function(path) {
     return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   };
 
-  window.__wpp__.xpath = function(node) {
+  __wpp__.xpath = function(node) {
     var getNodeTreeXPath = function(node) {
       var paths = [];
       for (; node && (node.nodeType == 1 || node.nodeType == 3) ; node = node.parentNode)  {

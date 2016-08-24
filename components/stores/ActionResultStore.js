@@ -8,8 +8,6 @@ var ActionResultStore = function() {
   CacheStore.apply(this, Array.prototype.slice.call(arguments));
 
   this.flags = {};
-
-  console.log('Create ActionResultStore instance.');
 };
 
 ActionResultStore.prototype = new CacheStore();

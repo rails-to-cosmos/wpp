@@ -4,7 +4,7 @@ var phantom = require('phantom'),
     is_array = require('./utils/TypeHints').is_array;
 
 function WebpageProcessor() {
-  console.log('Create WebpageProcessor instance.');
+
 }
 
 WebpageProcessor.prototype.process_action_tree = function(action_tree) {

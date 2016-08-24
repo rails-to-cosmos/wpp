@@ -36,7 +36,7 @@ ActionParse.prototype.main = function(subactions) {
 
     var parse_actions = pages.map(function(page) {
       return new Promise(function(resolveParse) {
-        get_page_content(page).then(function(content) {
+        get_page_content(page, ACTION).then(function(content) {
           var result = [];
           var element, element_representation;
           var $ = cheerio.load(content);
@@ -58,7 +58,6 @@ ActionParse.prototype.main = function(subactions) {
           }
 
           ACTION.push_to_store(result);
-
           resolveParse();
         });
       });

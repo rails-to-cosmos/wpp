@@ -5,7 +5,7 @@
         "url": "http://echo.msk.ru/blog/azubov/1824644-echo"
       },
       "settings": {
-        "visible": false,
+        "visible": true,
         "filters":  {
           "WhitelistUrlFilter": {
             "urls": [".*echo\\.msk\\.ru.*"]
@@ -13,15 +13,13 @@
           "BlacklistUrlFilter": {
             "urls": ["http:\\/\\/.+?\\.css",
                      ".*banner.*",
-                     ".*vkontakte.*",
-                     ".*vk\\.com.*",
-                     ".*facebook.*",
-                     ".*jquery-ui.*",
-                     ".*2\\.cdn\\.echo\\.msk\\.ru.*",
-                     ".*jquery.*",
-                     ".*ads\\.echo\\.msk.*",
+                     ".*ads.*",
                      ".*videos.*",
-                     ".*mediatoday.*"]
+                     ".*mediatoday.*",
+                     ".*vkontakte.*",
+                     ".*widget.*",
+                     ".*facebook.*",
+                    ".*counters.*"]
           },
           "BlacklistContentTypeFilter": {
             "content_types": ["text/css"]
@@ -36,7 +34,7 @@
         "selector": "section.content .actionBlock a.comm"
       },
       "settings": {
-        "visible": false
+        "visible": true
       },
       "type": "AClick",
       "name": "article_with_comments",
@@ -58,7 +56,7 @@
         "selector": ".commBlock[outerHTML]"
       },
       "settings": {
-        "visible": true
+        "visible": false
       },
       "type": "AParseBySelector",
       "name": "comment",

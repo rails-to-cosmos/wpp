@@ -28,27 +28,25 @@ ActionClickController.prototype.main = function (subactions) {
               var xpel = window.__wpp__.xpath(elements[ei]);
               result.push(xpel);
             }
-
             return result;
           }, selector).then(function(buttons) {
-            console.log(ACTION.config.name, 'controller', 'slave count =', buttons);
             var createSlaves = function() {
               var slaves = [];
               for (var index in buttons) {
                 var click_config = deepcopy(ACTION.config);
                 click_config.type = SLAVE_ACTION_TYPE;
-                click_config.name = ACTION.config.name + ' (' + index + ')';
+                click_config.name = ACTION.get_name() + ' (' + index + ')';
                 click_config.data = {
                   xpath: buttons[index]
                 };
                 slaves.push(ACTION.factory.create_action(click_config));
               }
+
               return slaves;
             };
 
             var processSlaves = function(slaves) {
               return new Promise(function(resolveSlave, rejectSlave) {
-                console.log('Processing', slaves.length, 'slaves of master', ACTION.config.name);
                 if (slaves.length == 0) {
                   resolveSlave();
                   return;
