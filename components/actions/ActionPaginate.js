@@ -51,6 +51,12 @@ ActionPaginate.prototype.main = function (subactions) {
 
               return result;
             }, selector).then(function(buttons) {
+              if (Object.keys(buttons).length == 0) {
+                ACTION.run_subactions(subactions).then(function(result) {
+                  resolve(result);
+                });
+                return;
+              }
               var found = false;
               for (var name in buttons) {
                 if (visited.indexOf(name.hashCode()) > -1) {
