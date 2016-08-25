@@ -13,6 +13,7 @@ const ActionAssoc = {
 
   // Deprecated aliases:
   ADownload: ActionDownload,
+  AFastDownload: ActionDownload,
   // Parse actions
   AParse: ActionParse,
   AParseBySelector: ActionParse,

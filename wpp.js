@@ -1,7 +1,7 @@
 var os = require('os');
 var cluster = require('cluster');
 
-const DEBUG = true;
+const DEBUG = false;
 
 console.log('Hello there.');
 
