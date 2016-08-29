@@ -1,7 +1,9 @@
 curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/
 
 
-* TODO BUG: OuterHTML в результатах не всегда группируется с дочерними действиями
+* DONE BUG: OuterHTML в результатах не всегда группируется с дочерними действиями
+CLOSED: [2016-08-29 Mon 17:38]
+- State "DONE"       from "TODO"       [2016-08-29 Mon 17:38]
 * DONE Add representation: AttributeWithoutElement?
 CLOSED: [2016-08-19 Fri 15:13]
 - State "DONE"       from "TODO"       [2016-08-19 Fri 15:13]
@@ -17,11 +19,15 @@ CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
 * TODO [#C] Сделать таймауты запросов
 * TODO Сделать setting repeat
-* STARTED Решить проблему с результатами
+* DONE Решить проблему с результатами
+CLOSED: [2016-08-29 Mon 17:38]
+- State "DONE"       from "STARTED"    [2016-08-29 Mon 17:38]
 CLOCK: [2016-08-19 Fri 14:22]
 - State "STARTED"    from "DONE"       [2016-08-19 Fri 14:22]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
-* TODO Сделать, чтобы принимал json конфига с помощью get-запроса
+* DONE Сделать, чтобы принимал json конфига с помощью get-запроса
+CLOSED: [2016-08-29 Mon 17:38]
+- State "DONE"       from "TODO"       [2016-08-29 Mon 17:38]
 * CANCELLED Попробовать сделать рекурсивную отдачу html в phantomjs
 CLOSED: [2016-08-18 Thu 17:35]
 - State "CANCELLED"  from ""           [2016-08-18 Thu 17:35]
@@ -34,14 +40,4 @@ CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
 
 * TODO IFrames
-* Automatic white/black lists
-** TODO Сделать действие HistoryBack после действия Click
-* Description
-пройти в папку
-npm install
-node --debug cluster.js
-nodemon cluster.js
-** nodemon cluster.js
-** Links
-- https://github.com/amir20/phantomjs-node
-** TODOs
+* TODO Сделать действие HistoryBack после действия Click
