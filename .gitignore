@@ -45,3 +45,4 @@ jspm_packages
 _DelSyncFiles
 /tmp
 /render/
+output.json

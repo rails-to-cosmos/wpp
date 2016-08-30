@@ -3,15 +3,15 @@ var Action = require('./Action'),
     XPathInjection = require('../injections/XPathInjection'),
     deepcopy = require('deepcopy');
 
-function ActionClickController() {
+function ActionClickMaster() {
   Action.apply(this, Array.prototype.slice.call(arguments));
 }
 
-ActionClickController.prototype = new Action();
+ActionClickMaster.prototype = new Action();
 
-ActionClickController.prototype.main = function (subactions) {
+ActionClickMaster.prototype.main = function (subactions) {
   const ACTION = this,
-        SLAVE_ACTION_TYPE = 'AClickOneElement';
+        SLAVE_ACTION_TYPE = 'AClickSlave';
 
   var pages = ACTION.get_from_store(ACTION.get_target());
 
@@ -77,4 +77,4 @@ ActionClickController.prototype.main = function (subactions) {
   });
 };
 
-module.exports = ActionClickController;
+module.exports = ActionClickMaster;

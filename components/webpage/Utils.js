@@ -5,7 +5,6 @@ function get_page_content(page, ACTION) {
   return new Promise(function(resolve, reject) {
     if (is_object(page)) {
       console.time(ACTION.get_name() + ' getting page content');
-
       page.property('content').then(function(content) {
         console.timeEnd(ACTION.get_name() + ' getting page content');
         resolve(content);

@@ -1,6 +1,6 @@
 var ActionDownload = require('./actions/ActionDownload'),
-    ActionClickController = require('./actions/ActionClickController'),
-    ActionClickOneElement = require('./actions/ActionClickOneElement'),
+    ActionClickMaster = require('./actions/ActionClickMaster'),
+    ActionClickSlave = require('./actions/ActionClickSlave'),
     ActionPaginate = require('./actions/ActionPaginate'),
     ActionParse = require('./actions/ActionParse'),
     ActionHistoryBack = require('./actions/ActionHistoryBack');
@@ -8,7 +8,7 @@ var ActionDownload = require('./actions/ActionDownload'),
 const ActionAssoc = {
   Download: ActionDownload,
   Parse: ActionParse,
-  Click: ActionClickController,
+  Click: ActionClickMaster,
   Paginate: ActionPaginate,
 
   // Deprecated aliases:
@@ -18,11 +18,11 @@ const ActionAssoc = {
   AParse: ActionParse,
   AParseBySelector: ActionParse,
   // Click controllers
-  AClick: ActionClickController,
+  AClick: ActionClickMaster,
   APaginate: ActionPaginate,
   APages: ActionPaginate,
   // Base click action
-  AClickOneElement: ActionClickOneElement,
+  AClickSlave: ActionClickSlave,
   // Webpage actions
   AHistoryBack: ActionHistoryBack
 };

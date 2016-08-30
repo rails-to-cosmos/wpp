@@ -7,13 +7,13 @@ var Action = require('./Action'),
     fs = require('fs'),
     get_page_content = require('../webpage/Utils').get_page_content;
 
-function ActionClickOneElement() {
+function ActionClickSlave() {
   Action.apply(this, Array.prototype.slice.call(arguments));
 }
 
-ActionClickOneElement.prototype = new Action();
+ActionClickSlave.prototype = new Action();
 
-ActionClickOneElement.prototype.main = function (subactions) {
+ActionClickSlave.prototype.main = function (subactions) {
   const ACTION = this,
         path = ACTION.config.data.xpath,
         pages = ACTION.get_from_store(ACTION.get_target());
@@ -21,8 +21,6 @@ ActionClickOneElement.prototype.main = function (subactions) {
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolveClick) {
-
-
         const WS_UNDEFINED = 0;
         const WS_PAGE_LOADING = 1;
         const WS_JQUERY_ACTIVE_AJAXES = 2;
@@ -127,4 +125,4 @@ ActionClickOneElement.prototype.main = function (subactions) {
   });
 };
 
-module.exports = ActionClickOneElement;
+module.exports = ActionClickSlave;

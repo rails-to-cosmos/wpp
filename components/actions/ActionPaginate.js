@@ -1,5 +1,5 @@
 var Action = require('./Action'),
-    ActionClickController = require('./ActionClickController'),
+    ActionClickMaster = require('./ActionClickMaster'),
     Webpage = require('../webpage/Webpage'),
     XPathInjection = require('../injections/XPathInjection'),
     deepcopy = require('deepcopy');
@@ -16,14 +16,14 @@ String.prototype.hashCode = function() {
 };
 
 function ActionPaginate() {
-  ActionClickController.apply(this, Array.prototype.slice.call(arguments));
+  ActionClickMaster.apply(this, Array.prototype.slice.call(arguments));
 }
 
-ActionPaginate.prototype = new ActionClickController();
+ActionPaginate.prototype = new ActionClickMaster();
 
 ActionPaginate.prototype.main = function (subactions) {
   const ACTION = this,
-        SLAVE_ACTION_TYPE = 'AClickOneElement',
+        SLAVE_ACTION_TYPE = 'AClickSlave',
         PAGINATION_LIMIT = 10;
 
   var pages = ACTION.get_from_store(ACTION.get_target());

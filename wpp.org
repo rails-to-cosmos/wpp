@@ -1,5 +1,4 @@
-curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/
-
+curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/ -o output.json
 
 * DONE BUG: OuterHTML в результатах не всегда группируется с дочерними действиями
 CLOSED: [2016-08-29 Mon 17:38]

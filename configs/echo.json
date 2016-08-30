@@ -5,7 +5,7 @@
         "url": "http://echo.msk.ru/blog/azubov/1824644-echo"
       },
       "settings": {
-        "visible": true,
+        "visible": false,
         "filters":  {
           "WhitelistUrlFilter": {
             "urls": [".*echo\\.msk\\.ru.*"]
@@ -34,7 +34,7 @@
         "selector": "section.content .actionBlock a.comm"
       },
       "settings": {
-        "visible": true
+        "visible": false
       },
       "type": "AClick",
       "name": "article_with_comments",
