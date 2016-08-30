@@ -107,12 +107,15 @@ ActionClickSlave.prototype.main = function (subactions) {
 
                 wait_for_active_requests().then(function() {
                   var filename = ACTION.get_name();
-                  page.render('render/' + filename + '.html');
+                  console.time('render');
+                  page.render('render/' + filename + '.html').then(function() {
+                    console.timeEnd('render');
+                  });
                   try_to_run_subactions();
                 });
               };
 
-              setTimeout(wait_if_needed, 500);
+              setTimeout(wait_if_needed, 100);
             });
           });
         });

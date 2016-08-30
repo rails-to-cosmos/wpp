@@ -54,7 +54,7 @@ Action.prototype.run_subactions = function(subactions) {
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
 
-  console.log('>>>', ACTION.get_name(), 'gets', head.get_name(), 'from', head.config.target);
+  console.log('Action', ACTION.get_name(), 'initiates action', head.get_name(), 'target', head.config.target);
   return head.main(tail);
 };
 

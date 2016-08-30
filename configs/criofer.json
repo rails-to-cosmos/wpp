@@ -1,0 +1,25 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://criofer.com/"
+      },
+      "settings": {
+        "visible": false
+      },
+      "type": "FastDownload",
+      "name": "article"
+    },
+    {
+      "data": {
+        "selector": "h1"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "Parse",
+      "name": "body",
+      "target": "article"
+    }
+  ]
+}

@@ -43,9 +43,6 @@ ActionDownload.prototype.main = function (subactions) {
 
       page.open(ACTION.get_url()).then(function(status) {
         get_page_content(page, ACTION).then(function(content) {
-          page.render('render/' + ACTION.get_name() + '.png');
-          fs.writeFile('render/' + ACTION.get_name() + '.html', content);
-
           ACTION.write_to_store(page);
           ACTION.run_subactions(subactions).then(function(result) {
             resolve(result);

@@ -1,4 +1,5 @@
 var ActionDownload = require('./actions/ActionDownload'),
+    ActionHTTPRequest = require('./actions/ActionHTTPRequest'),
     ActionClickMaster = require('./actions/ActionClickMaster'),
     ActionClickSlave = require('./actions/ActionClickSlave'),
     ActionPaginate = require('./actions/ActionPaginate'),
@@ -7,13 +8,14 @@ var ActionDownload = require('./actions/ActionDownload'),
 
 const ActionAssoc = {
   Download: ActionDownload,
+  FastDownload: ActionHTTPRequest,
   Parse: ActionParse,
   Click: ActionClickMaster,
   Paginate: ActionPaginate,
 
   // Deprecated aliases:
   ADownload: ActionDownload,
-  AFastDownload: ActionDownload,
+  AFastDownload: ActionHTTPRequest,
   // Parse actions
   AParse: ActionParse,
   AParseBySelector: ActionParse,
