@@ -52,9 +52,8 @@ if (cluster.isMaster && !DEBUG) {
     var validator = new SyntaxValidator();
     var validator_result = validator.validate(config);
     if (validator_result.err_code > 0) {
-      console.log(validator_result.description);
-      console.log('Bad config. No vy tam derzhites\'. Vsego vam dobrogo, horoshego nastroeniya.');
-      res.json({});
+      res.status(500).send('Config syntax validation failed: ' +
+                           validator_result.description);
       return;
     }
 
