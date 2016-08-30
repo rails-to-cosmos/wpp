@@ -18,6 +18,8 @@ ActionClickSlave.prototype.main = function (subactions) {
         path = ACTION.config.data.xpath,
         pages = ACTION.get_from_store(ACTION.get_target());
 
+  Action.prototype.main.call(this, subactions);
+
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolveClick) {

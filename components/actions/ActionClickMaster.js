@@ -15,6 +15,8 @@ ActionClickMaster.prototype.main = function (subactions) {
 
   var pages = ACTION.get_from_store(ACTION.get_target());
 
+  Action.prototype.main.call(this, subactions);
+
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolve) {
@@ -39,7 +41,9 @@ ActionClickMaster.prototype.main = function (subactions) {
                 click_config.data = {
                   xpath: buttons[index]
                 };
-                slaves.push(ACTION.factory.create_action(click_config));
+
+                var slave = ACTION.factory.create_action(click_config, ACTION);
+                slaves.push(slave);
               }
 
               return slaves;

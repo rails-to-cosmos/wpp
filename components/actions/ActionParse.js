@@ -29,6 +29,8 @@ ActionParse.prototype = new Action();
 ActionParse.prototype.main = function(subactions) {
   var ACTION = this;
 
+  Action.prototype.main.call(this, subactions);
+
   return new Promise(function(resolve, reject) {
     var selector = new ComplexSelector(ACTION.config.data.selector);
     var Representation = get_representation(selector);

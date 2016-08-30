@@ -23,6 +23,9 @@ SyntaxValidator.prototype.validate = function(code) {
     names.add(action.name);
   }
 
+  // check types:
+  // click must choose one of these targets: httpresponse, download, click
+
   return {
     err_code: 0,
     description: 'Success.'

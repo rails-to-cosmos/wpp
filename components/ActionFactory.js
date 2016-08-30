@@ -4,6 +4,7 @@ var ActionDownload = require('./actions/ActionDownload'),
     ActionClickSlave = require('./actions/ActionClickSlave'),
     ActionPaginate = require('./actions/ActionPaginate'),
     ActionParse = require('./actions/ActionParse'),
+    ActionStore = require('./actions/ActionStore'),
     ActionHistoryBack = require('./actions/ActionHistoryBack');
 
 const ActionAssoc = {
@@ -12,20 +13,23 @@ const ActionAssoc = {
   Parse: ActionParse,
   Click: ActionClickMaster,
   Paginate: ActionPaginate,
+  Store: ActionStore,
 
   // Deprecated aliases:
   ADownload: ActionDownload,
   AFastDownload: ActionHTTPRequest,
-  // Parse actions
+
   AParse: ActionParse,
   AParseBySelector: ActionParse,
-  // Click controllers
+
   AClick: ActionClickMaster,
   APaginate: ActionPaginate,
   APages: ActionPaginate,
-  // Base click action
+
   AClickSlave: ActionClickSlave,
-  // Webpage actions
+
+  AStoreParam: ActionStore,
+
   AHistoryBack: ActionHistoryBack
 };
 
@@ -34,12 +38,16 @@ function ActionFactory(browser, storage) {
   this.storage = storage;
 };
 
-ActionFactory.prototype.create_action = function(config) {
+ActionFactory.prototype.create_action = function(config, parent) {
   if (!(config.type in ActionAssoc)) {
     throw new Error('Unknown action received: ' + config.name + ' (' + config.type + ').');
   }
 
-  return new ActionAssoc[config.type](this, config, this.storage, this.browser);
+  var action = new ActionAssoc[config.type](this, config, this.storage, this.browser);
+  if (parent) {
+    action.history = parent.history;
+  }
+  return action;
 };
 
 module.exports = ActionFactory;

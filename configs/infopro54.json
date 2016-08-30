@@ -75,7 +75,7 @@
             },
             "type": "AParseBySelector",
             "target": "comment",
-            "name": "all_comments"
+            "name": "all_comments2"
         }
     ]
 }

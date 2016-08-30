@@ -14,6 +14,8 @@ ActionHTTPRequest.prototype.get_url = function() {
 ActionHTTPRequest.prototype.main = function (subactions) {
   var ACTION = this;
 
+  Action.prototype.main.call(this, subactions);
+
   return new Promise(function(resolve, reject) {
     request(ACTION.get_url(), function(err, resp) {
       ACTION.write_to_store(resp.body);

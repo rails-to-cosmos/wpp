@@ -32,6 +32,8 @@ ActionDownload.prototype.get_filters = function() {
 ActionDownload.prototype.main = function (subactions) {
   var ACTION = this;
 
+  Action.prototype.main.call(this, subactions);
+
   return new Promise(function(resolve, reject) {
     var webpage = new Webpage(ACTION.get_browser());
 

@@ -29,6 +29,8 @@ ActionPaginate.prototype.main = function (subactions) {
   var pages = ACTION.get_from_store(ACTION.get_target());
   var visited = [];
 
+  Action.prototype.main.call(this, subactions);
+
   return new Promise(function(resolveAllPages) {
     var dependent_subactions = [];
     var independent_subactions = [];
@@ -90,7 +92,7 @@ ActionPaginate.prototype.main = function (subactions) {
                 }
               }
 
-              var slave = ACTION.factory.create_action(click_config);
+              var slave = ACTION.factory.create_action(click_config, ACTION);
               slave.main(dependent_subactions).then(function() {
                 visited.push(name.hashCode());
                 if (visited.length < PAGINATION_LIMIT) {

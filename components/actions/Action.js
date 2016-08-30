@@ -5,6 +5,7 @@ function Action(factory, config, store, browser) {
   this.config = config;
   this.store = store;
   this.browser = browser;
+  this.history = new Map();
 };
 
 Action.prototype.get_browser = function() {
@@ -55,11 +56,13 @@ Action.prototype.run_subactions = function(subactions) {
       tail = clone.slice().splice(1, clone.length);
 
   console.log('Action', ACTION.get_name(), 'initiates action', head.get_name(), 'target', head.config.target);
+  head.history = this.history;
   return head.main(tail);
 };
 
 Action.prototype.main = function(subactions) {
-
+  this.history.set(this.get_name(), this);
+  console.log('History:', this.history.keys());
 };
 
 module.exports = Action;
