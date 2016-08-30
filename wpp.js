@@ -53,7 +53,7 @@ if (cluster.isMaster && !DEBUG) {
     var validator_result = validator.validate(config);
     if (validator_result.err_code > 0) {
       res.status(500).send('Config syntax validation failed: ' +
-                           validator_result.description);
+                           validator_result.description + '\n');
       return;
     }
 
