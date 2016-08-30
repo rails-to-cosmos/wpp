@@ -30,6 +30,7 @@ if (cluster.isMaster && !DEBUG) {
       app = express(),
       port = 8283,
 
+      SyntaxValidator = require('./components/SyntaxValidator'),
       WebpageProcessor = require('./components/WebpageProcessor'),
       ActionFactory = require('./components/ActionFactory'),
       ActionResultStore = require('./components/stores/ActionResultStore'),
@@ -45,12 +46,14 @@ if (cluster.isMaster && !DEBUG) {
 
   app.post('/', (req, res) => {
     console.log('');
-    console.log('Request received.');
+    console.log('Request received:', JSON.stringify(req.body));
 
     var config = req.body;
-    if (!config.actions) {
-      console.log('Nothing to do.');
-      console.log('Bye.');
+    var validator = new SyntaxValidator();
+    var validator_result = validator.validate(config);
+    if (validator_result.err_code > 0) {
+      console.log(validator_result.description);
+      console.log('Bad config. No vy tam derzhites\'. Vsego vam dobrogo, horoshego nastroeniya.');
       res.json({});
       return;
     }
@@ -62,7 +65,6 @@ if (cluster.isMaster && !DEBUG) {
       var storage = new ActionResultStore();
       var factory = new ActionFactory(browser, storage);
       var action_tree = new ActionTree(config.actions, factory);
-
       wpp.process_action_tree(action_tree).then(function(result) {
         var elems = {},
             duplicates = {},

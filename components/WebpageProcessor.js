@@ -1,5 +1,3 @@
-"use strict";
-
 var phantom = require('phantom'),
     is_array = require('./utils/TypeHints').is_array;
 

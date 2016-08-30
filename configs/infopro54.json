@@ -1,0 +1,81 @@
+{
+    "actions": [
+        {
+            "data": {
+                "url": "http:\/\/infopro54.ru\/videos\/274\/?theme=tekhno"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "ADownload",
+            "target": "",
+            "name": "webpage"
+        },
+        {
+            "data": {
+                "selector": "a.btn"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AClick",
+            "target": "webpage",
+            "name": "all_comments"
+        },
+        {
+            "data": {
+                "selector": "li.item[outerHTML]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "target": "all_comments",
+            "name": "comment"
+        },
+        {
+            "data": {
+                "selector": ".name"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "target": "comment",
+            "name": "author"
+        },
+        {
+            "data": {
+                "selector": ".text"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "target": "comment",
+            "name": "body"
+        },
+        {
+            "data": {
+                "selector": ".date-info"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "target": "comment",
+            "name": "date"
+        },
+        {
+            "data": {
+                "selector": ".rating[data-id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "target": "comment",
+            "name": "all_comments"
+        }
+    ]
+}
