@@ -95,7 +95,7 @@
       },
       "type": "AStoreParam",
       "name": "result_date",
-      "target": ""
+      "target": ["date", "time"]
     }
   ]
 }
