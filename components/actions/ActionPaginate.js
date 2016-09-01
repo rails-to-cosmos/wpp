@@ -118,6 +118,8 @@ ActionPaginate.prototype.main = function (subactions) {
         for (var is of independent_subactions) {
           iss.push(is.config.name);
         }
+        independent_subactions[0].history = ACTION.history;
+        independent_subactions[0].hd = ACTION.hd;
         independent_subactions[0].main(independent_subactions.slice(1, isl)).then(function(result) {
           resolveAllPages(result[0]);
         });

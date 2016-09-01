@@ -1,3 +1,5 @@
+'use strict';
+
 var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
 
@@ -5,7 +7,8 @@ var Action = require('./Action'),
     ClickInjection = require('../injections/ClickInjection'),
 
     fs = require('fs'),
-    get_page_content = require('../webpage/Utils').get_page_content;
+    get_page_content = require('../webpage/Utils').get_page_content,
+    memwatch = require('memwatch-next');
 
 function ActionClickSlave() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -23,6 +26,20 @@ ActionClickSlave.prototype.main = function (subactions) {
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolveClick) {
+        // console.log('---');
+        // let diff = ACTION.hd.end();
+        // console.log('Change:', diff.change.size);
+        // console.log('Very bad big guys:');
+        // let objects = diff.change.details;
+        // for (let obj of objects) {
+        //   if (obj.size_bytes > 5000000) {
+        //     console.log(obj);
+        //   }
+        // }
+        // console.log('------');
+
+        // ACTION.hd = new memwatch.HeapDiff();
+
         const WS_UNDEFINED = 0;
         const WS_PAGE_LOADING = 1;
         const WS_JQUERY_ACTIVE_AJAXES = 2;
@@ -109,10 +126,7 @@ ActionClickSlave.prototype.main = function (subactions) {
 
                 wait_for_active_requests().then(function() {
                   var filename = ACTION.get_name();
-                  console.time('render');
-                  page.render('render/' + filename + '.html').then(function() {
-                    console.timeEnd('render');
-                  });
+                  // page.render('render/' + filename + '.html').then(function() {});
                   try_to_run_subactions();
                 });
               };

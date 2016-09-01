@@ -1,3 +1,5 @@
+'use strict';
+
 var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
     Filters = require('../webpage/Filters'),

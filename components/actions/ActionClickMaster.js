@@ -1,3 +1,5 @@
+'use strict';
+
 var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
     XPathInjection = require('../injections/XPathInjection'),
@@ -20,7 +22,7 @@ ActionClickMaster.prototype.main = function (subactions) {
   return new Promise(function(resolveAllPages) {
     var actions = pages.map(function(page) {
       return new Promise(function(resolve) {
-        var xpath_injection = new XPathInjection();
+        let xpath_injection = new XPathInjection();
         xpath_injection.apply(page).then(function() {
           const selector = ACTION.config.data.selector;
           page.evaluate(function(selector) {

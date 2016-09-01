@@ -6,6 +6,7 @@ function Action(factory, config, store, browser) {
   this.store = store;
   this.browser = browser;
   this.history = new Map();
+  this.hd = null;
 };
 
 Action.prototype.get_browser = function() {
@@ -40,7 +41,10 @@ Action.prototype.finalize = function() {
   var ACTION = this;
 
   return new Promise(function(resolve, reject) {
-    resolve(ACTION.store.get_visible_data());
+    resolve({
+      data: ACTION.store.get_visible_data(),
+      history: ACTION.history
+    });
   });
 };
 
@@ -55,14 +59,14 @@ Action.prototype.run_subactions = function(subactions) {
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
 
-  console.log('Action', ACTION.get_name(), 'initiates action', head.get_name(), 'target', head.config.target);
+  console.log(ACTION.get_name(), '==>', head.get_name(), '->', head.config.target);
   head.history = this.history;
+  head.hd = this.hd;
   return head.main(tail);
 };
 
 Action.prototype.main = function(subactions) {
   this.history.set(this.get_name(), this);
-  console.log('History:', this.history.keys());
 };
 
 module.exports = Action;

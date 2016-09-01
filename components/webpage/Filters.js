@@ -34,7 +34,9 @@ function applyFiltersOnPage(page, filters) {
 
     Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, ['.*\.woff',
                                                                     '.*yandex.*',
-                                                                    '.*google.*']);
+                                                                    '.*google.*',
+                                                                    '.*ttf.*',
+                                                                    '.*svg.*']);
 
 
     for (var filter_name in filters) {

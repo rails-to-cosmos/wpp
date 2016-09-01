@@ -32,4 +32,10 @@ CacheStore.prototype.get_data = function() {
   return this.data;
 };
 
+CacheStore.prototype.free = function() {
+  for (var key in this.data) {
+    console.log(delete this.data[key]);
+  }
+};
+
 module.exports = CacheStore;
