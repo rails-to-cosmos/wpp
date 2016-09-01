@@ -24,8 +24,21 @@ function FilterFactory() {
 function applyFiltersOnPage(page, filters) {
   page.property('onResourceRequested', function(requestData, networkRequest, filters) {
     var url = requestData.url;
+    const WHITELIST_URL_FILTER = 'WhitelistUrlfilter',
+          BLACKLIST_URL_FILTER = 'BlacklistUrlFilter';
+    if (!(BLACKLIST_URL_FILTER in filters)) {
+      filters[BLACKLIST_URL_FILTER] = {
+        urls: []
+      };
+    }
+
+    Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, ['.*\.woff',
+                                                                    '.*yandex.*',
+                                                                    '.*google.*']);
+
+
     for (var filter_name in filters) {
-      if (filter_name == 'WhitelistUrlFilter') {
+      if (filter_name == WHITELIST_URL_FILTER) {
         var url_in_wl = false;
         var re;
 
@@ -43,7 +56,7 @@ function applyFiltersOnPage(page, filters) {
           networkRequest.abort();
           return;
         }
-      } else if (filter_name == 'BlacklistUrlFilter') {
+      } else if (filter_name == BLACKLIST_URL_FILTER) {
         for (var blre_index in filters[filter_name].urls) {
           var blre = filters[filter_name].urls[blre_index];
           re = new RegExp(blre);

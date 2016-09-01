@@ -1,7 +1,7 @@
-var os = require('os');
-var cluster = require('cluster');
+var os = require('os'),
+    cluster = require('cluster');
 
-const DEBUG = false;
+const DEBUG = true;
 
 console.log('Hello there.');
 
@@ -29,12 +29,17 @@ if (cluster.isMaster && !DEBUG) {
       phantom_instance = null,
       app = express(),
       port = 8283,
+      memwatch = require('memwatch-next'),
 
       SyntaxValidator = require('./components/SyntaxValidator'),
       WebpageProcessor = require('./components/WebpageProcessor'),
       ActionFactory = require('./components/ActionFactory'),
       ActionResultStore = require('./components/stores/ActionResultStore'),
       ActionTree = require('./components/data_structures/ActionTree');
+
+  memwatch.on('leak', function(info) {
+    console.log(info);
+  });
 
   const ErrorHandler = function(err, req, res, next) {
     console.error(err.stack);
@@ -44,26 +49,28 @@ if (cluster.isMaster && !DEBUG) {
   app.use(BodyParser.json());
   app.use(ErrorHandler);
 
-  app.post('/', (req, res) => {
-    console.log('');
-    console.log('Request received:', JSON.stringify(req.body));
+  phantom.create().then(function(browser) {
+    var server = app.listen(port);
+    app.post('/', function(req, res) {
+      console.log('');
+      console.log('Request received:', JSON.stringify(req.body));
 
-    var config = req.body;
-    var validator = new SyntaxValidator();
-    var validator_result = validator.validate(config);
-    if (validator_result.err_code > 0) {
-      res.status(500).send('Config syntax validation failed: ' +
-                           validator_result.description + '\n');
-      return;
-    }
+      var config = req.body;
+      var validator = new SyntaxValidator();
+      var validator_result = validator.validate(config);
+      if (validator_result.err_code > 0) {
+        res.status(500).send('Config syntax validation failed: ' +
+                             validator_result.description + '\n');
+        return;
+      }
 
-    phantom.create().then(function(browser) {
       console.time('Webpage Process');
       phantom_instance = browser;
-      var wpp = new WebpageProcessor();
-      var storage = new ActionResultStore();
-      var factory = new ActionFactory(browser, storage);
-      var action_tree = new ActionTree(config.actions, factory);
+      var wpp = new WebpageProcessor(),
+          storage = new ActionResultStore(),
+          factory = new ActionFactory(browser, storage),
+          action_tree = new ActionTree(config.actions, factory);
+
       wpp.process_action_tree(action_tree).then(function(result) {
         var elems = {},
             duplicates = {},
@@ -85,16 +92,18 @@ if (cluster.isMaster && !DEBUG) {
         console.log('Bye.');
 
         res.json(unique);
-        browser.exit();
-        wpp = null;
-        storage = null;
-        factory = null;
-        action_tree = null;
+        delete wpp;
+        delete storage;
+        delete factory;
+        delete action_tree;
+        delete elems;
+        delete duplicates;
+        delete unique;
+      }).catch(error => {
+        ErrorHandler(error, req, res);
+        phantom_instance.exit();
+        server.close();
       });
-
-    }).catch(error => {
-      ErrorHandler(error, req, res);
-      phantom_instance.exit();
     });
-  }).listen(port);
-}
+  });
+};

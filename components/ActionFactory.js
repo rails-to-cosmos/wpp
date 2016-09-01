@@ -1,8 +1,9 @@
 var ActionDownload = require('./actions/ActionDownload'),
     ActionHTTPRequest = require('./actions/ActionHTTPRequest'),
     ActionClickMaster = require('./actions/ActionClickMaster'),
-    ActionClickSlave = require('./actions/ActionClickSlave'),
     ActionPaginate = require('./actions/ActionPaginate'),
+    ActionClickSlave = require('./actions/ActionClickSlave'),
+    ActionClose = require('./actions/ActionClose'),
     ActionParse = require('./actions/ActionParse'),
     ActionStore = require('./actions/ActionStore'),
     ActionHistoryBack = require('./actions/ActionHistoryBack');
@@ -14,6 +15,7 @@ const ActionAssoc = {
   Click: ActionClickMaster,
   Paginate: ActionPaginate,
   Store: ActionStore,
+  Close: ActionClose,
 
   // Deprecated aliases:
   ADownload: ActionDownload,

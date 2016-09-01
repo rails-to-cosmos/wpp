@@ -6,7 +6,7 @@ var Action = require('./Action'),
 
     fs = require('fs'),
     is_array = require('../utils/TypeHints').is_array,
-    get_page_content = require('../webpage/Utils').get_page_content;;
+    get_page_content = require('../webpage/Utils').get_page_content;
 
 function ActionDownload() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -30,7 +30,8 @@ ActionDownload.prototype.get_filters = function() {
 };
 
 ActionDownload.prototype.main = function (subactions) {
-  var ACTION = this;
+  const ACTION = this,
+        CLOSE_ACTION_TYPE = 'Close';
 
   Action.prototype.main.call(this, subactions);
 
@@ -38,6 +39,14 @@ ActionDownload.prototype.main = function (subactions) {
     var webpage = new Webpage(ACTION.get_browser());
 
     webpage.create().then(function(page) {
+      var close_action = ACTION.factory.create_action({
+        name: ACTION.get_name() + '.close',
+        type: CLOSE_ACTION_TYPE,
+        target: ACTION.get_name()
+      }, ACTION);
+
+      subactions.push(close_action);
+
       var filters = ACTION.get_filters();
       if (filters) {
         Filters.applyFiltersOnPage(page, filters);
