@@ -37,7 +37,7 @@ function output_report(result, unique, duplicates, history) {
 app.use(BodyParser.json());
 app.use(ErrorHandler);
 
-jobs.process('wpp', cpu_count, function(job, done) {
+jobs.process('wpp', cpu_count * 10, function(job, done) {
   worker(job, done);
 });
 
