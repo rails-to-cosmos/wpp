@@ -2,6 +2,7 @@
 
 var os = require('os'),
     cpu_count = os.cpus().length,
+    phantom_count = 20,
 
     kue = require('kue'),
     jobs = kue.createQueue(),
@@ -37,7 +38,7 @@ function output_report(result, unique, duplicates, history) {
 app.use(BodyParser.json());
 app.use(ErrorHandler);
 
-jobs.process('wpp', cpu_count * 10, function(job, done) {
+jobs.process('wpp', cpu_count * phantom_count, function(job, done) {
   worker(job, done);
 });
 
