@@ -6,7 +6,6 @@ function Action(factory, config, store, browser) {
   this.store = store;
   this.browser = browser;
   this.history = new Map();
-  this.hd = null;
 };
 
 Action.prototype.get_browser = function() {
@@ -61,7 +60,6 @@ Action.prototype.run_subactions = function(subactions) {
 
   console.log(ACTION.get_name(), '==>', head.get_name(), '->', head.config.target);
   head.history = this.history;
-  head.hd = this.hd;
   return head.main(tail);
 };
 

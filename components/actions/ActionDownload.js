@@ -46,7 +46,6 @@ ActionDownload.prototype.main = function (subactions) {
         type: CLOSE_ACTION_TYPE,
         target: ACTION.get_name()
       }, ACTION);
-
       subactions.push(close_action);
 
       var filters = ACTION.get_filters();

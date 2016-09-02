@@ -36,7 +36,10 @@ function applyFiltersOnPage(page, filters) {
                                                                     '.*yandex.*',
                                                                     '.*google.*',
                                                                     '.*ttf.*',
-                                                                    '.*svg.*']);
+                                                                    '.*svg.*',
+                                                                    '.*facebook.*',
+                                                                    '.*vk\.com.*',
+                                                                    '.*ok\.ru.*']);
 
 
     for (var filter_name in filters) {

@@ -4,16 +4,16 @@ function SyntaxValidator() {
 
 }
 
-SyntaxValidator.prototype.validate = function(code) {
-  if (!is_array(code.actions)) {
+SyntaxValidator.prototype.validate = function(actions) {
+  if (!is_array(actions)) {
     return {
       err_code: 2,
-      description: 'Actions must be array.'
+      description: 'Actions must be an array.'
     };
   }
 
   var names = new Set();
-  for (var action of code.actions) {
+  for (var action of actions) {
     if (names.has(action.name)) {
       return {
         err_code: 1,

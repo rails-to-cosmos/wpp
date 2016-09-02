@@ -1,16 +1,20 @@
+'use strict';
+
 function ActionTree(actions, factory) {
   // TODO check duplicates
 
   this.root = '__root__';
 
-  var tree = {},
+  let tree = {},
       hash = {};
 
   tree[this.root] = [];
 
-  for (var action_config of actions) {
+  for (let action_config of actions) {
+    let action;
+
     try {
-      var action = factory.create_action(action_config);
+      action = factory.create_action(action_config);
     } catch(e) {
       console.log('Warning:', e.message, 'Ignoring.');
       continue;
@@ -45,13 +49,13 @@ ActionTree.prototype.has_children = function(key) {
 };
 
 ActionTree.prototype.dfs = function* () {
-  var visited = new Set();
-  var stack = [this.root];
+  let visited = new Set(),
+      stack = [this.root];
 
   while (stack.length > 0) {
-    var vertex = stack.pop();
+    let vertex = stack.pop();
     if (vertex && !(vertex in visited)) {
-      for(var action of this.get_children(vertex)) {
+      for(let action of this.get_children(vertex)) {
         stack.push(action.get_name()); // run child actions
       }
 
@@ -65,8 +69,8 @@ ActionTree.prototype.dfs = function* () {
 };
 
 ActionTree.prototype.as_stack = function() {
-  var action_stack = [];
-  for (var action of this.dfs()) {
+  let action_stack = [];
+  for (let action of this.dfs()) {
     if (action != this.root) {
       action_stack.push(action);
     }
