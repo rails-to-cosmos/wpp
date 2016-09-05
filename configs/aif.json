@@ -5,7 +5,7 @@
         "url": "http://www.aif.ru/politics/gallery/storonnik_iskrenney_politiki_luchshie_citaty_aleksandra_lukashenko"
       },
       "settings": {
-        "visible": true
+        "visible": false
       },
       "type": "ADownload",
       "name": "webpage",
@@ -16,7 +16,7 @@
         "selector": "a.blue_link[href$=\"#all_comments\"]"
       },
       "settings": {
-        "visible": true
+        "visible": false
       },
       "type": "AClick",
       "name": "all_comments",
@@ -27,7 +27,7 @@
         "selector": ".simple_comment:not([id^=\"reply\"])[outerHTML]"
       },
       "settings": {
-        "visible": true
+        "visible": false
       },
       "type": "AParseBySelector",
       "name": "comment",

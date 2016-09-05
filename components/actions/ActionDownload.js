@@ -49,9 +49,7 @@ ActionDownload.prototype.main = function (subactions) {
       // subactions.push(close_action);
 
       var filters = ACTION.get_filters();
-      if (filters) {
-        Filters.applyFiltersOnPage(page, filters);
-      }
+      Filters.applyFiltersOnPage(page, filters);
 
       page.open(ACTION.get_url()).then(function(status) {
         get_page_content(page, ACTION).then(function(content) {

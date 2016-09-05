@@ -35,7 +35,7 @@ function FilterFactory() {
 }
 
 function applyFiltersOnPage(page, filters) {
-  page.property('onResourceRequested', function(requestData, networkRequest, filters) {
+  page.property('onResourceRequested', function(requestData, networkRequest, filters, DEFAULT_BLACKLIST) {
     const WHITELIST_URL_FILTER = 'WhitelistUrlfilter',
           BLACKLIST_URL_FILTER = 'BlacklistUrlFilter';
 
@@ -44,6 +44,7 @@ function applyFiltersOnPage(page, filters) {
         urls: []
       };
     }
+
 
     Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
 
@@ -77,8 +78,8 @@ function applyFiltersOnPage(page, filters) {
       }
     }
 
-    console.log('Accept: ' + requestData.url);
-  }, filters);
+    console.log('Accept', requestData.url);
+  }, filters, DEFAULT_BLACKLIST);
 }
 
 

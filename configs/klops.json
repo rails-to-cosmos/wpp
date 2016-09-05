@@ -1,0 +1,81 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "https://klops.ru/news/politika/138702-pochemu-net-esli-u-cheloveka-potentsial-putin-vyskazalsya-o-naznachenii-silovikov-rukovoditelyami-regionov"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AClick",
+      "data": {
+        "selector": ".js-slidedown-comments"
+      },
+      "name": "click",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "click",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".b-comment__item[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".b-comment__nickname"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment_text"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".b-date .b-date__time"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".b-comment__item[id]"
+      },
+      "name": "id",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}
