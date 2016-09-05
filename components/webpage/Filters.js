@@ -1,4 +1,16 @@
-// TODO refactor
+const DEFAULT_BLACKLIST = ['.*\.woff',
+                           '.*yandex.*',
+                           '.*google.*',
+                           '.*ttf.*',
+                           '.*\.svg.*',
+                           '.*facebook\.com.*',
+                           '.*vk\.com.*',
+                           '.*ok\.ru.*',
+                           '.*adriver.*',
+                           '.*reklama.*',
+                           '.*\.css.*',
+                           '.*\.ads.*',
+                           '.*widgets.*'];
 
 function Filter() {
 
@@ -20,7 +32,6 @@ function FilterFactory() {
 
 }
 
-
 function applyFiltersOnPage(page, filters) {
   page.property('onResourceRequested', function(requestData, networkRequest, filters) {
     var url = requestData.url;
@@ -32,16 +43,7 @@ function applyFiltersOnPage(page, filters) {
       };
     }
 
-    Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, ['.*\.woff',
-                                                                    '.*yandex.*',
-                                                                    '.*google.*',
-                                                                    '.*ttf.*',
-                                                                    '.*svg.*',
-                                                                    '.*facebook.*',
-                                                                    '.*vk\.com.*',
-                                                                    '.*ok\.ru.*',
-                                                                    '.*adriver.*']);
-
+    Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
 
     for (var filter_name in filters) {
       if (filter_name == WHITELIST_URL_FILTER) {

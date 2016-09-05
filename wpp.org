@@ -39,4 +39,5 @@ CLOSED: [2016-08-18 Thu 17:35]
 - State "DONE"       from ""           [2016-08-18 Thu 17:35]
 
 * TODO IFrames
-* TODO Сделать действие HistoryBack после действия Click
+* TODO Implement action historyback
+* TODO Implement Action Store

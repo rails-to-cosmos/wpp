@@ -1,0 +1,70 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "http://islamtv.ru/news-3106.html"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": false
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "#coments[outerHTML]"
+      },
+      "name": "comments",
+      "settings": {
+        "visible": false
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".main[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": false
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".date"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".name"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".coment"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}

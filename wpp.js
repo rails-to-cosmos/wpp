@@ -1,17 +1,13 @@
 "use strict";
 
-var os = require('os'),
-    cpu_count = os.cpus().length,
-    phantom_count = 20,
+const express = require('express'),
+      app = express(),
+      port = 8283,
+      server = app.listen(port),
 
-    express = require('express'),
-    app = express(),
-    port = 8283,
-    server = app.listen(port),
+      BodyParser = require('body-parser'),
 
-    BodyParser = require('body-parser'),
-
-    WebpageProcessor = require('./components/WebpageProcessor');
+      WebpageProcessor = require('./components/WebpageProcessor');
 
 const ErrorHandler = function(err, req, res, next) {
   console.error(err.stack);
