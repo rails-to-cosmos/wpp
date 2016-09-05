@@ -23,6 +23,7 @@ app.post('/', function(req, res) {
       res.json(err);
     } else {
       res.json(data);
+      // console.log(data);
     }
   });
 });

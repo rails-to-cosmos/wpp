@@ -25,7 +25,7 @@ const DEFAULT_BLACKLIST = ['.*\.woff',
                            '.*marketgid\.com.*',
                            '.*onthe\.io.*',
                            '.*price\.ru.*',
-                           // '.*rambler\.ru.*',
+                           '.*rambler\.ru.*',
                            '.*begun\.ru.*',
                            '.*doubleclick\.net.*',
                            '.*adfox.*',
@@ -37,6 +37,9 @@ const DEFAULT_BLACKLIST = ['.*\.woff',
                            '.*smi2\.ru.*',
                            '.*smi2\.net.*',
                            '.*exnews\.net.*',
+                          ],
+      DEFAULT_WHITELIST = ['.*cdn-comments\.rambler\.ru.*',
+                           '.*c\.rambler\.ru.*',
                           ];
 
 function Filter() {
@@ -60,9 +63,16 @@ function FilterFactory() {
 }
 
 function applyFiltersOnPage(page, filters) {
-  page.property('onResourceRequested', function(requestData, networkRequest, filters, DEFAULT_BLACKLIST) {
+  page.property('onResourceRequested', function(requestData, networkRequest, filters,
+                                                DEFAULT_WHITELIST, DEFAULT_BLACKLIST) {
     const WHITELIST_URL_FILTER = 'WhitelistUrlfilter',
           BLACKLIST_URL_FILTER = 'BlacklistUrlFilter';
+
+    if (!(WHITELIST_URL_FILTER in filters)) {
+      filters[WHITELIST_URL_FILTER] = {
+        urls: []
+      };
+    }
 
     if (!(BLACKLIST_URL_FILTER in filters)) {
       filters[BLACKLIST_URL_FILTER] = {
@@ -70,41 +80,27 @@ function applyFiltersOnPage(page, filters) {
       };
     }
 
-
     Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
+    Array.prototype.push.apply(filters[WHITELIST_URL_FILTER].urls, DEFAULT_WHITELIST);
 
-    for (var filter_name in filters) {
-      if (filter_name == WHITELIST_URL_FILTER) {
-        var url_in_wl = false;
-
-        for (var wlre_index in filters[filter_name].urls) {
-          var wlre = filters[filter_name].urls[wlre_index];
-          var re = new RegExp(wlre);
-
-          if (re.test(requestData.url)) {
-            url_in_wl = true;
-          }
-        }
-
-        if(!url_in_wl && filters[filter_name] && filters[filter_name].urls) {
-          networkRequest.abort();
-          return;
-        }
-      } else if (filter_name == BLACKLIST_URL_FILTER) {
-        for (var blre_index in filters[filter_name].urls) {
-          var blre = filters[filter_name].urls[blre_index];
-          var re = new RegExp(blre);
-
-          if (re.test(requestData.url)) {
-            networkRequest.abort();
-            return;
-          }
+    function url_in_list(url, list) {
+      for (var url_index in filters[list].urls) {
+        var re = new RegExp(filters[list].urls[url_index]);
+        if (re.test(url)) {
+          return true;
         }
       }
+
+      return false;
     }
 
-    console.log('Accept', requestData.url);
-  }, filters, DEFAULT_BLACKLIST);
+    if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
+        !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
+      networkRequest.abort();
+    } else {
+      console.log('Accept', requestData.url);
+    }
+  }, filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST);
 }
 
 
