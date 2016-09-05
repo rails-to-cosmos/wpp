@@ -39,7 +39,8 @@ function applyFiltersOnPage(page, filters) {
                                                                     '.*svg.*',
                                                                     '.*facebook.*',
                                                                     '.*vk\.com.*',
-                                                                    '.*ok\.ru.*']);
+                                                                    '.*ok\.ru.*',
+                                                                    '.*adriver.*']);
 
 
     for (var filter_name in filters) {

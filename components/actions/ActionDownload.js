@@ -41,12 +41,12 @@ ActionDownload.prototype.main = function (subactions) {
     var webpage = new Webpage(ACTION.get_browser());
 
     webpage.create().then(function(page) {
-      var close_action = ACTION.factory.create_action({
-        name: ACTION.get_name() + '.close',
-        type: CLOSE_ACTION_TYPE,
-        target: ACTION.get_name()
-      }, ACTION);
-      subactions.push(close_action);
+      // var close_action = ACTION.factory.create_action({
+      //   name: ACTION.get_name() + '.close',
+      //   type: CLOSE_ACTION_TYPE,
+      //   target: ACTION.get_name()
+      // }, ACTION);
+      // subactions.push(close_action);
 
       var filters = ACTION.get_filters();
       if (filters) {
