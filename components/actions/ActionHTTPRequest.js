@@ -1,5 +1,5 @@
 var Action = require('./Action'),
-    request = require('req-fast');
+    request = require('request');
 
 function ActionHTTPRequest() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -17,12 +17,18 @@ ActionHTTPRequest.prototype.main = function (subactions) {
   Action.prototype.main.call(this, subactions);
 
   return new Promise(function(resolve, reject) {
-    request(ACTION.get_url(), function(err, resp) {
-      ACTION.write_to_store(resp.body);
-      ACTION.run_subactions(subactions).then(function(result) {
-        resolve(result);
-      });
-    });
+    console.log('ActionHTTPRequest started');
+    request({
+      url: ACTION.get_url(),
+      timeout: 60000
+    },
+            function(err, resp) {
+              console.log('ActionHTTPRequest finished');
+              ACTION.write_to_store(resp.body);
+              ACTION.run_subactions(subactions).then(function(result) {
+                resolve(result);
+              });
+            });
   });
 };
 

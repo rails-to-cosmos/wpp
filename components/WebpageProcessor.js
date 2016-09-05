@@ -1,20 +1,21 @@
 'use strict';
 
 const phantom = require('phantom'),
-      phantom_settings = [
-        '--disk-cache=true',
-        '--disk-cache-path=/tmp/phantom-cache',
-        '--load-images=false',
-        '--cookies-file=/dev/null',
-        '--ignore-ssl-errors=yes'
-      ],
-
       is_array = require('./utils/TypeHints').is_array,
 
       SyntaxValidator = require('./SyntaxValidator'),
       ActionFactory = require('./ActionFactory'),
       ActionResultStore = require('./stores/ActionResultStore'),
       ActionTree = require('./data_structures/ActionTree');
+
+var phantom_settings = [
+  '--disk-cache=false',
+  '--disk-cache-path=/tmp/phantom-cache',
+  '--load-images=false',
+  '--cookies-file=/dev/null',
+  '--ignore-ssl-errors=true',
+//  '--debug=true'
+];
 
 function WebpageProcessor() {
   this.phantom_instance = null;
@@ -24,7 +25,8 @@ WebpageProcessor.prototype.run = function(actions, done) {
   let WPP = this;
 
   return WPP.validate_config(actions).then(function() {
-    WPP.initialize_phantom().then(function(browser) {
+    phantom_settings[1] = '--disk-cache-path=' + actions[0].data.url;
+    return WPP.initialize_phantom().then(function(browser) {
       WPP.phantom_instance = browser;
 
       let storage = new ActionResultStore(),

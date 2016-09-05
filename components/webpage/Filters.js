@@ -6,13 +6,23 @@ const DEFAULT_BLACKLIST = ['.*\.woff',
                            '.*ttf.*',
                            '.*\.svg.*',
                            '.*facebook\.com.*',
+                           '.*facebook\.net.*',
+                           '.*odnoklassniki\.ru.*',
+                           '.*pinterest\.com.*',
                            '.*vk\.com.*',
                            '.*ok\.ru.*',
+                           '.*mail\.ru.*',
                            '.*adriver.*',
                            '.*reklama.*',
                            '.*\.css.*',
                            '.*\.ads.*',
-                           '.*widgets.*'];
+                           '.*widgets.*',
+                           '.*linkedin\.com.*',
+                           '.*appspot\.com.*',
+                           '.*index\.ru.*',
+                           '.*mediametrics.*',
+                           '.*visualdna.*',
+                           '.*marketgid\.com.*'];
 
 function Filter() {
 
