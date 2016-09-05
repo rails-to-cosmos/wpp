@@ -1,3 +1,5 @@
+'use strict';
+
 var is_array = require('../utils/TypeHints').is_array;
 
 var CacheStore = require('./CacheStore');
@@ -49,8 +51,13 @@ ActionResultStore.prototype.get_visible_data = function() {
       for (var elindex in data[key]) {
         var element = data[key][elindex];
         var elres = element;
-        if (element.constructor.name in ExtendedActionResults) {
-          elres = ExtendedActionResults[element.constructor.name].repr(element);
+        try  {
+          if (element.constructor.name in ExtendedActionResults) {
+            elres = ExtendedActionResults[element.constructor.name].repr(element);
+          }
+        } catch (exc) {
+          console.log(exc);
+          continue;
         }
 
         if (groupped_data[elindex]) {

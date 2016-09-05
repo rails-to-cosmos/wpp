@@ -51,7 +51,7 @@ Action.prototype.run_subactions = function(subactions) {
   var ACTION = this;
 
   if (!is_array(subactions) || subactions.length == 0) {
-     return ACTION.finalize();
+    return ACTION.finalize();
   }
 
   var clone = subactions.slice(),

@@ -1,0 +1,92 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "http://www.gazeta.ru/business/news/2016/09/05/n_9076235.shtml"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AClick",
+      "data": {
+        "selector": ".button_give_comments"
+      },
+      "name": "click",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "click",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".rc-comments__list[outerHTML]"
+      },
+      "name": "comments",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".rc-comment[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "[id]"
+      },
+      "name": "id",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".rc-comment__name"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".rc-comment__created.rc-comment__time"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".rc-comment__text"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}

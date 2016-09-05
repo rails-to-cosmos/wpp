@@ -42,7 +42,6 @@ ActionParse.prototype.main = function(subactions) {
           var result = [];
           var element, element_representation;
           var $ = cheerio.load(content);
-
           if (selector.selector[0] == '>') {
             var clean_selector = selector.selector.slice(1, selector.selector.length);
             element = $(clean_selector).first();

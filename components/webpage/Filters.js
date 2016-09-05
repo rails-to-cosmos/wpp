@@ -22,7 +22,22 @@ const DEFAULT_BLACKLIST = ['.*\.woff',
                            '.*index\.ru.*',
                            '.*mediametrics.*',
                            '.*visualdna.*',
-                           '.*marketgid\.com.*'];
+                           '.*marketgid\.com.*',
+                           '.*onthe\.io.*',
+                           '.*price\.ru.*',
+                           '.*rambler\.ru.*',
+                           '.*begun\.ru.*',
+                           '.*doubleclick\.net.*',
+                           '.*adfox.*',
+                           '.*top100\.ru.*',
+                           '.*criteo\.com.*',
+                           '.*pingdom\.net.*',
+                           '.*scorecardresearch\.com.*',
+                           '.*infographics\.gazeta\.ru.*',
+                           '.*smi2\.ru.*',
+                           '.*smi2\.net.*',
+                           '.*exnews\.net.*',
+                          ];
 
 function Filter() {
 
