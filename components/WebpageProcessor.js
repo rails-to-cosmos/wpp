@@ -100,9 +100,16 @@ WebpageProcessor.prototype.process_action_tree = function(action_tree) {
 
 WebpageProcessor.prototype.process_action_stack = function(action_stack) {
   let head = action_stack[0],
-      tail = action_stack.splice(1, action_stack.length);
+      tail = action_stack.splice(1, action_stack.length),
+      result = null;
 
-  return head.main(tail);
+  try {
+    result = head.main(tail);
+  } catch (exc) {
+    console.log(exc);
+  }
+
+  return result;
 };
 
 module.exports = WebpageProcessor;
