@@ -1,0 +1,92 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://vsenovosti24.ru/vystuplenie-yulii-savichevoj-v-verxnej-salde/"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "article",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".comment>.comment[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "article"
+    },
+    {
+      "data": {
+        "selector": "[id]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".fn"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment-content"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": "time[datetime]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".entry-meta li>a:eq(0)"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "ucounter",
+      "target": "article"
+    },
+    {
+      "data": {
+        "pattern": "\\d+"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AReMatch",
+      "name": "counter",
+      "target": "ucounter"
+    }
+  ]
+}
