@@ -1,0 +1,81 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "https://www.onlinetv.ru/video/2043/?autostart=1&trailer=1"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "#site-comments-list[outerHTML]"
+      },
+      "name": "comments",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-item[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "span:nth-child(3)"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "p"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".time"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-item[id]"
+      },
+      "name": "id",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "http://otradny24.ru/"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".reviews-post-table[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "[id]"
+      },
+      "name": "id",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "thead b"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".reviews-text"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".message-post-date"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}
