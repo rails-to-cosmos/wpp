@@ -1,5 +1,7 @@
 var Action = require('./Action'),
-    request = require('request');
+    request = require('request'),
+    charset = require('charset'),
+    iconv = require('iconv-lite');
 
 function ActionHTTPRequest() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -20,11 +22,17 @@ ActionHTTPRequest.prototype.main = function (subactions) {
     console.log('ActionHTTPRequest started');
     request({
       url: ACTION.get_url(),
-      timeout: 60000
+      timeout: 60000,
+      encoding: null,
+      headers: {
+        "Accept": "text, text/plain, text/xml",
+        "Accept-Encoding": "UTF-8",
+        'Content-Type': "text/plain; charset=utf-8;"
+      }
     },
             function(err, resp) {
-              console.log('ActionHTTPRequest finished');
-              ACTION.write_to_store(resp.body);
+              var body = iconv.decode(resp.body, charset(resp.headers, resp.body));
+              ACTION.write_to_store(body);
               ACTION.run_subactions(subactions).then(function(result) {
                 resolve(result);
               });

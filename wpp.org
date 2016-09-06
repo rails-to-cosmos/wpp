@@ -1,44 +1,13 @@
-curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/ -o output.json
-watch 'sudo ps aux | grep phantom | wc -l'
+watch "sudo ps aux | grep phantom | wc -l; sudo ps aux | sort -nk +4 | grep phantom | awk '{print \$13}'";
 
-* DONE BUG: OuterHTML в результатах не всегда группируется с дочерними действиями
-CLOSED: [2016-08-29 Mon 17:38]
-- State "DONE"       from "TODO"       [2016-08-29 Mon 17:38]
-* DONE Add representation: AttributeWithoutElement?
-CLOSED: [2016-08-19 Fri 15:13]
-- State "DONE"       from "TODO"       [2016-08-19 Fri 15:13]
-* DONE [#A] Сделать ActionPaginate(ActionClickController)
-CLOSED: [2016-08-18 Thu 17:35]
-- State "DONE"       from ""           [2016-08-18 Thu 17:35]
-- Принимает селектор элемента, начинает по ним кликать.
-* DONE [#B] Чернобелые листы для действия Click
-CLOSED: [2016-08-18 Thu 17:35]
-- State "DONE"       from ""           [2016-08-18 Thu 17:35]
-* DONE [#B] Зависают урлы, решается списками (черным и белым)
-CLOSED: [2016-08-18 Thu 17:35]
-- State "DONE"       from ""           [2016-08-18 Thu 17:35]
+curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/ -o output.json
+
+watch 'sudo ps aux | grep phantom | wc -l'
+* TODO Analyze
+--disk-cache-path=http://vrn.mk.ru/articles/2016/08/17/voronezhcy-prosrochili-dolgov-po-ipoteke-na-574-mln-rubley.html
+--disk-cache-path=http://vrn.mk.ru/articles/2016/08/31/voronezhcev-proverili-na-loyalnost-vertikali.html
 * TODO [#C] Сделать таймауты запросов
 * TODO Сделать setting repeat
-* DONE Решить проблему с результатами
-CLOSED: [2016-08-29 Mon 17:38]
-- State "DONE"       from "STARTED"    [2016-08-29 Mon 17:38]
-CLOCK: [2016-08-19 Fri 14:22]
-- State "STARTED"    from "DONE"       [2016-08-19 Fri 14:22]
-- State "DONE"       from ""           [2016-08-18 Thu 17:35]
-* DONE Сделать, чтобы принимал json конфига с помощью get-запроса
-CLOSED: [2016-08-29 Mon 17:38]
-- State "DONE"       from "TODO"       [2016-08-29 Mon 17:38]
-* CANCELLED Попробовать сделать рекурсивную отдачу html в phantomjs
-CLOSED: [2016-08-18 Thu 17:35]
-- State "CANCELLED"  from ""           [2016-08-18 Thu 17:35]
-* DONE Поискать стек-машину в npm
-CLOSED: [2016-08-18 Thu 17:35]
-- State "DONE"       from ""           [2016-08-18 Thu 17:35]
-* CANCELLED Для каждого explode-действия все ссылки на него становятся ссылками на дочерние действия и клонируются по количеству действий
-CLOSED: [2016-08-18 Thu 17:35]
-- State "CANCELLED"  from "DONE"       [2016-08-18 Thu 17:35]
-- State "DONE"       from ""           [2016-08-18 Thu 17:35]
-
 * TODO IFrames
 * TODO Implement action historyback
 * TODO Implement Action Store

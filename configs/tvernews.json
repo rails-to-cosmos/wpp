@@ -1,0 +1,81 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http:\/\/tvernews.ru\/folk\/127498\/"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "webpage",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".comments[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comments",
+      "target": "webpage"
+    },
+    {
+      "data": {
+        "selector": ".comment_item[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "comments"
+    },
+    {
+      "data": {
+        "selector": ".comment-user-name"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment-body"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment-date"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment_item[id]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "comment"
+    }
+  ]
+}
