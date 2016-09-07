@@ -1,3 +1,5 @@
+'use strict';
+
 var Action = require('./Action'),
     request = require('request'),
     charset = require('charset'),
@@ -31,7 +33,15 @@ ActionHTTPRequest.prototype.main = function (subactions) {
       }
     },
             function(err, resp) {
-              var body = iconv.decode(resp.body, charset(resp.headers, resp.body));
+              let body;
+
+              try {
+                body = iconv.decode(resp.body, charset(resp.headers, resp.body));
+              } catch (exc) {
+                console.log('Encoding not recognized. Using utf-8.');
+                body = resp.body;
+              }
+
               ACTION.write_to_store(body);
               ACTION.run_subactions(subactions).then(function(result) {
                 resolve(result);
