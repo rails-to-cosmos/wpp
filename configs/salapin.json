@@ -1,0 +1,81 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http:\/\/salapin.ru\/"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "webpage",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".c_wrapper[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comments",
+      "target": "webpage"
+    },
+    {
+      "data": {
+        "selector": ".c1_wrapper[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "comments"
+    },
+    {
+      "data": {
+        "selector": ".c_time"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".c_user"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".c_text"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".c1_wrapper[id]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "comment"
+    }
+  ]
+}

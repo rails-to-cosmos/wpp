@@ -1,0 +1,81 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "https:\/\/style.wildberries.ru\/"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment_list[outerHTML]"
+      },
+      "name": "comments",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-date"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-author"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-text"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment[id]"
+      },
+      "name": "id",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}

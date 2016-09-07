@@ -48,10 +48,10 @@
       (wpp-tank)
     (wpp-send-config wpp-job-name))
   (switch-to-buffer "*prodigy-wpp*"))
+(bind-key "C-x RET" 'wpp-send)
 
 (defun wpp-tank ()
   (interactive)
-  (mapcar 'wpp-send-config wpp-sources))
-(bind-key "C-x RET" 'wpp-send)
+  (mapcar 'wpp-send-config (wpp-get-sources)))
 
 (provide 'wpp)

@@ -1,0 +1,143 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://syzran-small.ru/index.php?go=Pages&in=view&id=2681"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AFastDownload",
+      "name": "webpage",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": "a[href^=\"\/forum\/comment\"][href]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "discussion",
+      "target": "webpage"
+    },
+    {
+      "data": "http:\/\/syzran-small.ru:discussion.result:",
+      "settings": {
+        "visible": true
+      },
+      "type": "AStoreParam",
+      "name": "forum_href",
+      "target": ""
+    },
+    {
+      "data": {
+        "url": "http:\/\/syzran-small.ru\/"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AFastDownload",
+      "name": "forum",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": "table table tr[valign=\"middle\"][outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "middle",
+      "target": "forum"
+    },
+    {
+      "data": {
+        "selector": ".postdetails"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date_and_header",
+      "target": "middle"
+    },
+    {
+      "data": {
+        "pattern": "\\d{2}\\.\\d{2}\\.\\d{4}, \\d{2}:\\d{2}"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AReMatch",
+      "name": "date",
+      "target": "date_and_header"
+    },
+    {
+      "data": {
+        "selector": ".name"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "middle"
+    },
+    {
+      "data": {
+        "pattern": "\u0417\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u044f: (.*)"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AReMatch",
+      "name": "header",
+      "target": "date_and_header"
+    },
+    {
+      "data": {
+        "selector": "table table tr[valign=\"middle\"][next]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "middlenext",
+      "target": ":forum"
+    },
+    {
+      "data": {
+        "selector": "table:nth-child(1)"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "middlenext"
+    },
+    {
+      "data": {
+        "selector": "span.name a[name]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "name",
+      "target": "middle"
+    },
+    {
+      "data": ":date.result: :name.result:",
+      "settings": {
+        "visible": true
+      },
+      "type": "AStoreParam",
+      "name": "id",
+      "target": ""
+    }
+  ]
+}
