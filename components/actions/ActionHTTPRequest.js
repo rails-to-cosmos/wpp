@@ -35,11 +35,21 @@ ActionHTTPRequest.prototype.main = function (subactions) {
             function(err, resp) {
               let body;
 
+              if (err) {
+                console.log(err);
+              }
+
               try {
                 body = iconv.decode(resp.body, charset(resp.headers, resp.body));
               } catch (exc) {
-                console.log('Encoding not recognized. Using utf-8.');
-                body = resp.body;
+                console.log('EncodingWarning: Encoding not recognized. Using utf-8.');
+
+                try {
+                  body = resp.body;
+                } catch (exc) {
+                  console.log('RequestError: empty response.');
+                  body = '';
+                }
               }
 
               ACTION.write_to_store(body);

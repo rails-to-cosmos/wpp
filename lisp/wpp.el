@@ -23,6 +23,7 @@
   (mapcar 'wpp-trim-json (directory-files wpp-conf-path nil ".*\.json")))
 
 (setq wpp-sources (wpp-get-sources))
+(setq old-wpp-sources wpp-sources)
 
 (defun wpp-send-config (config)
   (if (not (equal config "__tank__"))

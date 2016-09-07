@@ -4,7 +4,7 @@
       "target": "",
       "type": "ADownload",
       "data": {
-        "url": "http://www.gazeta.ru/army/2016/08/06/9705023.shtml"
+        "url": "http:\/\/yarsport.ru\/"
       },
       "name": "webpage",
       "settings": {
@@ -13,20 +13,9 @@
     },
     {
       "target": "webpage",
-      "type": "AClick",
-      "data": {
-        "selector": ".button_give_comments"
-      },
-      "name": "click",
-      "settings": {
-        "visible": true
-      }
-    },
-    {
-      "target": "click",
       "type": "AParseBySelector",
       "data": {
-        "selector": ".rc-comments__list[outerHTML]"
+        "selector": "#dlemasscomments .bcomment[outerHTML]"
       },
       "name": "comments",
       "settings": {
@@ -37,40 +26,7 @@
       "target": "comments",
       "type": "AParseBySelector",
       "data": {
-        "selector": ".rc-comment[outerHTML]"
-      },
-      "name": "comment",
-      "settings": {
-        "visible": true
-      }
-    },
-    {
-      "target": "comments",
-      "type": "AParseBySelector",
-      "data": {
-        "selector": "[id]"
-      },
-      "name": "id",
-      "settings": {
-        "visible": true
-      }
-    },
-    {
-      "target": "comments",
-      "type": "AParseBySelector",
-      "data": {
-        "selector": ".rc-comment__name"
-      },
-      "name": "author",
-      "settings": {
-        "visible": true
-      }
-    },
-    {
-      "target": "comments",
-      "type": "AParseBySelector",
-      "data": {
-        "selector": ".rc-comment__created.rc-comment__time"
+        "selector": ".comment_date"
       },
       "name": "date",
       "settings": {
@@ -81,9 +37,31 @@
       "target": "comments",
       "type": "AParseBySelector",
       "data": {
-        "selector": ".rc-comment__text"
+        "selector": "h4 a"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".com_bot"
       },
       "name": "body",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "div[id^=\"comment-id\"][id]"
+      },
+      "name": "id",
       "settings": {
         "visible": true
       }

@@ -1,0 +1,70 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://beregienergy.ru/news/14917-2016-08-08-07-36-37.html"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AFastDownload",
+      "name": "webpage",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".comment-box[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "webpage"
+    },
+    {
+      "data": {
+        "selector": ".comment-author"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment-body"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment-date"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comment-anchor[id]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "comment"
+    }
+  ]
+}

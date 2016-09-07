@@ -1,8 +1,9 @@
-watch "sudo ps aux | grep phantom | wc -l; sudo ps aux | sort -nk +4 | grep phantom | awk '{print \$13}'";
+watch "sudo ps aux | grep phantom | grep -v '/watch/' | wc -l; sudo ps aux | sort -nk +4 | grep phantom | grep -v '/watch/' | awk '{print \$13}'";
 
 curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283/ -o output.json
 
 watch 'sudo ps aux | grep phantom | wc -l'
+
 * TODO Analyze
 --disk-cache-path=http://vrn.mk.ru/articles/2016/08/17/voronezhcy-prosrochili-dolgov-po-ipoteke-na-574-mln-rubley.html
 --disk-cache-path=http://vrn.mk.ru/articles/2016/08/31/voronezhcev-proverili-na-loyalnost-vertikali.html

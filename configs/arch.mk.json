@@ -1,0 +1,70 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://arh.mk.ru/articles/2015/08/06/sud-segodnya-prodlil-predsudebnoe-zaklyuchenie-zhurnalista-azovskogo.html"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "article",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".tabs li"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AClick",
+      "name": "article_with_comments",
+      "target": "article"
+    },
+    {
+      "data": {
+        "selector": ".comment[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "article_with_comments"
+    },
+    {
+      "data": {
+        "selector": ".author"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": "p"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".date"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    }
+  ]
+}
