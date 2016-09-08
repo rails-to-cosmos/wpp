@@ -4,6 +4,8 @@ curl -H "Content-Type: application/json" --data @echo.json http://localhost:8283
 
 watch 'sudo ps aux | grep phantom | wc -l'
 
+mocha tests --recursive --watch
+
 * TODO Analyze
 --disk-cache-path=http://vrn.mk.ru/articles/2016/08/17/voronezhcy-prosrochili-dolgov-po-ipoteke-na-574-mln-rubley.html
 --disk-cache-path=http://vrn.mk.ru/articles/2016/08/31/voronezhcev-proverili-na-loyalnost-vertikali.html
