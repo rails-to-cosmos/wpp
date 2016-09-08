@@ -4,10 +4,7 @@ var Action = require('./Action'),
     Webpage = require('../webpage/Webpage'),
     Filters = require('../webpage/Filters'),
 
-    jQueryInjection = require('../injections/jQueryInjection'),
-
-    fs = require('fs'),
-    is_array = require('../utils/TypeHints').is_array,
+    assert = require('assert'),
     get_page_content = require('../webpage/Utils').get_page_content;
 
 function ActionDownload() {
@@ -16,13 +13,9 @@ function ActionDownload() {
 
 ActionDownload.prototype = new Action();
 
-ActionDownload.prototype.get_url = function() {
-  return this.config.data.url;
-};
-
 // TODO refactor filters
 ActionDownload.prototype.get_filters = function() {
-  var filters = {};
+  let filters = {};
 
   if (this.config.settings && this.config.settings.filters) {
     filters = this.config.settings.filters;
@@ -38,28 +31,39 @@ ActionDownload.prototype.main = function (subactions) {
   Action.prototype.main.call(this, subactions);
 
   return new Promise(function(resolve, reject) {
-    var webpage = new Webpage(ACTION.get_browser());
+    try {
+      let webpage = new Webpage(ACTION.get_browser());
+      webpage.create().then(function(page) {
+        try {
+          let filters = ACTION.get_filters();
+          Filters.applyOnPage(page, filters);
 
-    webpage.create().then(function(page) {
-      // var close_action = ACTION.factory.create_action({
-      //   name: ACTION.get_name() + '.close',
-      //   type: CLOSE_ACTION_TYPE,
-      //   target: ACTION.get_name()
-      // }, ACTION);
-      // subactions.push(close_action);
+          let url = ACTION.config.data.url;
+          assert(url);
 
-      var filters = ACTION.get_filters();
-      Filters.applyFiltersOnPage(page, filters);
-
-      page.open(ACTION.get_url()).then(function(status) {
-        get_page_content(page, ACTION).then(function(content) {
-          ACTION.write_to_store(page);
-          ACTION.run_subactions(subactions).then(function(result) {
-            resolve(result);
-          });
-        });
-      });
-    });
+          page.open(url).then(function(status) {
+            try {
+              get_page_content(page, ACTION).then(function(content) {
+                try {
+                  ACTION.write_to_store(page);
+                  ACTION.run_subactions(subactions).then(function(result) {
+                    resolve(result);
+                  }, reject);
+                } catch (exc) {
+                  reject(exc);
+                }
+              }, reject);
+            } catch (exc) {
+              reject(exc);
+            }
+          }, reject);
+        } catch (exc) {
+          reject(exc);
+        }
+      }, reject);
+    } catch (exc) {
+      reject(exc);
+    }
   });
 };
 

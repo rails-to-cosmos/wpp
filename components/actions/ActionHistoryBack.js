@@ -13,9 +13,7 @@ ActionHistoryBack.prototype.main = function (subactions) {
   Action.prototype.main.call(this, subactions);
 
   return new Promise(function(resolve, reject) {
-    ACTION.run_subactions(subactions).then(function(result) {
-      resolve(result);
-    });
+    ACTION.run_subactions(subactions).then(resolve, reject);
   });
 };
 

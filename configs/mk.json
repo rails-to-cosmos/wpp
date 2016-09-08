@@ -1,0 +1,92 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://www.mk.ru/politics/2016/09/08/kreml-nazval-netochnoy-informaciyu-o-poslednem-predlozhenii-ssha-po-sirii.html"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "webpage",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".tabs li"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AClick",
+      "name": "click",
+      "target": "webpage"
+    },
+    {
+      "data": {
+        "selector": ".button[value=\"\u0412\u0441\u0435\"]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AClick",
+      "name": "click2",
+      "target": "click"
+    },
+    {
+      "data": {
+        "selector": ".comment[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "click"
+    },
+    {
+      "data": {
+        "selector": ".author"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": "p"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".date"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ".comments li[commentid]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "click"
+    }
+  ]
+}

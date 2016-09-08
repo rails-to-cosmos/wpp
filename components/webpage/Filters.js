@@ -42,6 +42,7 @@ const DEFAULT_BLACKLIST = ['.*\.woff',
                            '.*mediaplayer.*',
                            '.*flvscript\.js.*',
                            '.*youtube\.com.*',
+                           '.*openstat\.net.*',
                           ],
       DEFAULT_WHITELIST = ['.*cdn-comments\.rambler\.ru.*',
                            '.*c\.rambler\.ru.*',
@@ -67,7 +68,7 @@ function FilterFactory() {
 
 }
 
-function applyFiltersOnPage(page, filters) {
+function applyOnPage(page, filters) {
   page.property('onResourceRequested', function(requestData, networkRequest, filters,
                                                 DEFAULT_WHITELIST, DEFAULT_BLACKLIST) {
     const WHITELIST_URL_FILTER = 'WhitelistUrlfilter',
@@ -110,5 +111,5 @@ function applyFiltersOnPage(page, filters) {
 
 
 module.exports = {
-  applyFiltersOnPage: applyFiltersOnPage
+  applyOnPage: applyOnPage
 };

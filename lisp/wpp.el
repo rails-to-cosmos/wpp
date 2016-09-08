@@ -48,7 +48,8 @@
   (if (equal wpp-job-name "__tank__")
       (wpp-tank)
     (wpp-send-config wpp-job-name))
-  (switch-to-buffer "*prodigy-wpp*"))
+  ;; (switch-to-buffer "*prodigy-wpp*")
+  )
 (bind-key "C-x RET" 'wpp-send)
 
 (defun wpp-tank ()

@@ -16,16 +16,14 @@ ActionClose.prototype.main = function (subactions) {
 
   return new Promise(function(resolve, reject) {
     var actions = pages.map(function(page) {
-      return new Promise(function(resolveAction) {
-        page.close().then(resolveAction);
+      return new Promise(function(resolveAction, rejectAction) {
+        page.close().then(resolveAction, rejectAction);
       });
     });
 
     Promise.all(actions).then(function(result) {
-      ACTION.run_subactions(subactions).then(function(result) {
-        resolve(result);
-      });
-    });
+      ACTION.run_subactions(subactions).then(resolve, reject);
+    }, reject);
 
   });
 };

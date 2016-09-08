@@ -47,67 +47,79 @@ ActionParse.prototype.main = function(subactions) {
   Action.prototype.main.call(this, subactions);
 
   return new Promise(function(resolve, reject) {
-    var selector = new ComplexSelector(ACTION.config.data.selector);
-    var Representation = get_representation(selector);
-    var pages = ACTION.get_from_store(ACTION.get_target());
-    var parse_actions = pages.map(function(page) {
-      return new Promise(function(resolveParse) {
-        get_page_content(page, ACTION).then(function(content) {
-          var result = [];
-          var element, element_representation;
-          var $ = cheerio.load(content);
+    try {
+      var selector = new ComplexSelector(ACTION.config.data.selector),
+          Representation = get_representation(selector),
+          pages = ACTION.get_from_store(ACTION.get_target());
 
-          if (selector.selector[0] == '>') {
-            var clean_selector = selector.selector.slice(1, selector.selector.length);
-            if (selector.index > -1) {
+      var parse_actions = pages.map(function(page) {
+        return new Promise(function(resolveParse, rejectParse) {
+          try {
+            get_page_content(page, ACTION).then(function(content) {
               try {
-                element = $(selector.selector).get(selector.index);
-              } catch (exc) {
-                console.log(exc);
-              }
-            } else {
-              element = $(clean_selector).first();
-            }
+                let result = [], element, element_representation,
+                    $ = cheerio.load(content);
 
-            element_representation = new Representation($, element, selector);
-            result.push(element_representation.repr());
-          } else if (selector.selector) {
-            if (selector.index > -1) {
-              try {
-                element = $(selector.selector).get(selector.index);
-              } catch (exc) {
-                console.log(exc);
-              }
+                if (selector.selector[0] == '>') {
+                  let clean_selector = selector.selector.slice(1, selector.selector.length);
+                  if (selector.index > -1) {
+                    try {
+                      element = $(selector.selector).get(selector.index);
+                    } catch (exc) {
+                      console.log(exc);
+                    }
+                  } else {
+                    element = $(clean_selector).first();
+                  }
 
-              element_representation = new Representation($, element, selector);
-              result.push(element_representation.repr());
-            } else {
-              try {
-                $(selector.selector).each(function(id, el) {
-                  element_representation = new Representation($, el, selector);
+                  element_representation = new Representation($, element, selector);
                   result.push(element_representation.repr());
-                });
-              } catch (exc) {
-                console.log(exc);
-              }
-            }
-          } else if (selector.attribute && !selector.selector) {
-            element = $(content);
-            element_representation = new Representation($, element, selector);
-            result.push(element_representation.repr());
-          }
+                } else if (selector.selector) {
+                  if (selector.index > -1) {
+                    try {
+                      element = $(selector.selector).get(selector.index);
+                    } catch (exc) {
+                      console.log(exc);
+                    }
 
-          ACTION.push_to_store(result);
-          resolveParse();
+                    element_representation = new Representation($, element, selector);
+                    result.push(element_representation.repr());
+                  } else {
+                    try {
+                      $(selector.selector).each(function(id, el) {
+                        element_representation = new Representation($, el, selector);
+                        result.push(element_representation.repr());
+                      });
+                    } catch (exc) {
+                      console.log(exc);
+                    }
+                  }
+                } else if (selector.attribute && !selector.selector) {
+                  element = $(content);
+                  element_representation = new Representation($, element, selector);
+                  result.push(element_representation.repr());
+                }
+
+                ACTION.push_to_store(result);
+                resolveParse();
+              } catch (exc) {
+                rejectParse(exc);
+              }
+            }, rejectParse);
+          } catch (exc) {
+            rejectParse(exc);
+          }
         });
       });
-    });
 
-    Promise.all(parse_actions).then(function() {
-      ACTION.run_subactions(subactions).then(function(result) {
-        resolve(result);
-      });
-    });
+      Promise.all(parse_actions).then(function() {
+        ACTION.run_subactions(subactions).then(function(result) {
+          resolve(result);
+        }, reject);
+      }, reject);
+    } catch (exc) {
+      reject(exc);
+    }
   });
 };
 

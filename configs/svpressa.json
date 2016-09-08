@@ -1,0 +1,81 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://partners.svpressa.ru/people/872/"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "article",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".mc-comment-next"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AClick",
+      "name": "all_comments",
+      "target": "article"
+    },
+    {
+      "data": {
+        "selector": ".mc-comment[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comment",
+      "target": "all_comments"
+    },
+    {
+      "data": {
+        "selector": "[id]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "id",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ">.mc-comment-wrap .mc-comment-username"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ">.mc-comment-wrap .mc-comment-msg"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "body",
+      "target": "comment"
+    },
+    {
+      "data": {
+        "selector": ">.mc-comment-wrap .mc-comment-time"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comment"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ var default_settings = (page, config) => {
   // page.setting('userAgent', userAgent);
   page.setting('loadImages', false);
   page.setting('resourceTimeout', 30000);
+  page.property('viewportSize', {width: 800, height: 600});
 
   page.on('onResourceTimeout', function(e) {
     console.log(e.errorCode);   // it'll probably be 408

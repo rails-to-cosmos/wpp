@@ -19,66 +19,103 @@ ActionClickMaster.prototype.main = function (subactions) {
 
   Action.prototype.main.call(this, subactions);
 
-  return new Promise(function(resolveAllPages) {
-    var actions = pages.map(function(page) {
-      return new Promise(function(resolve) {
-        let xpath_injection = new XPathInjection();
-        xpath_injection.apply(page).then(function() {
-          const selector = ACTION.config.data.selector;
-          page.evaluate(function(selector) {
-            var result = [];
-            var elements = document.querySelectorAll(selector);
-            for (var ei=0; ei<elements.length; ei++) {
-              var xpel = window.__wpp__.xpath(elements[ei]);
-              result.push(xpel);
-            }
-            return result;
-          }, selector).then(function(buttons) {
-            var createSlaves = function() {
-              var slaves = [];
-              for (var index in buttons) {
-                var click_config = deepcopy(ACTION.config);
-                click_config.type = SLAVE_ACTION_TYPE;
-                click_config.name = ACTION.get_name() + ' (' + index + ')';
-                click_config.data = {
-                  xpath: buttons[index]
-                };
+  return new Promise(function(resolveAllPages, rejectAllPages) {
+    try {
+      var actions = pages.map(function(page) {
+        return new Promise(function(resolve, reject) {
+          try {
+            let xpath_injection = new XPathInjection();
+            xpath_injection.apply(page).then(function() {
+              try {
+                const selector = ACTION.config.data.selector;
+                page.evaluate(function(selector) {
+                  var result = [];
+                  var elements = document.querySelectorAll(selector);
+                  for (var ei=0; ei<elements.length; ei++) {
+                    var xpel = window.__wpp__.xpath(elements[ei]);
+                    result.push(xpel);
+                  }
+                  return result;
+                }, selector).then(function(buttons) {
+                  try {
+                    let createSlaves = function() {
+                      var slaves = [];
+                      for (var index in buttons) {
+                        var click_config = deepcopy(ACTION.config);
+                        click_config.type = SLAVE_ACTION_TYPE;
+                        click_config.name = ACTION.get_name() + ' (' + index + ')';
+                        click_config.data = {
+                          xpath: buttons[index]
+                        };
 
-                var slave = ACTION.factory.create_action(click_config, ACTION);
-                slaves.push(slave);
-              }
+                        var slave = ACTION.factory.create_action(click_config, ACTION);
+                        slaves.push(slave);
+                      }
 
-              return slaves;
-            };
+                      return slaves;
+                    };
 
-            var processSlaves = function(slaves) {
-              return new Promise(function(resolveSlave, rejectSlave) {
-                if (slaves.length == 0) {
-                  resolveSlave();
-                  return;
-                }
+                    let processSlaves = function(slaves) {
+                      return new Promise(function(resolveSlave, rejectSlave) {
+                        try {
+                          if (slaves.length == 0) {
+                            resolveSlave();
+                            return;
+                          }
 
-                var slave_action = slaves.pop();
+                          var slave_action = slaves.pop();
 
-                slave_action.main(subactions).then(function() {
-                  processSlaves(slaves).then(resolveSlave);
+                          slave_action.main(subactions).then(function() {
+                            processSlaves(slaves).then(resolveSlave);
+                          }, function(exc) {
+                            rejectSlave(exc);
+                          });
+                        } catch (exc) {
+                          rejectSlave(exc);
+                        }
+                      });
+                    };
+
+                    ACTION.write_to_store(page);
+                    processSlaves(createSlaves()).then(function() {
+                      try {
+                        ACTION.finalize().then(function(result) {
+                          resolve(result);
+                        }, function(exc) {
+                          reject(exc);
+                        });
+                      } catch (exc) {
+                        reject(exc);
+                      }
+                    }, function(exc) {
+                      reject(exc);
+                    });
+                  } catch (exc) {
+                    reject(exc);
+                  }
+                }, function(exc) {
+                  reject(exc);
                 });
-              });
-            };
-
-            ACTION.write_to_store(page);
-            processSlaves(createSlaves()).then(function() {
-              ACTION.finalize().then(function(result) {
-                resolve(result);
-              });
+              } catch (exc) {
+                reject(exc);
+              }
+            }, function(exc) {
+              reject(exc);
             });
-          });
+          } catch (exc) {
+            reject(exc);
+          }
         });
       });
-    });
+    } catch (exc) {
+      rejectAllPages(exc);
+      return;
+    }
 
     Promise.all(actions).then(function(result) {
       resolveAllPages(result[0]);
+    }, function(exc) {
+      rejectAllPages(exc);
     });
   });
 };

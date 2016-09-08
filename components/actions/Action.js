@@ -1,4 +1,7 @@
-var is_array = require('../utils/TypeHints').is_array;
+'use strict';
+
+var assert = require('assert'),
+    is_array = require('../utils/TypeHints').is_array;
 
 function Action(factory, config, store, browser) {
   this.factory = factory;
@@ -40,25 +43,30 @@ Action.prototype.finalize = function() {
   var ACTION = this;
 
   return new Promise(function(resolve, reject) {
-    resolve({
-      data: ACTION.store.get_visible_data(),
-      history: ACTION.history
-    });
+    try {
+      resolve({
+        data: ACTION.store.get_visible_data(),
+        history: ACTION.history
+      });
+    } catch (exc) {
+      reject(exc);
+    }
   });
 };
 
 Action.prototype.run_subactions = function(subactions) {
-  var ACTION = this;
-
-  if (!is_array(subactions) || subactions.length == 0) {
-    return ACTION.finalize();
-  }
-
-  var clone = subactions.slice(),
+  let clone = subactions.slice(),
       head = clone[0],
       tail = clone.slice().splice(1, clone.length);
 
-  console.log(ACTION.get_name(), '==>', head.get_name(), '->', head.config.target);
+  try {
+    assert(is_array(subactions));
+    assert.notEqual(subactions.length, 0);
+  } catch (exc) {
+    return this.finalize();
+  }
+
+  console.log(this.get_name(), '==>', head.get_name(), '->', head.config.target);
   head.history = this.history;
   return head.main(tail);
 };

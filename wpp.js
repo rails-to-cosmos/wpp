@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require('express'),
+      assert = require('assert'),
       app = express(),
       port = 8283,
       server = app.listen(port),
@@ -9,33 +10,65 @@ const express = require('express'),
 
       WebpageProcessor = require('./components/WebpageProcessor');
 
-const ErrorHandler = function(err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-};
-
 app.use(BodyParser.json());
-app.use(ErrorHandler);
 
-app.post('/', function(req, res) {
-  worker(req.body.actions, function(err, data) {
-    if (err) {
-      res.json(err);
-    } else {
-      res.json(data);
-      // console.log(data);
-    }
-  });
+app.get('/', function(req, res) {
+  res.sendStatus(500);
 });
 
-function worker(actions, done) {
-  var date = new Date();
-  console.log('\n--- NEW JOB RECEIVED: ' + date + ' ---');
+app.post('/', function(req, res) {
+  let shout_termination_success = function() {
+    console.log('--- SUCCESS on', new Date(), '---');
+  };
+
+  let shout_termination_failure = function() {
+    console.error('--- FAILURE on', new Date(), '---');
+  };
+
+  let handle_exception = function (description, exc, req, res) {
+    res.sendStatus(500);
+    console.log(description + ':', exc);
+    shout_termination_failure();
+    return;
+  };
+
+  console.log('\n--- JOB RECEIVED on', new Date(), '---');
+
+  let actions;
+  try {
+    actions = req.body.actions;
+    assert(actions);
+  } catch (exc) {
+    return handle_exception('Cannot get actions', exc, req, res);
+  }
   console.log(JSON.stringify(actions));
 
-  let wpp = new WebpageProcessor();
+  let wpp;
+  try {
+    wpp = new WebpageProcessor();
+    assert(wpp);
+  } catch (exc) {
+    return handle_exception('Cannot create webpage processor', exc, req, res);
+  }
 
-  wpp.run(actions, done).catch(function(error) {
-    server.close();
-  });
-}
+  try {
+    wpp.run(actions, function(exc, data) {
+      if (exc) {
+        return handle_exception('Webpage processor exception', exc, req, res);
+      }
+
+      try {
+        res.json(data);
+        shout_termination_success();
+      } catch (exc) {
+        return handle_exception('Failed to build response', exc, req, res);
+      }
+
+      return true;
+    });
+  } catch (exc) {
+    return handle_exception('Task failed', exc, req, res);
+  }
+
+  return true;
+});
