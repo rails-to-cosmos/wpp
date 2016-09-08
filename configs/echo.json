@@ -1,4 +1,10 @@
 {
+  "proxy": {
+    "ftp": "",
+    "http": "http://Jb2RADb4w6:a.batalov@grfc.ru@193.124.188.228:54354",
+    "https": "",
+    "type": "http"
+  },
   "actions": [
     {
       "data": {

@@ -9,17 +9,9 @@ const phantom = require('phantom'),
       ActionResultStore = require('./stores/ActionResultStore'),
       ActionTree = require('./data_structures/ActionTree');
 
-var phantom_settings = [
-  '--disk-cache=false',
-  '--disk-cache-path=/tmp/phantom-cache',
-  '--load-images=false',
-  '--cookies-file=/dev/null',
-  '--ignore-ssl-errors=true',
-  //  '--debug=true'
-];
-
-function WebpageProcessor() {
+function WebpageProcessor(proxy) {
   this.phantom_instance = null;
+  this.proxy = proxy;
 }
 
 WebpageProcessor.prototype.run = function(actions, done) {
@@ -28,9 +20,27 @@ WebpageProcessor.prototype.run = function(actions, done) {
 
   return validator.validate(actions).then(function(validator_report) { // SUCCESSFUL validation
     try {
-      phantom_settings[1] = '--disk-cache-path=' + actions[0].data.url;
+      let phantom_settings = new Map();
+      phantom_settings.set('--disk-cache', 'false');
+      phantom_settings.set('--load-images', 'false');
+      phantom_settings.set('--cookies-file', '/dev/null');
+      phantom_settings.set('--ignore-ssl-errors', 'true');
+      phantom_settings.set('--disk-cache-path', actions[0].data.url);
 
-      phantom.create(phantom_settings).then(function(phantom_instance) { // phantom instance successfully created
+      if (WPP.proxy) {
+        phantom_settings.set('--proxy-type', WPP.proxy.type);
+        phantom_settings.set('--proxy', WPP.proxy[WPP.proxy.type]);
+      }
+      // phantom_settings.set('--disk-cache-path', '/tmp/phantom-cache');
+
+      let adapted_phantom_settings = [];
+      phantom_settings.forEach(function(value, key) {
+        adapted_phantom_settings.push(key + '=' + value);
+      });
+
+      console.log('--- PHANTOM SETTINGS ---\n', phantom_settings);
+
+      phantom.create(adapted_phantom_settings).then(function(phantom_instance) { // phantom instance successfully created
         try {
           let storage = new ActionResultStore(),
               factory = new ActionFactory(phantom_instance, storage),

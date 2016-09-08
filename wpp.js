@@ -41,12 +41,21 @@ app.post('/', function(req, res) {
   } catch (exc) {
     return handle_exception('Cannot get actions', exc, req, res);
   }
-  console.log(JSON.stringify(actions));
+  console.log('Actions:', JSON.stringify(actions));
+
+  let proxy;
+  try {
+    proxy = req.body.proxy;
+  } catch (exc) {
+
+  }
+  console.log('Proxy settings:', JSON.stringify(proxy));
 
   let wpp;
   try {
     wpp = new WebpageProcessor();
     assert(wpp);
+    wpp.proxy = proxy;
   } catch (exc) {
     return handle_exception('Cannot create webpage processor', exc, req, res);
   }
