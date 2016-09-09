@@ -14,3 +14,18 @@ mocha tests --recursive --watch
 * TODO IFrames
 * TODO Implement action historyback
 * TODO Implement Action Store
+* TODO Bugs
+** FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory
+ 1: node::Abort() [node]
+ 2: 0xfc3f6c [node]
+ 3: v8::Utils::ReportApiFailure(char const*, char const*) [node]
+ 4: v8::internal::V8::FatalProcessOutOfMemory(char const*, bool) [node]
+ 5: v8::internal::Factory::NewRawTwoByteString(int, v8::internal::PretenureFlag) [node]
+ 6: v8::internal::String::SlowFlatten(v8::internal::Handle<v8::internal::ConsString>, v8::internal::PretenureFlag) [node]
+ 7: v8::internal::String::Flatten(v8::internal::Handle<v8::internal::String>, v8::internal::PretenureFlag) [node]
+ 8: v8::String::WriteUtf8(char*, int, int*, int) const [node]
+ 9: node::StringBytes::Write(v8::Isolate*, char*, unsigned long, v8::Local<v8::Value>, node::encoding, int*) [node]
+10: node::Buffer::New(v8::Isolate*, v8::Local<v8::String>, node::encoding) [node]
+11: node::Buffer::CreateFromString(v8::FunctionCallbackInfo<v8::Value> const&) [node]
+12: 0x6da8c90c048
+** FATAL ERROR: Scavenger: semi-space copy

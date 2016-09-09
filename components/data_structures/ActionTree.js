@@ -16,7 +16,7 @@ function ActionTree(actions, factory) {
     try {
       action = factory.create_action(action_config);
     } catch(e) {
-      console.log('Warning:', e.message, 'Ignoring.');
+      // console.log('Warning:', e.message, 'Ignoring.');
       continue;
     }
 

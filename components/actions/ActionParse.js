@@ -19,7 +19,7 @@ function ComplexSelector(selector) {
       try {
         this.index = parseInt(eq_matches[1]);
       } catch (exc) {
-        console.log('AttributeError: eq contains non-numeric value');
+        // console.log('AttributeError: eq contains non-numeric value');
       }
 
       selector = selector.replace(/:eq\((\d+)\)/, '');
@@ -66,7 +66,7 @@ ActionParse.prototype.main = function(subactions) {
                     try {
                       element = $(selector.selector).get(selector.index);
                     } catch (exc) {
-                      console.log(exc);
+                      // console.log(exc);
                     }
                   } else {
                     element = $(clean_selector).first();
@@ -79,7 +79,7 @@ ActionParse.prototype.main = function(subactions) {
                     try {
                       element = $(selector.selector).get(selector.index);
                     } catch (exc) {
-                      console.log(exc);
+                      // console.log(exc);
                     }
 
                     element_representation = new Representation($, element, selector);
@@ -91,7 +91,7 @@ ActionParse.prototype.main = function(subactions) {
                         result.push(element_representation.repr());
                       });
                     } catch (exc) {
-                      console.log(exc);
+                      // console.log(exc);
                     }
                   }
                 } else if (selector.attribute && !selector.selector) {

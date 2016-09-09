@@ -38,7 +38,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
         adapted_phantom_settings.push(key + '=' + value);
       });
 
-      console.log('--- PHANTOM SETTINGS ---\n', phantom_settings);
+      // console.log('--- PHANTOM SETTINGS ---\n', phantom_settings);
 
       phantom.create(adapted_phantom_settings).then(function(phantom_instance) { // phantom instance successfully created
         try {
@@ -74,7 +74,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
             try {
               WPP.phantom_instance.exit();
             } catch (exc) {
-              console.log('Cannot kill phantom instance:', exc);
+              // console.log('Cannot kill phantom instance:', exc);
             }
           }, function(exc) { // FAILED processing
             done(exc);
@@ -83,7 +83,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
           done(exc);
         }
       }, function() { // unable to create phantom instance
-        console.log('Unable to create phantom instance');
+        // console.log('Unable to create phantom instance');
       });
     } catch (exc) {
       done(exc);
@@ -94,10 +94,10 @@ WebpageProcessor.prototype.run = function(actions, done) {
 };
 
 WebpageProcessor.prototype.output_report = function(result, unique, duplicates, history) {
-  console.log('--- OUTPUT RECORD ---');
-  console.log('Result Length:', result.data.length);
-  console.log('Duplicates:', duplicates);
-  console.log('Result history:', result.history.keys());
+  // console.log('--- OUTPUT RECORD ---');
+  // console.log('Result Length:', result.data.length);
+  // console.log('Duplicates:', duplicates);
+  // console.log('Result history:', result.history.keys());
 };
 
 WebpageProcessor.prototype.process_action_tree = function(action_tree) {

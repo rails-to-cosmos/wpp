@@ -81,7 +81,7 @@ ActionClickSlave.prototype.main = function (subactions) {
                     }, path).then(function(result) {
                       try {
                         if (!result) {
-                          console.error('Unable to click', path, ACTION.get_name(), 'on', ACTION.config.target);
+                          // console.error('Unable to click', path, ACTION.get_name(), 'on', ACTION.config.target);
                           ACTION.finalize().then(function(result) {
                             resolveClick(result);
                           }, function(exc) {

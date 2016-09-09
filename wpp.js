@@ -18,21 +18,21 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res) {
   let shout_termination_success = function() {
-    console.log('--- SUCCESS on', new Date(), '---');
+    // console.log('--- SUCCESS on', new Date(), '---');
   };
 
   let shout_termination_failure = function() {
-    console.error('--- FAILURE on', new Date(), '---');
+    // console.error('--- FAILURE on', new Date(), '---');
   };
 
   let handle_exception = function (description, exc, req, res) {
     res.sendStatus(500);
-    console.log(description + ':', exc);
+    // console.log(description + ':', exc);
     shout_termination_failure();
     return;
   };
 
-  console.log('\n--- JOB RECEIVED on', new Date(), '---');
+  // console.log('\n--- JOB RECEIVED on', new Date(), '---');
 
   let actions;
   try {
@@ -41,7 +41,7 @@ app.post('/', function(req, res) {
   } catch (exc) {
     return handle_exception('Cannot get actions', exc, req, res);
   }
-  console.log('Actions:', JSON.stringify(actions));
+  // console.log('Actions:', JSON.stringify(actions));
 
   let proxy;
   try {
@@ -49,7 +49,7 @@ app.post('/', function(req, res) {
   } catch (exc) {
 
   }
-  console.log('Proxy settings:', JSON.stringify(proxy));
+  // console.log('Proxy settings:', JSON.stringify(proxy));
 
   let wpp;
   try {

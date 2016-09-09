@@ -66,7 +66,7 @@ Action.prototype.run_subactions = function(subactions) {
     return this.finalize();
   }
 
-  console.log(this.get_name(), '==>', head.get_name(), '->', head.config.target);
+  // console.log(this.get_name(), '==>', head.get_name(), '->', head.config.target);
   head.history = this.history;
   return head.main(tail);
 };

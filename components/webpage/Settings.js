@@ -5,9 +5,9 @@ var default_settings = (page, config) => {
   page.property('viewportSize', {width: 800, height: 600});
 
   page.on('onResourceTimeout', function(e) {
-    console.log(e.errorCode);   // it'll probably be 408
-    console.log(e.errorString); // it'll probably be 'Network timeout on resource'
-    console.log(e.url);         // the url whose request timed out
+    // console.log(e.errorCode);   // it'll probably be 408
+    // console.log(e.errorString); // it'll probably be 'Network timeout on resource'
+    // console.log(e.url);         // the url whose request timed out
     // phantom.exit(1);
   });
 

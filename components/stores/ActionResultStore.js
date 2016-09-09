@@ -56,7 +56,7 @@ ActionResultStore.prototype.get_visible_data = function() {
             elres = ExtendedActionResults[element.constructor.name].repr(element);
           }
         } catch (exc) {
-          console.log(exc);
+          // console.log(exc);
           continue;
         }
 
