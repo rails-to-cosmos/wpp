@@ -11,6 +11,8 @@ const express = require('express'),
       LogstashLogger = require('./components/loggers/LogstashLogger'),
       WebpageProcessor = require('./components/WebpageProcessor');
 
+process.env.UV_THREADPOOL_SIZE = 128;
+
 app.use(BodyParser.json());
 
 app.get('/', function(req, res) {

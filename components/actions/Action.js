@@ -97,7 +97,7 @@ Action.prototype.run_subactions = function(subactions) {
     return this.finalize();
   }
 
-  this.console_info(this.get_name(), '==>', head.get_name(), '->', head.config.target);
+  this.console_info('(' + this.get_name(), '(' + head.get_name(), '(' + head.config.target + ')))');
 
   head.logger = this.logger;
   head.history = this.history;
