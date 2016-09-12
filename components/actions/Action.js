@@ -9,6 +9,7 @@ function Action(factory, config, store, browser) {
   this.store = store;
   this.browser = browser;
   this.history = new Map();
+  this.logger = null;
 };
 
 Action.prototype.get_browser = function() {
@@ -54,6 +55,36 @@ Action.prototype.finalize = function() {
   });
 };
 
+Action.prototype.console_info = function() {
+  let args = Array.prototype.slice.call(arguments),
+      msg = args.join(' ');
+
+  try {
+    this.logger.info(msg);
+  } catch (exc) {
+    console.log(msg);
+  }
+};
+
+Action.prototype.console_debug = function() {
+  let args = Array.prototype.slice.call(arguments),
+      msg = args.join(' ');
+
+  try {
+    this.logger.debug(msg);
+  } catch (exc) {
+    console.log(msg);
+  }
+};
+
+Action.prototype.console_error = function(message, exception) {
+  try {
+    this.logger.error(message, exception);
+  } catch (exc) {
+    console.log(message, exception);
+  }
+};
+
 Action.prototype.run_subactions = function(subactions) {
   let clone = subactions.slice(),
       head = clone[0],
@@ -66,7 +97,9 @@ Action.prototype.run_subactions = function(subactions) {
     return this.finalize();
   }
 
-  // console.log(this.get_name(), '==>', head.get_name(), '->', head.config.target);
+  console.log(this.get_name(), '==>', head.get_name(), '->', head.config.target);
+
+  head.logger = this.logger;
   head.history = this.history;
   return head.main(tail);
 };

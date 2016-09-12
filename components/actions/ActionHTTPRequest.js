@@ -22,7 +22,7 @@ ActionHTTPRequest.prototype.main = function (subactions) {
 
   return new Promise(function(resolve, reject) {
     try {
-      // console.log('ActionHTTPRequest started');
+      ACTION.console_info('ActionHTTPRequest started');
       request({
         url: ACTION.get_url(),
         timeout: 60000,
@@ -36,7 +36,6 @@ ActionHTTPRequest.prototype.main = function (subactions) {
         try {
           let body;
           if (err) {
-            // console.log(err);
             reject(err);
             return;
           }
@@ -44,12 +43,9 @@ ActionHTTPRequest.prototype.main = function (subactions) {
           try {
             body = iconv.decode(resp.body, charset(resp.headers, resp.body));
           } catch (exc) {
-            // console.log('EncodingWarning: Encoding not recognized. Using utf-8.');
-
             try {
               body = resp.body;
             } catch (exc) {
-              // console.log('RequestError: empty response.');
               reject(exc);
               return;
             }

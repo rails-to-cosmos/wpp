@@ -7,7 +7,8 @@ const express = require('express'),
       server = app.listen(port),
 
       BodyParser = require('body-parser'),
-      Logger = require('./components/Logger'),
+      Logger = require('./components/loggers/Logger'),
+      LogstashLogger = require('./components/loggers/LogstashLogger'),
       WebpageProcessor = require('./components/WebpageProcessor');
 
 app.use(BodyParser.json());
@@ -17,21 +18,27 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-  let shout_termination_success = function() {
-    // console.log('--- SUCCESS on', new Date(), '---');
-  };
+  let logger = new Logger();
+  let logger_conf;
+  try {
+    logger_conf = req.body.logging;
+    assert(logger_conf);
 
-  let shout_termination_failure = function() {
-    // console.error('--- FAILURE on', new Date(), '---');
-  };
+    logger = new LogstashLogger(logger_conf.host, logger_conf.port);
+    logger.project_name = 'WPP';
+    logger.type = logger_conf.type;
+    logger.job_type = logger_conf.job_type;
+    logger.job_id = logger_conf.job_id;
+    logger.url = logger_conf.url;
+  } catch (exc) {}
 
   let handle_exception = function (description, exc, req, res) {
     res.sendStatus(500);
-    console.log(description + ':', exc);
-    shout_termination_failure();
+    logger.error(description + ':', exc);
+    logger.info('Job done: FAILURE');
   };
 
-  // console.log('\n--- JOB RECEIVED on', new Date(), '---');
+  logger.info('Receive job');
 
   let actions;
   try {
@@ -40,7 +47,6 @@ app.post('/', function(req, res) {
   } catch (exc) {
     return handle_exception('Cannot get actions', exc, req, res);
   }
-  // console.log('Actions:', JSON.stringify(actions));
 
   let proxy;
   try {
@@ -48,28 +54,12 @@ app.post('/', function(req, res) {
   } catch (exc) {
     // do not use proxy
   }
-  // console.log('Proxy settings:', JSON.stringify(proxy));
-
-  let logger_conf;
-  try {
-    logger_conf = req.body.logging;
-  } catch (exc) {
-    // do not use logging
-  }
-
-  var logger;
-  if (logger_conf) {
-    try {
-      logger = new Logger(logger_conf.host, logger_conf.port);
-    } catch (exc) {
-
-    }
-  }
 
   let wpp;
   try {
     wpp = new WebpageProcessor();
     assert(wpp);
+    wpp.logger = logger;
     wpp.proxy = proxy;
   } catch (exc) {
     return handle_exception('Cannot create webpage processor', exc, req, res);
@@ -83,7 +73,7 @@ app.post('/', function(req, res) {
 
       try {
         res.json(data);
-        shout_termination_success();
+        logger.info('Job done: SUCCESS');
       } catch (exc) {
         return handle_exception('Failed to build response', exc, req, res);
       }
