@@ -7,7 +7,7 @@ const express = require('express'),
       server = app.listen(port),
 
       BodyParser = require('body-parser'),
-
+      Logger = require('./components/Logger'),
       WebpageProcessor = require('./components/WebpageProcessor');
 
 app.use(BodyParser.json());
@@ -27,9 +27,8 @@ app.post('/', function(req, res) {
 
   let handle_exception = function (description, exc, req, res) {
     res.sendStatus(500);
-    // console.log(description + ':', exc);
+    console.log(description + ':', exc);
     shout_termination_failure();
-    return;
   };
 
   // console.log('\n--- JOB RECEIVED on', new Date(), '---');
@@ -47,9 +46,25 @@ app.post('/', function(req, res) {
   try {
     proxy = req.body.proxy;
   } catch (exc) {
-
+    // do not use proxy
   }
   // console.log('Proxy settings:', JSON.stringify(proxy));
+
+  let logger_conf;
+  try {
+    logger_conf = req.body.logging;
+  } catch (exc) {
+    // do not use logging
+  }
+
+  var logger;
+  if (logger_conf) {
+    try {
+      logger = new Logger(logger_conf.host, logger_conf.port);
+    } catch (exc) {
+
+    }
+  }
 
   let wpp;
   try {

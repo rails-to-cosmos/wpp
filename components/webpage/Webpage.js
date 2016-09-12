@@ -10,7 +10,7 @@ Webpage.prototype.create = function() {
 
   return new Promise((resolve, reject) => {
     BROWSER.createPage().then((page) => {
-      settings.default_settings(page, CONFIG);
+      settings.default_settings(BROWSER, page, CONFIG);
       resolve(page);
     });
   });
