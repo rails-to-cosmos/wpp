@@ -15,6 +15,16 @@ function WebpageProcessor() {
   this.logger = null;
 }
 
+WebpageProcessor.prototype.free = function(done) {
+  if (this.phantom_instance) {
+    try {
+      this.phantom_instance.exit();
+    } catch (exc) {
+      console.log(exc);
+    }
+  }
+};
+
 WebpageProcessor.prototype.run = function(actions, done) {
   let WPP = this,
       validator = new SyntaxValidator();
@@ -72,27 +82,27 @@ WebpageProcessor.prototype.run = function(actions, done) {
 
               WPP.output_report(result, unique, duplicates);
             } catch (exc) {
-              done(exc);
-            }
-
-            try {
-              WPP.phantom_instance.exit();
-            } catch (exc) {
+              WPP.free();
               done(exc);
             }
           }, function(exc) { // FAILED processing
+            WPP.free();
             done(exc);
           });
         } catch (exc) {
+          WPP.free();
           done(exc);
         }
       }, function(exc) { // unable to create phantom instance
+        WPP.free();
         done(exc);
       });
     } catch (exc) { // webpage processor exception on init
+      WPP.free();
       done(exc);
     }
   }, function(validator_report) { // syntax validation FAILURE
+    WPP.free();
     done(validator_report);
   });
 };
