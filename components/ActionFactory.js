@@ -1,4 +1,6 @@
-var ActionDownload = require('./actions/ActionDownload'),
+'use strict';
+
+let ActionDownload = require('./actions/ActionDownload'),
     ActionHTTPRequest = require('./actions/ActionHTTPRequest'),
     ActionClickMaster = require('./actions/ActionClickMaster'),
     ActionPaginate = require('./actions/ActionPaginate'),
@@ -40,15 +42,20 @@ function ActionFactory(browser, storage) {
   this.storage = storage;
 };
 
+ActionFactory.prototype.inherit = function(child, parent) {
+  if (child && parent) {
+    child.history = parent.history;
+    child.logger = parent.logger;
+  }
+};
+
 ActionFactory.prototype.create_action = function(config, parent) {
   if (!(config.type in ActionAssoc)) {
     throw new Error('Unknown action received: ' + config.name + ' (' + config.type + ').');
   }
 
-  var action = new ActionAssoc[config.type](this, config, this.storage, this.browser);
-  if (parent) {
-    action.history = parent.history;
-  }
+  let action = new ActionAssoc[config.type](this, config, this.storage, this.browser);
+  this.inherit(action, parent);
   return action;
 };
 

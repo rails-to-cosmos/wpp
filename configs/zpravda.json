@@ -1,0 +1,70 @@
+{
+  "actions": [
+    {
+      "target": "",
+      "type": "ADownload",
+      "data": {
+        "url": "http://zpravda.ru/2014-01-17-10-44-05/item/9288-redaktsiya-gazetyi-nash-zelenyiy-dol-zelenodolsk-obyavil-novyiy-konkurs-dlya-samyih-malenkih-svoih-chitateley.html"
+      },
+      "name": "webpage",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "webpage",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".even[outerHTML]"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": "[id]"
+      },
+      "name": "id",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-author"
+      },
+      "name": "author",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-body"
+      },
+      "name": "body",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comments",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".comment-date"
+      },
+      "name": "comment",
+      "settings": {
+        "visible": true
+      }
+    }
+  ]
+}

@@ -78,12 +78,12 @@ WebpageProcessor.prototype.run = function(actions, done) {
                 }
               }
 
-              done(null, unique);
-
               WPP.output_report(result, unique, duplicates);
+              done(null, unique);
             } catch (exc) {
-              WPP.free();
               done(exc);
+            } finally {
+              WPP.free();
             }
           }, function(exc) { // FAILED processing
             WPP.free();
