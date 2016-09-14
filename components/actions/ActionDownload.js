@@ -36,8 +36,12 @@ ActionDownload.prototype.main = function (subactions) {
           Filters.applyOnPage(page, filters);
           let url = ACTION.config.data.url;
           assert(url);
+
+          let context_transfered_to_main_thread = false;
+
           page.invokeAsyncMethod('open', url).then(function(status) {
             try {
+              context_transfered_to_main_thread = true;
               get_page_content(page, ACTION).then(function(content) {
                 try {
                   ACTION.write_to_store(page);
@@ -51,7 +55,18 @@ ActionDownload.prototype.main = function (subactions) {
             } catch (exc) {
               reject(exc);
             }
-          }, reject);
+          }, function(exc) {
+            context_transfered_to_main_thread = true;
+            reject(exc);
+          });
+
+          setTimeout(function() {
+            if (!context_transfered_to_main_thread) {
+              let phantom = ACTION.get_browser();
+              phantom.process.kill();
+              reject(new Error('PhantomJS process is not responding'));
+            }
+          }, 60000);
         } catch (exc) {
           reject(exc);
         }
