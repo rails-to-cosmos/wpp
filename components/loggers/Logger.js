@@ -1,7 +1,7 @@
 'use strict';
 
 function Logger() {
-
+  this.url = '';
 }
 
 Logger.prototype.send_message = function(message) {
@@ -9,7 +9,9 @@ Logger.prototype.send_message = function(message) {
 };
 
 Logger.prototype.get_default_params = function() {
-  return {};
+  return {
+    url: this.url
+  };
 };
 
 Logger.prototype.info = function(message) {

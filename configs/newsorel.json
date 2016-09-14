@@ -4,7 +4,7 @@
       "target": "",
       "type": "ADownload",
       "data": {
-        "url": "http://www.yarsport.ru/hockey/nhl/37177-varlamov-kubok-mira-budet-samym-sereznym-turnirom-v-moey-karere.html"
+        "url": "http://newsorel.ru/fn_182689.html"
       },
       "name": "webpage",
       "settings": {
@@ -15,7 +15,7 @@
       "target": "webpage",
       "type": "AParseBySelector",
       "data": {
-        "selector": "#dlemasscomments .bcomment[outerHTML]"
+        "selector": ".mc-comments[outerHTML]"
       },
       "name": "comments",
       "settings": {
@@ -26,18 +26,18 @@
       "target": "comments",
       "type": "AParseBySelector",
       "data": {
-        "selector": ".comment_date"
+        "selector": ".mc-comment[outerHTML]"
       },
-      "name": "date",
+      "name": "comment",
       "settings": {
         "visible": true
       }
     },
     {
-      "target": "comments",
+      "target": "comment",
       "type": "AParseBySelector",
       "data": {
-        "selector": "h4 a"
+        "selector": " .mc-comment-username"
       },
       "name": "author",
       "settings": {
@@ -45,10 +45,10 @@
       }
     },
     {
-      "target": "comments",
+      "target": "comment",
       "type": "AParseBySelector",
       "data": {
-        "selector": ".com_bot"
+        "selector": ".mc-comment-msg"
       },
       "name": "body",
       "settings": {
@@ -56,10 +56,21 @@
       }
     },
     {
-      "target": "webpage",
+      "target": "comment",
       "type": "AParseBySelector",
       "data": {
-        "selector": "div[id^=\"comment-id\"][id]"
+        "selector": ".mc-comment-time"
+      },
+      "name": "date",
+      "settings": {
+        "visible": true
+      }
+    },
+    {
+      "target": "comment",
+      "type": "AParseBySelector",
+      "data": {
+        "selector": ".mc-comment[id]"
       },
       "name": "id",
       "settings": {

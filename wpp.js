@@ -32,15 +32,15 @@ app.post('/', function(req, res) {
     logger.job_type = logger_conf.job_type;
     logger.job_id = logger_conf.job_id;
     logger.url = logger_conf.url;
-  } catch (exc) {}
+  } catch (exc) {
+    logger.info('Use default logger');
+  }
 
   let handle_exception = function (description, exc, req, res) {
     res.sendStatus(500);
     logger.error(description + ':', exc);
     logger.info('Job done: FAILURE');
   };
-
-  logger.info('Receive job');
 
   let actions;
   try {
@@ -50,11 +50,21 @@ app.post('/', function(req, res) {
     return handle_exception('Cannot get actions', exc, req, res);
   }
 
+  if (!logger.url) {
+    try {
+      logger.url = actions[0].data.url;
+      assert(logger.url);
+    } catch (exc) {
+      logger.info('Cannot get task URL');
+    }
+  }
+
   let proxy;
   try {
     proxy = req.body.proxy;
+    assert(proxy);
   } catch (exc) {
-    // do not use proxy
+    logger.info('Proxy disabled');
   }
 
   let wpp;

@@ -25,10 +25,7 @@ ActionDownload.prototype.get_filters = function() {
 };
 
 ActionDownload.prototype.main = function (subactions) {
-  const ACTION = this,
-        CLOSE_ACTION_TYPE = 'Close';
-
-  Action.prototype.main.call(this, subactions);
+  const ACTION = this;
 
   return new Promise(function(resolve, reject) {
     try {

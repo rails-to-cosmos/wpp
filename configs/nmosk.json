@@ -1,0 +1,59 @@
+{
+  "actions": [
+    {
+      "data": {
+        "url": "http://www.nmosktoday.ru/news/politics/35201/"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "ADownload",
+      "name": "webpage",
+      "target": ""
+    },
+    {
+      "data": {
+        "selector": ".content_field .com-item[outerHTML]"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "comments",
+      "target": "webpage"
+    },
+    {
+      "data": {
+        "selector": ".s12"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comments"
+    },
+    {
+      "data": {
+        "selector": ".c_mgr a"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "author",
+      "target": "comments"
+    },
+    {
+      "data": {
+        "selector": ".c_mgr span"
+      },
+      "settings": {
+        "visible": true
+      },
+      "type": "AParseBySelector",
+      "name": "date",
+      "target": "comments"
+    }
+  ]
+}
