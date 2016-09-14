@@ -39,6 +39,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
       phantom_settings.set('--cookies-file', '/dev/null');
       phantom_settings.set('--ignore-ssl-errors', 'true');
       phantom_settings.set('--disk-cache-path', actions[0].data.url);
+      // phantom_settings.set('--debug', 'true');
       // phantom_settings.set('--disk-cache-path', '/tmp/phantom-cache');
       if (WPP.proxy) {
         phantom_settings.set('--proxy-type', WPP.proxy.type);

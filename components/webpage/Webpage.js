@@ -8,10 +8,12 @@ Webpage.prototype.create = function() {
   const BROWSER = this.browser,
         CONFIG = this.config;
 
-  return new Promise((resolve, reject) => {
-    BROWSER.createPage().then((page) => {
+  return new Promise(function (resolve, reject) {
+    BROWSER.createPage().then(function (page) {
       settings.default_settings(BROWSER, page, CONFIG);
       resolve(page);
+    }, function(exc) {
+      reject(exc);
     });
   });
 };
