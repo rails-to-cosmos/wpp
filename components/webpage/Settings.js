@@ -1,5 +1,5 @@
 var default_settings = (browser, page, config) => {
-  // page.setting('userAgent', userAgent);
+  page.setting('userAgent', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36');
   page.setting('resourceTimeout', 60000);
   page.property('viewportSize', {width: 800, height: 600});
   page.on('onResourceTimeout', function(e) {

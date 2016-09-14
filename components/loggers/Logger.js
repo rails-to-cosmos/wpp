@@ -1,7 +1,7 @@
 'use strict';
 
 function Logger() {
-  this.url = '';
+  this.__slots__ = ['url'];
 }
 
 Logger.prototype.send_message = function(message) {
@@ -9,9 +9,19 @@ Logger.prototype.send_message = function(message) {
 };
 
 Logger.prototype.get_default_params = function() {
-  return {
-    url: this.url
+  let def_params = {
+    '@version': '1',
+    '@timestamp': new Date(),
+    'level': 'INFO'
   };
+
+  for (let slot of this.__slots__) {
+    if (this[slot]) {
+      def_params[slot] = this[slot];
+    }
+  }
+
+  return def_params;
 };
 
 Logger.prototype.info = function(message) {

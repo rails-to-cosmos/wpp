@@ -6,36 +6,19 @@ var Logger = require('./Logger'),
 function LogstashLogger(host, port) {
   Logger.apply(this, []);
 
-  this.client = new LogstashClient({
+  this.__slots__ = ['type', 'project_name', 'job_id', 'job_type', 'url'];
+
+  this.__client__ = new LogstashClient({
     type: 'udp',
     host: host,
     port: port
   });
-
-  this.project_name = 'Default project name';
-  this.type = 0;
-  this.job_id = 0;
-  this.job_type = 'default job type';
-  this.url = 'default url';
 }
 
 LogstashLogger.prototype = new Logger();
 
 LogstashLogger.prototype.send_message = function(message) {
-  return this.client.send(message);
-};
-
-LogstashLogger.prototype.get_default_params = function() {
-  return {
-    '@version': '1',
-    '@timestamp': new Date(),
-    level: 'INFO',
-    type: this.type,
-    project_name: this.project_name,
-    job_id: this.job_id,
-    job_type: this.job_type,
-    url: this.url
-  };
+  return this.__client__.send(message);
 };
 
 LogstashLogger.prototype.info = function(message) {
