@@ -38,8 +38,7 @@ ActionDownload.prototype.main = function (subactions) {
           assert(url);
 
           let context_transfered_to_main_thread = false;
-
-          page.invokeAsyncMethod('open', url).then(function(status) {
+          page.open(url).then(function(status) {
             try {
               context_transfered_to_main_thread = true;
               get_page_content(page, ACTION).then(function(content) {
@@ -64,9 +63,9 @@ ActionDownload.prototype.main = function (subactions) {
             if (!context_transfered_to_main_thread) {
               let phantom = ACTION.get_browser();
               phantom.process.kill();
-              reject(new Error('PhantomJS process is not responding'));
+              reject(new Error('PhantomJS process does not responding'));
             }
-          }, 60000);
+          }, 500);
         } catch (exc) {
           reject(exc);
         }

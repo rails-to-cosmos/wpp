@@ -24,7 +24,6 @@ ActionClose.prototype.main = function (subactions) {
     Promise.all(actions).then(function(result) {
       ACTION.run_subactions(subactions).then(resolve, reject);
     }, reject);
-
   });
 };
 

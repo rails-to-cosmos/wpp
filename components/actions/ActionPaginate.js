@@ -1,10 +1,10 @@
 'use strict';
 
-var Action = require('./Action'),
-    ActionClickMaster = require('./ActionClickMaster'),
-    Webpage = require('../webpage/Webpage'),
-    XPathInjection = require('../injections/XPathInjection'),
-    deepcopy = require('deepcopy');
+const Action = require('./Action'),
+      ActionClickMaster = require('./ActionClickMaster'),
+      Webpage = require('../webpage/Webpage'),
+      XPathInjection = require('../injections/XPathInjection'),
+      deepcopy = require('deepcopy');
 
 function ActionPaginate() {
   ActionClickMaster.apply(this, Array.prototype.slice.call(arguments));
@@ -17,17 +17,17 @@ ActionPaginate.prototype.main = function (subactions) {
         SLAVE_ACTION_TYPE = 'AClickSlave',
         PAGINATION_LIMIT = 100;
 
-  var pages = ACTION.get_from_store(ACTION.get_target()),
+  let pages = ACTION.get_from_store(ACTION.get_target()),
       visited = [];
 
   Action.prototype.main.call(this, subactions);
 
   return new Promise(function(resolveAllPages, rejectAllPages) {
     try {
-      var dependent_subactions = [],
+      let dependent_subactions = [],
           independent_subactions = [];
 
-      var actions = pages.map(function(page) {
+      let actions = pages.map(function(page) {
         try {
           ACTION.write_to_store(page);
           return new Promise(function(resolve, reject) {
@@ -38,7 +38,7 @@ ActionPaginate.prototype.main = function (subactions) {
             }
 
             function scanPaginationButtons() {
-              var xpath_injection = new XPathInjection();
+              let xpath_injection = new XPathInjection();
               xpath_injection.apply(page).then(function() {
                 const selector = ACTION.config.data.selector;
                 page.evaluate(function(selector) {
@@ -59,7 +59,7 @@ ActionPaginate.prototype.main = function (subactions) {
                       return;
                     }
 
-                    let found = false;
+                    var found = false;
                     for (var name in buttons) {
                       if (visited.indexOf(name) > -1) {
                         continue;
@@ -73,7 +73,7 @@ ActionPaginate.prototype.main = function (subactions) {
                       return;
                     }
 
-                    let click_config = deepcopy(ACTION.config);
+                    var click_config = deepcopy(ACTION.config);
                     click_config.type = SLAVE_ACTION_TYPE;
                     click_config.name = ACTION.config.name + ' (' + name + ')';
                     click_config.data = {
@@ -90,7 +90,7 @@ ActionPaginate.prototype.main = function (subactions) {
                       }
                     }
 
-                    let slave = ACTION.factory.create_action(click_config, ACTION);
+                    var slave = ACTION.factory.create_action(click_config, ACTION);
                     slave.main(dependent_subactions).then(function() {
                       visited.push(name);
                       if (visited.length < PAGINATION_LIMIT) {
@@ -114,10 +114,10 @@ ActionPaginate.prototype.main = function (subactions) {
       });
 
       Promise.all(actions).then(function(result) {
-        let isl = independent_subactions.length;
+        var isl = independent_subactions.length;
         if (isl > 0) {
-          let iss = [];
-          for (let is of independent_subactions) {
+          var iss = [];
+          for (var is of independent_subactions) {
             iss.push(is.config.name);
           }
           ACTION.factory.inherit(independent_subactions[0], ACTION);

@@ -105,7 +105,7 @@ function applyOnPage(page, filters) {
         !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
       networkRequest.abort();
     } else {
-      // // console.log('Accept', requestData.url);
+      console.log('Accept', requestData.url);
     }
   }, filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST);
 }

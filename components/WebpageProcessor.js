@@ -1,7 +1,6 @@
 'use strict';
 
-const phantom = require('phantom'),
-      assert = require('assert'),
+const assert = require('assert'),
       is_array = require('./utils/TypeHints').is_array,
 
       SyntaxValidator = require('./SyntaxValidator'),
@@ -9,96 +8,71 @@ const phantom = require('phantom'),
       ActionResultStore = require('./stores/ActionResultStore'),
       ActionTree = require('./data_structures/ActionTree');
 
-function WebpageProcessor() {
-  this.phantom_instance = null;
-  this.proxy = null;
-  this.logger = null;
+function WebpageProcessor(phantom_instance, proxy, logger) {
+  this.phantom_instance = phantom_instance;
+  this.proxy = proxy;
+  this.logger = logger;
 }
 
 WebpageProcessor.prototype.free = function(done) {
-  if (this.phantom_instance) {
-    try {
-      this.phantom_instance.exit();
-    } catch (exc) {
-      console.log(exc);
-    }
-  }
+  // if (this.phantom_instance) {
+  //   try {
+  //     this.phantom_instance.exit();
+  //   } catch (exc) {
+  //     console.log(exc);
+  //   }
+  // }
 };
 
 WebpageProcessor.prototype.run = function(actions, done) {
   let WPP = this,
       validator = new SyntaxValidator();
 
+  try {
+    assert(WPP.phantom_instance);
+  } catch (exc) {
+    done(exc);
+  }
+
   WPP.logger.info('Validate config');
   return validator.validate(actions).then(function(validator_report) { // SUCCESSFUL validation
     try {
-      WPP.logger.info('Create phantom instance');
-      let phantom_settings = new Map();
-      phantom_settings.set('--disk-cache', 'false');
-      phantom_settings.set('--load-images', 'false');
-      phantom_settings.set('--cookies-file', '/dev/null');
-      phantom_settings.set('--ignore-ssl-errors', 'true');
-      phantom_settings.set('--disk-cache-path', actions[0].data.url);
-      // phantom_settings.set('--debug', 'true');
-      // phantom_settings.set('--disk-cache-path', '/tmp/phantom-cache');
-      if (WPP.proxy) {
-        phantom_settings.set('--proxy-type', WPP.proxy.type);
-        phantom_settings.set('--proxy', WPP.proxy[WPP.proxy.type]);
-      }
+      WPP.logger.info('Create action tree');
 
-      let adapted_phantom_settings = [];
-      phantom_settings.forEach(function(value, key) {
-        adapted_phantom_settings.push(key + '=' + value);
-      });
+      let storage = new ActionResultStore(),
+          factory = new ActionFactory(WPP.phantom_instance, storage),
+          action_tree = new ActionTree(actions, factory);
 
-      phantom.create(adapted_phantom_settings).then(function(phantom_instance) { // phantom instance successfully created
+      WPP.logger.info('Process action tree');
+      WPP.process_action_tree(action_tree).then(function(result) { // SUCCESSFUL processing
         try {
-          WPP.logger.info('Create action tree');
+          WPP.logger.info('Process action tree result');
+          let elems = {},
+              duplicates = {},
+              unique = [];
 
-          let storage = new ActionResultStore(),
-              factory = new ActionFactory(phantom_instance, storage),
-              action_tree = new ActionTree(actions, factory);
-
-          WPP.phantom_instance = phantom_instance;
-
-          WPP.logger.info('Process action tree');
-          WPP.process_action_tree(action_tree).then(function(result) { // SUCCESSFUL processing
-            try {
-              WPP.logger.info('Process action tree result');
-              let elems = {},
-                  duplicates = {},
-                  unique = [];
-
-              for (let ritem of result.data) {
-                if (elems[ritem.id]) {
-                  elems[ritem.id]++;
-                  duplicates[ritem.id]=elems[ritem.id];
-                } else {
-                  elems[ritem.id] = 1;
-                  unique.push(ritem);
-                }
-              }
-
-              WPP.output_report(result, unique, duplicates);
-              done(null, unique);
-            } catch (exc) {
-              done(exc);
-            } finally {
-              WPP.free();
+          for (let ritem of result.data) {
+            if (elems[ritem.id]) {
+              elems[ritem.id]++;
+              duplicates[ritem.id]=elems[ritem.id];
+            } else {
+              elems[ritem.id] = 1;
+              unique.push(ritem);
             }
-          }, function(exc) { // FAILED processing
-            WPP.free();
-            done(exc);
-          });
+          }
+
+          WPP.output_report(result, unique, duplicates);
+          done(null, unique);
         } catch (exc) {
-          WPP.free();
           done(exc);
+        } finally {
+          WPP.free();
         }
-      }, function(exc) { // unable to create phantom instance
+      }, function(exc) { // FAILED processing
         WPP.free();
         done(exc);
       });
-    } catch (exc) { // webpage processor exception on init
+    } catch (exc) {
       WPP.free();
       done(exc);
     }
