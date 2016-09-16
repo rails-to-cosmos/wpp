@@ -4,17 +4,21 @@ var default_settings = (browser, page, config) => {
   page.property('viewportSize', {width: 800, height: 600});
 
   page.on('onResourceTimeout', function(e) {
-    // console.log('PhantomJS request timed out');
-    // console.log(e.errorCode);   // it'll probably be 408
-    // console.log(e.errorString); // it'll probably be 'Network timeout on resource'
-    // console.log(e.url);         // the url whose request timed out
+    console.log('PhantomJS request timed out');
+    console.log(e.errorCode);   // it'll probably be 408
+    console.log(e.errorString); // it'll probably be 'Network timeout on resource'
+    console.log(e.url);         // the url whose request timed out
     browser.exit(1);
   });
 
-  // page.on('onResourceError', function(msg, trace) {
-  //   // console.log('Resource error:');
-  //   // console.log(msg, trace);
-  // });
+  page.on('onError', function() {
+    //
+  });
+
+  page.on('onResourceError', function(msg, trace) {
+    // console.log('Resource error:');
+    // console.log(msg, trace);
+  });
 };
 
 module.exports = {
