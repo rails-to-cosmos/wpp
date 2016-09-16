@@ -62,6 +62,8 @@ ActionHTTPRequest.prototype.main = function (subactions) {
         } catch (exc) {
           reject(exc);
         }
+      }).on('error', function(exc) {
+        reject(exc);
       });
     } catch (exc) {
       reject(exc);

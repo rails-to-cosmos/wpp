@@ -98,9 +98,7 @@ Action.prototype.run_subactions = function(subactions) {
   }
 
   this.console_info('(' + this.get_name(), '(' + head.get_name(), '(' + head.config.target + ')))');
-
-  head.logger = this.logger;
-  head.history = this.history;
+  this.factory.inherit(head, this);
   return head.main(tail);
 };
 

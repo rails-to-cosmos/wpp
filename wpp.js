@@ -80,6 +80,7 @@ app.post('/', function(req, res) {
     if (proxy) {
       phantom_settings.set('--proxy-type', proxy.type);
       phantom_settings.set('--proxy', proxy[proxy.type]);
+      process.env['HTTP_PROXY'] = proxy[proxy.type];
     }
     // if (logger.url) {
     //   phantom_settings.set('--disk-cache-path', logger.url);
