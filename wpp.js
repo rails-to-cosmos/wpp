@@ -16,6 +16,12 @@ var phbalancer = new PhantomJSBalancer();
 require('epipebomb')();
 process.env.UV_THREADPOOL_SIZE = 1024;
 
+process.on('SIGINT', function(code) {
+  console.log('SIGINT: Destroy related phantomjs processes.');
+  phbalancer.free();
+  process.kill(process.pid);
+});
+
 app.use(BodyParser.json());
 
 app.post('/', function(req, res) {

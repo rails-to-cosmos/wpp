@@ -23,6 +23,14 @@ PhantomJSBalancer.prototype.move_phantom_process_index = function() {
   }
 };
 
+PhantomJSBalancer.prototype.free = function() {
+  for (let phjs of this.phantom_processes) {
+    if (phjs.process) {
+      phjs.process.kill();
+    }
+  }
+};
+
 PhantomJSBalancer.prototype.get_phantom_instance = function(settings) {
   let BALANCER = this,
       phantom_settings = BALANCER.adapt_settings(settings);
