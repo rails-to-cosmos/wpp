@@ -34,6 +34,7 @@ ActionDownload.prototype.main = function (subactions) {
         try {
           let filters = ACTION.get_filters();
           Filters.applyOnPage(page, filters);
+
           let url = ACTION.config.data.url;
           assert(url);
 
@@ -45,6 +46,11 @@ ActionDownload.prototype.main = function (subactions) {
                 try {
                   ACTION.write_to_store(page);
                   ACTION.run_subactions(subactions).then(function(result) {
+                    try {
+                      page.close();
+                    } catch (exc) {
+                      ACTION.logger.error('Unable to close page:', exc);
+                    }
                     resolve(result);
                   }, reject);
                 } catch (exc) {
@@ -65,7 +71,7 @@ ActionDownload.prototype.main = function (subactions) {
               phantom.process.kill();
               reject(new Error('PhantomJS process does not responding'));
             }
-          }, 500);
+          }, 30000);
         } catch (exc) {
           reject(exc);
         }

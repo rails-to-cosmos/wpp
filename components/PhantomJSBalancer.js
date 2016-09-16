@@ -4,7 +4,6 @@ const os = require('os'),
       phantom = require('phantom'),
       assert = require('assert');
 
-
 function PhantomJSBalancer(settings) {
   this.phantom_processes = [];
   this.phantom_process_index = 0;
@@ -31,26 +30,32 @@ PhantomJSBalancer.prototype.get_phantom_instance = function(settings) {
   return new Promise(function(resolve, reject) {
     let cached_ph = BALANCER.phantom_processes[BALANCER.phantom_process_index];
 
-    if (cached_ph && cached_ph.process && cached_ph.process.killed) {
-      BALANCER.phantom_processes[BALANCER.phantom_process_index] = null;
-      phantom.create(phantom_settings).then(function(phantom_instance) {
-        BALANCER.phantom_processes[BALANCER.phantom_process_index] = phantom_instance;
-        resolve(phantom_instance);
-      }, function(exc) { // cannot create phantom instance
-        reject(exc);
-      });
-    } else if (cached_ph && cached_ph.process && cached_ph.process._handle) {
-      try {
-        BALANCER.move_phantom_process_index();
-        resolve(BALANCER.phantom_processes[BALANCER.phantom_process_index]);
-      } catch (exc) {
-        reject(exc);
+    if (cached_ph && cached_ph.process) {
+      if (cached_ph.process._handle){
+        try {
+          BALANCER.move_phantom_process_index();
+          resolve(BALANCER.phantom_processes[BALANCER.phantom_process_index]);
+        } catch (exc) {
+          reject(exc);
+        }
+      } else {
+        BALANCER.phantom_processes[BALANCER.phantom_process_index] = null;
+        phantom.create(phantom_settings).then(function(phantom_instance) {
+          BALANCER.phantom_processes[BALANCER.phantom_process_index] = phantom_instance;
+          resolve(phantom_instance);
+        }, function(exc) { // cannot create phantom instance
+          reject(exc);
+        });
       }
     } else {
       phantom.create(phantom_settings).then(function(phantom_instance) {
         BALANCER.phantom_processes.push(phantom_instance);
-        BALANCER.move_phantom_process_index();
-        resolve(phantom_instance);
+        try {
+          BALANCER.move_phantom_process_index();
+          resolve(phantom_instance);
+        } catch (exc) {
+          reject(exc);
+        }
       }, function(exc) { // cannot create phantom instance
         reject(exc);
       });

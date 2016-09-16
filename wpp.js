@@ -36,7 +36,10 @@ app.post('/', function(req, res) {
   }
 
   let handle_exception = function (description, exc, req, res) {
-    res.sendStatus(500);
+    res.json({
+      'error': description + ' (' + exc.message + ')'
+    }).status(500);
+
     logger.error(description + ':', exc);
     logger.info('Job done: FAILURE');
   };
@@ -81,7 +84,7 @@ app.post('/', function(req, res) {
     // if (logger.url) {
     //   phantom_settings.set('--disk-cache-path', logger.url);
     // }
-    phantom_settings.set('--debug', 'true');
+    // phantom_settings.set('--debug', 'true');
     // phantom_settings.set('--disk-cache-path', '/tmp/phantom-cache');
 
     phbalancer.get_phantom_instance(phantom_settings).then(function(phantom_instance) {
