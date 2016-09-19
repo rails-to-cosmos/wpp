@@ -89,7 +89,7 @@ ActionDownload.prototype.main = function(subactions) {
               ACTION.close(page);
               reject(new Error('PhantomJS process does not responding'));
             }
-          }, 120000);
+          }, 30000);
         } catch (exc) {
           ACTION.close(page);
           reject(exc);
