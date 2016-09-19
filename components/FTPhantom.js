@@ -44,10 +44,7 @@ PhantomJSFTWrapper.prototype.release = function() {
 };
 
 PhantomJSFTWrapper.prototype.free = function() {
-  // console.log('Killing PhantomJS');
-  this.phantom.exit(1);
   this.phantom.process.kill();
-  this.phantom = null;
 };
 
 // Fault-Tolerance Phantom Instance
@@ -83,6 +80,10 @@ FTPhantom.prototype.acquire = function() {
 };
 
 FTPhantom.prototype.free = function() {
+  if (this.wheelhorse) {
+    this.wheelhorse.free();
+  }
+
   for (let grave of this.graveyard) {
     grave.free();
   }
