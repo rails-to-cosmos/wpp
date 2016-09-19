@@ -15,13 +15,7 @@ function WebpageProcessor(phantom_instance, proxy, logger) {
 }
 
 WebpageProcessor.prototype.free = function(done) {
-  // if (this.phantom_instance) {
-  //   try {
-  //     this.phantom_instance.exit();
-  //   } catch (exc) {
-  //     console.log(exc);
-  //   }
-  // }
+
 };
 
 WebpageProcessor.prototype.run = function(actions, done) {
@@ -35,7 +29,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
   }
 
   WPP.logger.info('Validate config');
-  return validator.validate(actions).then(function(validator_report) { // SUCCESSFUL validation
+  return validator.validate(actions).then(function(validator_report) {
     try {
       WPP.logger.info('Create action tree');
 
@@ -44,13 +38,12 @@ WebpageProcessor.prototype.run = function(actions, done) {
           action_tree = new ActionTree(actions, factory);
 
       WPP.logger.info('Process action tree');
-      WPP.process_action_tree(action_tree).then(function(result) { // SUCCESSFUL processing
+      WPP.process_action_tree(action_tree).then(function(result) {
         try {
           WPP.logger.info('Process action tree result');
           let elems = {},
               duplicates = {},
               unique = [];
-
           for (let ritem of result.data) {
             if (elems[ritem.id]) {
               elems[ritem.id]++;
@@ -60,7 +53,6 @@ WebpageProcessor.prototype.run = function(actions, done) {
               unique.push(ritem);
             }
           }
-
           WPP.output_report(result, unique, duplicates);
           done(null, unique);
         } catch (exc) {
@@ -68,7 +60,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
         } finally {
           WPP.free();
         }
-      }, function(exc) { // FAILED processing
+      }, function(exc) {
         WPP.free();
         done(exc);
       });
@@ -76,8 +68,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
       WPP.free();
       done(exc);
     }
-  }, function(validator_report) { // syntax validation FAILURE
-    WPP.free();
+  }, function(validator_report) {
     done(validator_report);
   });
 };
@@ -86,6 +77,7 @@ WebpageProcessor.prototype.output_report = function(result, unique, duplicates, 
   // this.logger.info('Result Length:', result.data.length);
   // this.logger.info('Duplicates:', duplicates);
   // console.log('Result history:', result.history.keys());
+  // console.log(new Date(), 'Stop', this.__url__, result.data.length);
 };
 
 WebpageProcessor.prototype.process_action_tree = function(action_tree) {
@@ -94,6 +86,8 @@ WebpageProcessor.prototype.process_action_tree = function(action_tree) {
       tail = action_stack.splice(1, action_stack.length);
 
   head.logger = this.logger;
+  // console.log(new Date(), 'Start', head.config.data.url);
+  // this.__url__ = head.config.data.url;
   return head.main(tail);
 };
 

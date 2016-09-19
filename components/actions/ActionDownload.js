@@ -24,7 +24,21 @@ ActionDownload.prototype.get_filters = function() {
   return filters;
 };
 
-ActionDownload.prototype.main = function (subactions) {
+ActionDownload.prototype.close = function(page) {
+  this.logger.info('Close page ' + page.target);
+  try {
+    let __free__ = function() {
+      page.stop();
+      page.close();
+      page = null;
+    };
+    page.invokeMethod('clearMemoryCache').then(__free__, __free__);
+  } catch (exc) {
+    this.logger.error('Unable to close page:', exc);
+  }
+};
+
+ActionDownload.prototype.main = function(subactions) {
   const ACTION = this;
 
   return new Promise(function(resolve, reject) {
@@ -46,33 +60,38 @@ ActionDownload.prototype.main = function (subactions) {
                 try {
                   ACTION.write_to_store(page);
                   ACTION.run_subactions(subactions).then(function(result) {
-                    try {
-                      page.close();
-                    } catch (exc) {
-                      ACTION.logger.error('Unable to close page:', exc);
-                    }
+                    ACTION.close(page);
                     resolve(result);
-                  }, reject);
+                  }, function(exc) {
+                    ACTION.close(page);
+                    reject(exc);
+                  });
                 } catch (exc) {
+                  ACTION.close(page);
                   reject(exc);
                 }
-              }, reject);
+              }, function(exc) {
+                ACTION.close(page);
+                reject(exc);
+              });
             } catch (exc) {
+              ACTION.close(page);
               reject(exc);
             }
           }, function(exc) {
             context_transfered_to_main_thread = true;
+            ACTION.close(page);
             reject(exc);
           });
 
           setTimeout(function() {
             if (!context_transfered_to_main_thread) {
-              let phantom = ACTION.get_browser();
-              phantom.process.kill();
+              ACTION.close(page);
               reject(new Error('PhantomJS process does not responding'));
             }
-          }, 30000);
+          }, 120000);
         } catch (exc) {
+          ACTION.close(page);
           reject(exc);
         }
       }, reject);

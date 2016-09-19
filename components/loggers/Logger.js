@@ -5,7 +5,7 @@ function Logger() {
 }
 
 Logger.prototype.send_message = function(message) {
-  console.log(message);
+  // console.log(message);
 };
 
 Logger.prototype.get_default_params = function() {

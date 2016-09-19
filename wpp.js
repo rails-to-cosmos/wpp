@@ -11,13 +11,48 @@ const express = require('express'),
       WebpageProcessor = require('./components/WebpageProcessor'),
       PhantomJSBalancer = require('./components/PhantomJSBalancer');
 
-var phbalancer = new PhantomJSBalancer();
+var phbalancer = new PhantomJSBalancer(),
+    jobs_in_progress = new Map(),
+    jobs_count = 0,
+    jobs_start_time = new Date(),
+    imem = 0;
+
+function inc_jobs_in_progress(url) {
+  url = url.substring(0 , 15);
+  if (jobs_count == 0) {
+    imem = process.memoryUsage();
+    jobs_start_time = new Date();
+    // console.log('Jobs started, please wait...');
+  }
+  jobs_in_progress.set(url, new Date());
+  jobs_count++;
+}
+
+function dec_jobs_in_progress(url) {
+  try {
+    url = url.substring(0 , 15);
+    let start = jobs_in_progress.get(url).getTime(),
+        finish = (new Date()).getTime();
+    jobs_in_progress.set(url, ((finish - start) / 1000).toFixed(2));
+    jobs_count--;
+
+    if(jobs_count == 0) {
+      // console.log(jobs_in_progress);
+      let mem = process.memoryUsage(),
+          jobs_finish_time = new Date();
+      // console.log('Estimated time:', ((jobs_finish_time.getTime() - jobs_start_time.getTime()) / 1000).toFixed(2));
+      // console.log('Memory usage diff:', mem.rss - imem.rss, mem.heapTotal - imem.heapTotal, mem.heapUsed - imem.heapUsed);
+    }
+  } catch (exc) {
+    // console.log(exc);
+  }
+}
 
 require('epipebomb')();
 process.env.UV_THREADPOOL_SIZE = 1024;
 
 process.on('exit', function() {
-  console.log('Exit: Destroy related phantomjs processes.');
+  // console.log('Exit: Destroy related phantomjs processes.');
   phbalancer.free();
 });
 
@@ -101,21 +136,25 @@ app.post('/', function(req, res) {
     // phantom_settings.set('--debug', 'true');
     // phantom_settings.set('--disk-cache-path', '/tmp/phantom-cache');
 
-    phbalancer.get_phantom_instance(phantom_settings).then(function(phantom_instance) {
-      let wpp;
+    phbalancer.acquire_phantom_instance(phantom_settings).then(function(little_horse) {
+      let phantom = little_horse.phantom,
+          wpp;
+
       try {
-        wpp = new WebpageProcessor(phantom_instance, proxy, logger);
+        wpp = new WebpageProcessor(phantom, proxy, logger);
         assert(wpp);
       } catch (exc) {
         handle_exception('Cannot create webpage processor', exc, req, res);
-        return;
+        return little_horse.release();
       }
 
       try {
+        inc_jobs_in_progress(logger.url);
         wpp.run(actions, function(exc, data) {
+          dec_jobs_in_progress(logger.url);
           if (exc) {
             handle_exception('Webpage processor exception', exc, req, res);
-            return;
+            return little_horse.release();
           }
 
           try {
@@ -124,16 +163,21 @@ app.post('/', function(req, res) {
           } catch (exc) {
             handle_exception('Failed to build response', exc, req, res);
           }
+
+          return little_horse.release();
         });
       } catch (exc) {
+        dec_jobs_in_progress(logger.url);
         handle_exception('Task failed', exc, req, res);
-        return;
+        return little_horse.release();
       }
-    }, function(exc) { // cannot get phantom instance
+
+      return True;
+    }, function(exc) {
+      dec_jobs_in_progress(logger.url);
       handle_exception('Cannot get phantom instance', exc, req, res);
     });
   } catch (exc) {
     handle_exception('Cannot get phantom instance', exc, req, res);
-    return;
   }
 });

@@ -1,8 +1,6 @@
 'use strict';
 
 function ActionTree(actions, factory) {
-  // TODO check duplicates
-
   this.root = '__root__';
 
   let tree = {},
@@ -15,8 +13,8 @@ function ActionTree(actions, factory) {
 
     try {
       action = factory.create_action(action_config);
-    } catch(e) {
-      // console.log('Warning:', e.message, 'Ignoring.');
+    } catch(exc) {
+      action.logger.error('ActionTree exception:', exc);
       continue;
     }
 
