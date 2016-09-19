@@ -35,7 +35,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
 
       let storage = new ActionResultStore(),
           factory = new ActionFactory(WPP.phantom_instance, storage),
-          action_tree = new ActionTree(actions, factory);
+          action_tree = new ActionTree(actions, factory, WPP.logger);
 
       WPP.logger.info('Process action tree');
       WPP.process_action_tree(action_tree).then(function(result) {

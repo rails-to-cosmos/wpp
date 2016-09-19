@@ -1,6 +1,6 @@
 'use strict';
 
-function ActionTree(actions, factory) {
+function ActionTree(actions, factory, logger) {
   this.root = '__root__';
 
   let tree = {},
@@ -14,7 +14,7 @@ function ActionTree(actions, factory) {
     try {
       action = factory.create_action(action_config);
     } catch(exc) {
-      action.logger.error('ActionTree exception:', exc);
+      logger.error('ActionTree exception:', exc);
       continue;
     }
 
