@@ -2,7 +2,7 @@
 
 const phantom = require('phantom');
 
-function PhantomJSFTWrapper(settings) {
+function PhFTWrapper(settings) {
   this.uses_count = 0;
   this.phantom = null;
   this.in_progress = 0;
@@ -10,7 +10,7 @@ function PhantomJSFTWrapper(settings) {
   this.release_when_noone_using_me = false;
 }
 
-PhantomJSFTWrapper.prototype.create_phantom = function() {
+PhFTWrapper.prototype.create = function() {
   let PJSW = this;
   return new Promise(function(resolve, reject) {
     phantom.create(PJSW.settings).then(function(ph) {
@@ -20,21 +20,21 @@ PhantomJSFTWrapper.prototype.create_phantom = function() {
   });
 };
 
-PhantomJSFTWrapper.prototype.go_to_rest = function() {
+PhFTWrapper.prototype.go_to_rest = function() {
   this.release_when_noone_using_me = true;
   if (this.in_progress == 0) {
     this.free();
   }
 };
 
-PhantomJSFTWrapper.prototype.acquire = function() {
+PhFTWrapper.prototype.acquire = function() {
   this.uses_count++;
   this.in_progress++;
   // console.log('Acquired', this.in_progress);
   return this;
 };
 
-PhantomJSFTWrapper.prototype.release = function() {
+PhFTWrapper.prototype.release = function() {
   this.in_progress--;
   // console.log('Released', this.in_progress);
 
@@ -43,19 +43,23 @@ PhantomJSFTWrapper.prototype.release = function() {
   }
 };
 
-PhantomJSFTWrapper.prototype.free = function() {
-  this.phantom.process.kill();
+PhFTWrapper.prototype.free = function() {
+  try {
+    this.phantom.process.kill();
+  } catch (exc) {
+    // cannot kill phantom
+  }
 };
 
 // Fault-Tolerance Phantom Instance
-function FTPhantom(settings) {
+function FaultTolerantBrowser(settings) {
   this.max_uses_count = 50;
   this.wheelhorse = null;
   this.graveyard = [];
   this.settings = settings;
 };
 
-FTPhantom.prototype.acquire = function() {
+FaultTolerantBrowser.prototype.acquire = function() {
   let FTPh = this;
 
   return new Promise(function(resolve, reject) {
@@ -72,14 +76,14 @@ FTPhantom.prototype.acquire = function() {
       }
     }
 
-    FTPh.wheelhorse = new PhantomJSFTWrapper(FTPh.settings);
-    FTPh.wheelhorse.create_phantom().then(function() {
+    FTPh.wheelhorse = new PhFTWrapper(FTPh.settings);
+    FTPh.wheelhorse.create().then(function() {
       resolve(FTPh.wheelhorse.acquire());
     }, reject);
   });
 };
 
-FTPhantom.prototype.free = function() {
+FaultTolerantBrowser.prototype.free = function() {
   if (this.wheelhorse) {
     this.wheelhorse.free();
   }
@@ -91,4 +95,4 @@ FTPhantom.prototype.free = function() {
   this.graveyard = [];
 };
 
-module.exports = FTPhantom;
+module.exports = FaultTolerantBrowser;
