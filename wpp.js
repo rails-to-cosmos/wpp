@@ -84,10 +84,11 @@ app.post('/', function(req, res) {
   }
 
   let handle_exception = function (description, exc, req, res) {
-    res.json({
-      'error': description + ' (' + exc.message + ')'
-    }).status(500);
-
+    // let data = {
+    //   error: description + ' (' + exc.message + ')',
+    //   result: {}
+    // };
+    res.json({}).status(500);
     logger.error(description + ':', exc);
     logger.info('Job done: FAILURE');
   };
