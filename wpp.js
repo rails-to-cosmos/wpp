@@ -132,6 +132,8 @@ app.post('/', function(req, res) {
       process.env['HTTP_PROXY'] = proxy[proxy.type];
     }
 
+    // TODO insert request settings here
+
     phbalancer.acquire_phantom_instance(phantom_settings).then(function(little_horse) {
       let phantom = little_horse.phantom,
           wpp;
