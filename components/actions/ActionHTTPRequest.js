@@ -28,8 +28,8 @@ ActionHTTPRequest.prototype.main = function (subactions) {
         timeout: 60000,
         encoding: null,
         headers: {
-          "Accept": "text, text/plain, text/xml",
-          "Accept-Encoding": "UTF-8",
+          'Accept': "text, text/plain, text/xml",
+          'Accept-Encoding': "UTF-8",
           'Content-Type': "text/plain; charset=utf-8;"
         }
       }, function(err, resp) {
