@@ -5,7 +5,7 @@ const Action = require('./Action'),
       DataCleaner = require('../webpage/DataCleaner'),
       cheerio = require('cheerio'),
       get_page_content = require('../webpage/Utils').get_page_content,
-      get_representation = require('../webpage/ElementRepresentations').get_representation;
+      get_representation_by_selector = require('../webpage/ElementRepresentations').get_representation_by_selector;
 
 const ACTION_PARSE_EXCEPTION = 'Parse action raised an exception:',
       CPX_SELECTOR_EXCEPTION = 'Complex selector raised an exception:';
@@ -30,7 +30,7 @@ ActionParse.prototype.main = function(subactions) {
         ACTION.logger.error(CPX_SELECTOR_EXCEPTION, exc);
       }
 
-      let Representation = get_representation(selector),
+      let Representation = get_representation_by_selector(selector),
           pages = ACTION.get_from_store(ACTION.get_target());
 
       let parse_actions = pages.map(function(page) {

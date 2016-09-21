@@ -1,8 +1,17 @@
+'use strict';
+
 function ElementRepresentation($, el, selector) {
   this.$ = $;
   this.element = el;
   this.selector = selector;
 }
+
+ElementRepresentation.prototype.exclude_rubbish = function(elem) {
+  for (let excl of this.selector.excludes) {
+    elem.children(excl).remove();
+  }
+};
+
 
 function OuterHTMLRepresentation() {
   ElementRepresentation.apply(this, Array.prototype.slice.call(arguments));
@@ -11,9 +20,11 @@ function OuterHTMLRepresentation() {
 OuterHTMLRepresentation.prototype = new ElementRepresentation();
 
 OuterHTMLRepresentation.prototype.repr = function() {
-  var element = this.$(this.element);
-  return this.$.html(element);
+  let elem = this.$(this.element);
+  this.exclude_rubbish(elem);
+  return this.$.html(elem);
 };
+
 
 function TextRepresentation() {
   ElementRepresentation.apply(this, Array.prototype.slice.call(arguments));
@@ -22,8 +33,11 @@ function TextRepresentation() {
 TextRepresentation.prototype = new ElementRepresentation();
 
 TextRepresentation.prototype.repr = function() {
-  return this.$(this.element).text();
+  let elem = this.$(this.element);
+  this.exclude_rubbish(elem);
+  return elem.text();
 };
+
 
 function AttributeRepresentation() {
   ElementRepresentation.apply(this, Array.prototype.slice.call(arguments));
@@ -32,11 +46,14 @@ function AttributeRepresentation() {
 AttributeRepresentation.prototype = new ElementRepresentation();
 
 AttributeRepresentation.prototype.repr = function() {
-  return this.$(this.element).attr(this.selector.attribute);
+  let elem = this.$(this.element);
+  this.exclude_rubbish(elem);
+  return elem.attr(this.selector.attribute);
 };
 
-function get_representation(selector) {
-  var representation = TextRepresentation;
+
+function get_representation_by_selector(selector) {
+  let representation = TextRepresentation;
   if (selector.attribute) {
     switch(selector.attribute) {
     case 'outerHTML':
@@ -54,5 +71,10 @@ function get_representation(selector) {
 }
 
 module.exports = {
-  get_representation: get_representation
+  get_representation_by_selector: get_representation_by_selector,
+
+  ElementRepresentation: ElementRepresentation,
+  OuterHTMLRepresentation: OuterHTMLRepresentation,
+  TextRepresentation: TextRepresentation,
+  AttributeRepresentation: AttributeRepresentation
 };
