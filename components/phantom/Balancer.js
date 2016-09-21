@@ -23,18 +23,9 @@ Balancer.prototype.free = function() {
   }
 };
 
-Balancer.prototype.phjs_settings_adapt = function(settings) {
-  let adapted_phantom_settings = [];
-  settings.forEach(function(value, key) {
-    adapted_phantom_settings.push(key + '=' + value);
-  });
-  return adapted_phantom_settings;
-};
-
 Balancer.prototype.acquire_phantom_instance = function(settings) {
-  let adapted_phantom_settings = this.phjs_settings_adapt(settings);
   if (!this.browsers[this.browser_index]) {
-    let browser = new FaultTolerantBrowser(adapted_phantom_settings);
+    let browser = new FaultTolerantBrowser(settings);
     this.browsers.push(browser);
   }
 

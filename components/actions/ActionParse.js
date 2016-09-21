@@ -1,39 +1,13 @@
 'use strict';
 
-var Action = require('./Action'),
-    cheerio = require('cheerio'),
-    get_page_content = require('../webpage/Utils').get_page_content,
-    get_representation = require('../webpage/ElementRepresentations').get_representation;
+const Action = require('./Action'),
+      ComplexSelector = require('../webpage/ComplexSelector'),
+      cheerio = require('cheerio'),
+      get_page_content = require('../webpage/Utils').get_page_content,
+      get_representation = require('../webpage/ElementRepresentations').get_representation;
 
-function ComplexSelector(selector) {
-  this.selector = '';
-  this.attribute = '';
-  this.index = -1;
-
-  if (selector) {
-    // get index from selector
-    let eq_matches = selector.match(/:eq\((\d+)\)/);
-    if (eq_matches && eq_matches.length > 1) {
-      let index;
-
-      try {
-        this.index = parseInt(eq_matches[1]);
-      } catch (exc) {
-        // console.log('AttributeError: eq contains non-numeric value');
-      }
-
-      selector = selector.replace(/:eq\((\d+)\)/, '');
-    }
-
-    let sel_attr_list = selector.match(/(.*?)\[([a-zA-Z\-]+)\]/);
-    if (sel_attr_list) {
-      this.selector = sel_attr_list[1];
-      this.attribute = sel_attr_list[2];
-    } else {
-      this.selector = selector;
-    }
-  }
-}
+const ACTION_PARSE_EXCEPTION = 'Parse action raised an exception:',
+      CPX_SELECTOR_EXCEPTION = 'Complex selector raised an exception:';
 
 function ActionParse() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -42,62 +16,74 @@ function ActionParse() {
 ActionParse.prototype = new Action();
 
 ActionParse.prototype.main = function(subactions) {
-  var ACTION = this;
+  let ACTION = this;
 
   Action.prototype.main.call(this, subactions);
 
   return new Promise(function(resolve, reject) {
     try {
-      var selector = new ComplexSelector(ACTION.config.data.selector),
-          Representation = get_representation(selector),
+      let selector = new ComplexSelector();
+      try {
+        selector.build(ACTION.config.data.selector);
+      } catch (exc) {
+        ACTION.logger.error(CPX_SELECTOR_EXCEPTION, exc);
+      }
+
+      let Representation = get_representation(selector),
           pages = ACTION.get_from_store(ACTION.get_target());
 
-      var parse_actions = pages.map(function(page) {
+      let parse_actions = pages.map(function(page) {
         return new Promise(function(resolveParse, rejectParse) {
           try {
             get_page_content(page, ACTION).then(function(content) {
               try {
                 let result = [], element, element_representation,
                     $ = cheerio.load(content),
-                    get_element = function(selector) {
+
+                    get_element_by_selector = function(selector) {
                       let result;
                       try {
                         result = $(selector.selector).get(selector.index);
                       } catch (exc) {
-                        ACTION.logger.error('ActionParse exception:', exc);
+                        ACTION.logger.error(ACTION_PARSE_EXCEPTION, exc);
                       }
                       return result;
+                    },
+
+                    get_element_data = function(element, selector) {
+                      element_representation = new Representation($, element, selector);
+                      return element_representation.repr();
                     };
 
                 if (selector.selector[0] == '>') {
                   let clean_selector = selector.selector.slice(1, selector.selector.length);
                   if (selector.index > -1) {
-                    element = get_element();
+                    element = get_element_by_selector(selector);
                   } else {
                     element = $(clean_selector).first();
                   }
 
-                  element_representation = new Representation($, element, selector);
-                  result.push(element_representation.repr());
+                  let element_data = get_element_data(element, selector);
+                  result.push(element_data);
                 } else if (selector.selector) {
                   if (selector.index > -1) {
-                    element = get_element();
-                    element_representation = new Representation($, element, selector);
-                    result.push(element_representation.repr());
+                    element = get_element_by_selector(selector);
+                    let element_data = get_element_data(element, selector);
+                    result.push(element_data);
                   } else {
                     try {
                       $(selector.selector).each(function(id, el) {
-                        element_representation = new Representation($, el, selector);
-                        result.push(element_representation.repr());
+                        let element_data = get_element_data(el, selector);
+                        result.push(element_data);
                       });
                     } catch (exc) {
-                      ACTION.logger.error('ActionParse exception:', exc);
+                      ACTION.logger.error(ACTION_PARSE_EXCEPTION, exc);
                     }
                   }
                 } else if (selector.attribute && !selector.selector) {
                   element = $(content);
-                  element_representation = new Representation($, element, selector);
-                  result.push(element_representation.repr());
+                  let element_data = get_element_data(element, selector);
+                  result.push(element_data);
                 }
 
                 ACTION.push_to_store(result);

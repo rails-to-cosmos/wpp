@@ -6,7 +6,7 @@ let chai = require('chai'),
 
 describe('WebpageProcessor', function() {
   it('phantom_instance must be null if wpp not started', function() {
-    var wpp = new WebpageProcessor();
+    let wpp = new WebpageProcessor();
     expect(wpp.phantom_instance).to.equal(null);
   });
 });
