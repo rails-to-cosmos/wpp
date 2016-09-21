@@ -37,15 +37,21 @@ const ActionAssoc = {
   AHistoryBack: ActionHistoryBack
 };
 
-function ActionFactory(browser, storage) {
+function ActionFactory(browser, storage, proxy) {
   this.browser = browser;
   this.storage = storage;
+  this.proxy = proxy;
 };
 
 ActionFactory.prototype.inherit = function(child, parent) {
-  if (child && parent) {
-    child.history = parent.history;
-    child.logger = parent.logger;
+  let params_to_inherit = ['history', 'logger', 'proxy'];
+
+  for (let param of params_to_inherit) {
+    try {
+      child[param] = parent[param];
+    } catch (exc) {
+      break;
+    }
   }
 };
 

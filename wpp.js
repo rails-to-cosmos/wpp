@@ -9,7 +9,7 @@ const express = require('express'),
       Logger = require('./components/loggers/Logger'),
       LogstashLogger = require('./components/loggers/LogstashLogger'),
       WebpageProcessor = require('./components/WebpageProcessor'),
-      PhantomJSBalancer = require('./components/PhantomJSBalancer');
+      PhantomJSBalancer = require('./components/phantom/Balancer');
 
 var phbalancer = new PhantomJSBalancer(),
     jobs_in_progress = new Map(),
@@ -131,11 +131,8 @@ app.post('/', function(req, res) {
       phantom_settings.set('--proxy', proxy[proxy.type]);
       process.env['HTTP_PROXY'] = proxy[proxy.type];
     }
-    // if (logger.url) {
-    //   phantom_settings.set('--disk-cache-path', logger.url);
-    // }
-    // phantom_settings.set('--debug', 'true');
-    // phantom_settings.set('--disk-cache-path', '/tmp/phantom-cache');
+
+    // TODO insert request settings here
 
     phbalancer.acquire_phantom_instance(phantom_settings).then(function(little_horse) {
       let phantom = little_horse.phantom,
@@ -172,8 +169,6 @@ app.post('/', function(req, res) {
         handle_exception('Task failed', exc, req, res);
         return little_horse.release();
       }
-
-      return True;
     }, function(exc) {
       dec_jobs_in_progress(logger.url);
       handle_exception('Cannot get phantom instance', exc, req, res);

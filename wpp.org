@@ -6,43 +6,9 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
-* TODO Analyze
---disk-cache-path=http://vrn.mk.ru/articles/2016/08/17/voronezhcy-prosrochili-dolgov-po-ipoteke-na-574-mln-rubley.html
---disk-cache-path=http://vrn.mk.ru/articles/2016/08/31/voronezhcev-proverili-na-loyalnost-vertikali.html
 * TODO [#C] Сделать таймауты запросов
-* TODO Сделать setting repeat
 * TODO IFrames
-* TODO Implement action historyback
-* TODO Implement Action Store
-* Bugs
-** DONE FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory
-CLOSED: [2016-09-13 Tue 10:09]
-- State "DONE"       from ""           [2016-09-13 Tue 10:09]
- 1: node::Abort() [node]
- 2: 0xfc3f6c [node]
- 3: v8::Utils::ReportApiFailure(char const*, char const*) [node]
- 4: v8::internal::V8::FatalProcessOutOfMemory(char const*, bool) [node]
- 5: v8::internal::Factory::NewRawTwoByteString(int, v8::internal::PretenureFlag) [node]
- 6: v8::internal::String::SlowFlatten(v8::internal::Handle<v8::internal::ConsString>, v8::internal::PretenureFlag) [node]
- 7: v8::internal::String::Flatten(v8::internal::Handle<v8::internal::String>, v8::internal::PretenureFlag) [node]
- 8: v8::String::WriteUtf8(char*, int, int*, int) const [node]
- 9: node::StringBytes::Write(v8::Isolate*, char*, unsigned long, v8::Local<v8::Value>, node::encoding, int*) [node]
-10: node::Buffer::New(v8::Isolate*, v8::Local<v8::String>, node::encoding) [node]
-11: node::Buffer::CreateFromString(v8::FunctionCallbackInfo<v8::Value> const&) [node]
-12: 0x6da8c90c048
-** DONE FATAL ERROR: Scavenger: semi-space copy
-CLOSED: [2016-09-13 Tue 10:09]
-- State "DONE"       from ""           [2016-09-13 Tue 10:09]
-** TESTING [[http://www.mk.ru/social/2016/08/08/kakie-obshhestvennye-iniciativy-predlagayut-grazhdane-dlya-rossiyskoy-shkoly.html][Error: write EPIPE]]
-** [[http://vlad.mk.ru/articles/2016/08/16/zatonuvshuyu-v-primore-yakhtu-obsleduyut-vodolazy.html][Error: read ECONNRESET]]
-** [[http://brl.mk.ru/articles/2016/08/25/park-khimikov-smenil-imidzh.html][Error: This socket is closed]]
-** [[http://beregienergy.ru/news/14853-2016-07-29-08-44-37.html][Webpage processor exception: ESOCKETTIMEDOUT]]
-** [[http://syzran-small.ru/index.php?go%3DPages&in%3Dview&id%3D3580][Webpage processor exception: socket hang up]]
-** [[http://www.nmosktoday.ru/news/occurrences/35625/][Webpage processor exception: undefined]]
-** Spawn phantom error
-Error: spawn /home/crawler/projects/collection_system/crawler/wpp/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs EMFILE
-    at exports._errnoException (util.js:1026:11)
-    at Process.ChildProcess._handle.onexit (internal/child_process.js:182:32)
-    at onErrorNT (internal/child_process.js:348:16)
-    at _combinedTickCallback (internal/process/next_tick.js:74:11)
-    at process._tickCallback (internal/process/next_tick.js:98:9)
+* TODO Implement actions
+** TODO Historyback
+** TODO Store
+** TODO Setting repeat

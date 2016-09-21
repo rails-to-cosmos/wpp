@@ -1,9 +1,9 @@
 'use strict';
 
-var Action = require('./Action'),
-    request = require('request'),
-    charset = require('charset'),
-    iconv = require('iconv-lite');
+const Action = require('./Action'),
+      request = require('request'),
+      charset = require('charset'),
+      iconv = require('iconv-lite');
 
 function ActionHTTPRequest() {
   Action.apply(this, Array.prototype.slice.call(arguments));
@@ -16,7 +16,7 @@ ActionHTTPRequest.prototype.get_url = function() {
 };
 
 ActionHTTPRequest.prototype.main = function (subactions) {
-  var ACTION = this;
+  const ACTION = this;
 
   Action.prototype.main.call(this, subactions);
 
@@ -52,19 +52,11 @@ ActionHTTPRequest.prototype.main = function (subactions) {
           }
 
           ACTION.write_to_store(body);
-          ACTION.run_subactions(subactions).then(function(result) {
-            try {
-              resolve(result);
-            } catch (exc) {
-              reject(exc);
-            }
-          }, reject);
+          ACTION.run_subactions(subactions).then(resolve, reject);
         } catch (exc) {
           reject(exc);
         }
-      }).on('error', function(exc) {
-        reject(exc);
-      });
+      }).on('error', reject);
     } catch (exc) {
       reject(exc);
     }
