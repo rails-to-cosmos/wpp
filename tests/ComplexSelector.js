@@ -40,7 +40,7 @@ describe('ComplexSelector', function() {
     }
   });
 
-  it('should cut exclude from selector', function() {
+  it('should cut ":exclude(...)" from selector', function() {
     let cs = new ComplexSelector();
 
     cs.build('a:exclude(span)');
