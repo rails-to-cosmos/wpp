@@ -25,8 +25,8 @@ Balancer.prototype.free = function() {
 
 Balancer.prototype.acquire_phantom_instance = function(settings) {
   if (!this.bros[this.bro_index]) {
-    let browser = new FaultTolerantBrowser(settings);
-    this.bros.push(browser);
+    let bro = new FaultTolerantBrowser(settings);
+    this.bros.push(bro);
   }
 
   let ph = this.bros[this.bro_index].acquire();
