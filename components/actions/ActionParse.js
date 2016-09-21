@@ -2,6 +2,7 @@
 
 const Action = require('./Action'),
       ComplexSelector = require('../webpage/ComplexSelector'),
+      DataCleaner = require('../webpage/DataCleaner'),
       cheerio = require('cheerio'),
       get_page_content = require('../webpage/Utils').get_page_content,
       get_representation = require('../webpage/ElementRepresentations').get_representation;
@@ -50,9 +51,14 @@ ActionParse.prototype.main = function(subactions) {
                       return result;
                     },
 
+                    clear_element_data = function(element_data) {
+                      let dc = new DataCleaner();
+                      return dc.clean(element_data);
+                    },
+
                     get_element_data = function(element, selector) {
                       element_representation = new Representation($, element, selector);
-                      return element_representation.repr();
+                      return clear_element_data(element_representation.repr());
                     };
 
                 if (selector.selector[0] == '>') {

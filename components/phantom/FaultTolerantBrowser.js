@@ -23,7 +23,7 @@ PhFTWrapper.prototype.create = function() {
 PhFTWrapper.prototype.go_to_rest = function() {
   this.release_when_noone_using_me = true;
   if (this.in_progress == 0) {
-    this.free();
+    this.rip();
   }
 };
 
@@ -37,11 +37,11 @@ PhFTWrapper.prototype.release = function() {
   this.in_progress--;
 
   if (this.release_when_noone_using_me && this.in_progress == 0) {
-    this.free();
+    this.rip();
   }
 };
 
-PhFTWrapper.prototype.free = function() {
+PhFTWrapper.prototype.rip = function() {
   try {
     this.phantom.process.kill();
   } catch (exc) {
@@ -79,13 +79,15 @@ FaultTolerantBrowser.prototype.acquire = function() {
   });
 };
 
-FaultTolerantBrowser.prototype.free = function() {
-  if (this.wheelhorse) {
-    this.wheelhorse.free();
+FaultTolerantBrowser.prototype.rip = function() {
+  try {
+    this.wheelhorse.rip();
+  } catch (exc) {
+    // already killed
   }
 
-  for (let grave of this.graveyard) {
-    grave.free();
+  for (let dead_horse of this.graveyard) {
+    dead_horse.rip();
   }
 
   this.graveyard = [];
