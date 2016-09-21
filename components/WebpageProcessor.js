@@ -8,9 +8,8 @@ const assert = require('assert'),
       ActionResultStore = require('./stores/ActionResultStore'),
       ActionTree = require('./data_structures/ActionTree');
 
-function WebpageProcessor(phantom_instance, proxy, logger) {
+function WebpageProcessor(phantom_instance, logger) {
   this.phantom_instance = phantom_instance;
-  this.proxy = proxy;
   this.logger = logger;
 }
 
@@ -74,10 +73,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
 };
 
 WebpageProcessor.prototype.output_report = function(result, unique, duplicates, history) {
-  // this.logger.info('Result Length:', result.data.length);
-  // this.logger.info('Duplicates:', duplicates);
-  // console.log('Result history:', result.history.keys());
-  // console.log(new Date(), 'Stop', this.__url__, result.data.length);
+
 };
 
 WebpageProcessor.prototype.process_action_tree = function(action_tree) {
@@ -86,8 +82,6 @@ WebpageProcessor.prototype.process_action_tree = function(action_tree) {
       tail = action_stack.splice(1, action_stack.length);
 
   head.logger = this.logger;
-  // console.log(new Date(), 'Start', head.config.data.url);
-  // this.__url__ = head.config.data.url;
   return head.main(tail);
 };
 

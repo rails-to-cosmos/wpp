@@ -109,7 +109,7 @@ app.post('/', function(req, res) {
         wpp;
 
     try {
-      wpp = new WebpageProcessor(phantom, proxy, logger);
+      wpp = new WebpageProcessor(phantom, logger);
     } catch (exc) {
       little_horse.release();
       handle_exception('Cannot create webpage processor', exc, req, res);
