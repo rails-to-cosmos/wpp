@@ -58,16 +58,21 @@ ActionParse.prototype.main = function(subactions) {
             get_page_content(page, ACTION).then(function(content) {
               try {
                 let result = [], element, element_representation,
-                    $ = cheerio.load(content);
+                    $ = cheerio.load(content),
+                    get_element = function(selector) {
+                      let result;
+                      try {
+                        result = $(selector.selector).get(selector.index);
+                      } catch (exc) {
+                        ACTION.logger.error('ActionParse exception:', exc);
+                      }
+                      return result;
+                    };
 
                 if (selector.selector[0] == '>') {
                   let clean_selector = selector.selector.slice(1, selector.selector.length);
                   if (selector.index > -1) {
-                    try {
-                      element = $(selector.selector).get(selector.index);
-                    } catch (exc) {
-                      // console.log(exc);
-                    }
+                    element = get_element();
                   } else {
                     element = $(clean_selector).first();
                   }
@@ -76,12 +81,7 @@ ActionParse.prototype.main = function(subactions) {
                   result.push(element_representation.repr());
                 } else if (selector.selector) {
                   if (selector.index > -1) {
-                    try {
-                      element = $(selector.selector).get(selector.index);
-                    } catch (exc) {
-                      // console.log(exc);
-                    }
-
+                    element = get_element();
                     element_representation = new Representation($, element, selector);
                     result.push(element_representation.repr());
                   } else {
@@ -91,7 +91,7 @@ ActionParse.prototype.main = function(subactions) {
                         result.push(element_representation.repr());
                       });
                     } catch (exc) {
-                      // console.log(exc);
+                      ACTION.logger.error('ActionParse exception:', exc);
                     }
                   }
                 } else if (selector.attribute && !selector.selector) {
