@@ -7,31 +7,30 @@ const os = require('os'),
       phantom_max_count = os.cpus().length;
 
 function Balancer(settings) {
-  this.browsers = [];
-  this.browser_index = 0;
+  this.bros = [];
+  this.bro_index = 0;
 }
 
-Balancer.prototype.move_browser_index = function() {
-  if (++this.browser_index >= phantom_max_count) {
-    this.browser_index = 0;
+Balancer.prototype.move_bro_index = function() {
+  if (++this.bro_index >= phantom_max_count) {
+    this.bro_index = 0;
   }
 };
 
 Balancer.prototype.free = function() {
-  for (let phjs of this.browsers) {
-    phjs.free();
+  for (let bro of this.bros) {
+    bro.rip();
   }
 };
 
 Balancer.prototype.acquire_phantom_instance = function(settings) {
-  if (!this.browsers[this.browser_index]) {
+  if (!this.bros[this.bro_index]) {
     let browser = new FaultTolerantBrowser(settings);
-    this.browsers.push(browser);
+    this.bros.push(browser);
   }
 
-  let ph = this.browsers[this.browser_index].acquire();
-
-  this.move_browser_index();
+  let ph = this.bros[this.bro_index].acquire();
+  this.move_bro_index();
 
   return ph;
 };
