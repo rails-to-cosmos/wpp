@@ -83,15 +83,5 @@ describe('ElementRepresentations', function() {
       let repr = new repr_type($, element, cs);
       expect(repr.repr()).to.equal('my_id');
     });
-
-    it('should support exclude logic', function() {
-      let cs = new ComplexSelector();
-      cs.build('body>span>div[id]');
-      let $ = cheerio.load('<html><body><span><div id="hello">hello<span>world</span></div></span></body></html>');
-      let repr_type = ElementRepresentations.get_representation_by_selector(cs);
-      let element = $(cs.selector).get(cs.index);
-      let repr = new repr_type($, element, cs);
-      expect(repr.repr()).to.equal('hello');
-    });
   });
 });
