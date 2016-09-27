@@ -57,24 +57,13 @@
     },
     {
       "data": {
-        "selector": ".author_time"
+        "selector": ".author_time,.author_date"
       },
       "settings": {
         "visible": true
       },
       "type": "AParseBySelector",
-      "name": "time",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ".author_date"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "date",
+      "name": "result_date",
       "target": "comment"
     },
     {
@@ -87,15 +76,6 @@
       "type": "AParseBySelector",
       "name": "id",
       "target": "comment"
-    },
-    {
-      "data": "{{date}} {{time}}",
-      "settings": {
-        "visible": true
-      },
-      "type": "AStoreParam",
-      "name": "result_date",
-      "target": ["date", "time"]
     }
   ]
 }
