@@ -32,6 +32,53 @@ ActionParse.prototype.get_element_by_complex_selector = function($, selector) {
     return result;
 };
 
+ActionParse.prototype.clean_element_data = function(element_data) {
+    let dc = new DataCleaner();
+    return dc.clean(element_data);
+};
+
+ActionParse.prototype.get_element_data = function($, element, selector) {
+    let Representation = get_representation_by_selector(selector),
+        element_representation = new Representation($, element, selector);
+    return element_representation.repr();
+};
+
+ActionParse.prototype.get_relative_element_data = function($, selector) {
+    let element;
+    if (selector.index > -1) {
+        element = this.get_element_by_complex_selector($, selector);
+    } else {
+        let clean_selector = selector.selector.slice(1, selector.selector.length);
+        element = $(clean_selector).first();
+    }
+
+    let element_data = this.get_element_data($, element, selector);
+    element_data = this.clean_element_data(element_data);
+    return element_data;
+};
+
+ActionParse.prototype.get_many_elements_by_cpx_selector = function($, selector) {
+    let result = [],
+        ACTION = this;
+    try {
+        $(selector.selector).each(function(id, el) {
+            let element_data = ACTION.get_element_data($, el, selector);
+            element_data = ACTION.clean_element_data(element_data);
+            result.push(element_data);
+        });
+    } catch (exc) {
+        this.logger.error(ACTION_PARSE_EXCEPTION, exc);
+    }
+    return result;
+};
+
+ActionParse.prototype.get_attr_from_current_element = function($, selector, content) {
+    let element = $(content),
+        element_data = this.get_element_data($, element, selector);
+    element_data = this.clean_element_data(element_data);
+    return element_data;
+};
+
 ActionParse.prototype.main = function(subactions) {
     let ACTION = this;
 
@@ -46,56 +93,23 @@ ActionParse.prototype.main = function(subactions) {
                 ACTION.logger.error(CPX_SELECTOR_EXCEPTION, exc);
             }
 
-            let Representation = get_representation_by_selector(selector),
-                pages = ACTION.get_from_store(ACTION.get_target());
+            let pages = ACTION.get_from_store(ACTION.get_target());
 
             let parse_actions = pages.map(function(page) {
                 return new Promise(function(resolveParse, rejectParse) {
                     try {
                         get_page_content(page, ACTION).then(function(content) {
                             try {
-                                let result = [], element, element_representation,
+                                let result = [],
                                     $ = cheerio.load(content),
+                                    element, element_representation;
 
-                                    clear_element_data = function(element_data) {
-                                        let dc = new DataCleaner();
-                                        return dc.clean(element_data);
-                                    },
-
-                                    get_element_data = function(element, selector) {
-                                        element_representation = new Representation($, element, selector);
-                                        return clear_element_data(element_representation.repr());
-                                    };
-
-                                if (selector.selector[0] == '>') {
-                                    let clean_selector = selector.selector.slice(1, selector.selector.length);
-                                    if (selector.index > -1) {
-                                        element = ACTION.get_element_by_complex_selector($, selector);
-                                    } else {
-                                        element = $(clean_selector).first();
-                                    }
-
-                                    let element_data = get_element_data(element, selector);
-                                    result.push(element_data);
+                                if (selector.selector[0] == '>' || selector.index > -1) {
+                                    result.push(ACTION.get_relative_element_data($, selector));
                                 } else if (selector.selector) {
-                                    if (selector.index > -1) {
-                                        element = ACTION.get_element_by_complex_selector($, selector);
-                                        let element_data = get_element_data(element, selector);
-                                        result.push(element_data);
-                                    } else {
-                                        try {
-                                            $(selector.selector).each(function(id, el) {
-                                                let element_data = get_element_data(el, selector);
-                                                result.push(element_data);
-                                            });
-                                        } catch (exc) {
-                                            ACTION.logger.error(ACTION_PARSE_EXCEPTION, exc);
-                                        }
-                                    }
+                                    result.push.apply(result, ACTION.get_many_elements_by_cpx_selector($, selector));
                                 } else if (selector.attribute && !selector.selector) {
-                                    element = $(content);
-                                    let element_data = get_element_data(element, selector);
-                                    result.push(element_data);
+                                    result.push(ACTION.get_attr_from_current_element($, selector, content));
                                 }
 
                                 ACTION.push_to_store(result);
