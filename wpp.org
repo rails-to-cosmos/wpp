@@ -6,8 +6,9 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
-* TODO [#C] Сделать таймауты запросов
+* TODO Timeouts
 * TODO IFrames
+* TODO User-Agents
 * TODO Implement actions
 ** TODO Historyback
 ** TODO Store
