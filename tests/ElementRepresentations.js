@@ -21,7 +21,7 @@ describe('ElementRepresentations', function() {
                 repr_type = cs.selectors[0].representation,
                 element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
                 repr = new repr_type($, element, cs),
-                exp_vals = cs.apply_on_element($, element);
+                exp_vals = cs.apply($);
 
             for (let exp_val of exp_vals) {
                 expect(exp_val).to.equal('hello');
@@ -34,7 +34,7 @@ describe('ElementRepresentations', function() {
                 repr_type = cs.selectors[0].representation,
                 element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
                 repr = new repr_type($, element, cs),
-                exp_vals = cs.apply_on_element($, element);
+                exp_vals = cs.apply($);
 
             for (let exp_val of exp_vals) {
                 expect(exp_val).to.equal('hello');
@@ -55,7 +55,7 @@ describe('ElementRepresentations', function() {
                 repr_type = cs.selectors[0].representation,
                 element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
                 repr = new repr_type($, element, cs),
-                exp_vals = cs.apply_on_element($, element);
+                exp_vals = cs.apply($);
 
             for (let exp_val of exp_vals) {
                 expect(exp_val).to.equal('<div>hello</div>');
@@ -68,7 +68,7 @@ describe('ElementRepresentations', function() {
                 repr_type = cs.selectors[0].representation,
                 element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
                 repr = new repr_type($, element, cs),
-                exp_vals = cs.apply_on_element($, element);
+                exp_vals = cs.apply($);
 
             for (let exp_val of exp_vals) {
                 expect(exp_val).to.equal('<div>hello</div>');
@@ -89,7 +89,7 @@ describe('ElementRepresentations', function() {
                 repr_type = cs.selectors[0].representation,
                 element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
                 repr = new repr_type($, element, cs),
-                exp_vals = cs.apply_on_element($, element);
+                exp_vals = cs.apply($);
 
             for (let exp_val of exp_vals) {
                 expect(exp_val).to.equal('my_id');

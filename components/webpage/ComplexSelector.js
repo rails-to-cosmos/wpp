@@ -11,21 +11,21 @@ function SimpleSelector(selector) {
     this.excludes = [];
     this.index = -1;
     this.representation = TextRepresentation;
+    this.relative = false;
 }
 
 function ComplexSelector(simple_selector) {
-    if (simple_selector) {
-        this.build(simple_selector);
-    }
-}
-
-ComplexSelector.prototype.build = function(simple_selector) {
     this.selectors = [];
 
     let selectors = simple_selector.split(',');
 
     for (let selector of selectors) {
         let result = new SimpleSelector(selector);
+
+        result.selector = result.selector.replace(/^>/, function(_) {
+            result.relative = true;
+            return '';
+        });
 
         let eq_matches = result.selector.match(/:eq\((\d+)\)/);
         if (eq_matches && eq_matches.length > 1) {
@@ -59,14 +59,39 @@ ComplexSelector.prototype.build = function(simple_selector) {
 
         this.selectors.push(result);
     }
-};
+}
 
-ComplexSelector.prototype.apply_on_element = function($, element) {
-    let result = [];
+ComplexSelector.prototype.apply = function($) {
+    let cpxsel = this,
+        result = [];
+
     for (let sel of this.selectors) {
-        let repr = new sel.representation($, element, sel);
-        result.push(repr.repr());
+        let elements = [];
+
+        if (sel.selector) {
+            $(sel.selector).each(function(id, el) {
+                if (sel.relative && id) {
+                    return;
+                }
+                elements.push(el);
+            });
+        } else {
+            let el = $.root().children().first();
+            elements.push(el);
+        }
+
+        for (let i in elements) {
+            let el = elements[i],
+                repr = new sel.representation($, el, sel);
+
+            if (result[i]) {
+                result[i] = result[i] + ' ' + repr.repr();
+            } else {
+                result.push(repr.repr());
+            }
+        }
     }
+
     return result;
 };
 

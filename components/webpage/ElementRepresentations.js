@@ -1,5 +1,7 @@
 'use strict';
 
+const DataCleaner = require('../webpage/DataCleaner');
+
 function ElementRepresentation($, el, selector) {
     this.$ = $;
     this.element = el;
@@ -22,7 +24,9 @@ OuterHTMLRepresentation.prototype = new ElementRepresentation();
 OuterHTMLRepresentation.prototype.repr = function() {
     let elem = this.$(this.element);
     this.exclude_rubbish(elem);
-    return this.$.html(elem);
+    let result = this.$.html(elem),
+        dc = new DataCleaner();
+    return dc.clean(result);
 };
 
 
@@ -35,9 +39,11 @@ TextRepresentation.prototype = new ElementRepresentation();
 TextRepresentation.prototype.repr = function() {
     let elem = this.$(this.element);
     this.exclude_rubbish(elem);
-    return elem.text();
-};
 
+    let result = elem.text(),
+        dc = new DataCleaner();
+    return dc.clean(result);
+};
 
 function AttributeRepresentation() {
     ElementRepresentation.apply(this, Array.prototype.slice.call(arguments));
@@ -47,8 +53,7 @@ AttributeRepresentation.prototype = new ElementRepresentation();
 
 AttributeRepresentation.prototype.repr = function() {
     let elem = this.$(this.element);
-    this.exclude_rubbish(elem);
-    return elem.attr(this.selector.attribute)
+    return elem.attr(this.selector.attribute);
 };
 
 module.exports = {
