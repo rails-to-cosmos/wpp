@@ -1,0 +1,33 @@
+{
+    "actions": [
+        {
+            "target": "",
+            "type": "Download",
+            "data": {
+                "url": "http://www.sovsekretno.ru/news/id/9398/"
+            },
+            "name": "webpage",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "webpage",
+            "type": "Screenshot",
+            "data": {
+                "path": "/tmp/sovsekretno.html"
+            }
+        },
+        {
+            "target": "webpage",
+            "type": "Parse",
+            "data": {
+                "selector": "div[outerHTML]"
+            },
+            "name": "comment",
+            "settings": {
+                "visible": true
+            }
+        }
+    ]
+}

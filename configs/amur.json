@@ -1,0 +1,72 @@
+{
+    "actions": [
+        {
+            "data": {
+                "url": "http://amgpgu.ru/news/7578994/"
+            },
+            "type": "ADownload",
+            "name": "webpage",
+            "target": ""
+        },
+        {
+            "data": {
+                "selector": ".reviews-block-outer[outerHTML]"
+            },
+            "type": "AParseBySelector",
+            "name": "comments",
+            "target": "webpage"
+        },
+        {
+            "data": {
+                "selector": ".reviews-post-table[outerHTML]"
+            },
+            "type": "AParseBySelector",
+            "name": "comment",
+            "target": "comments"
+        },
+        {
+            "data": {
+                "selector": ".reviews-post-table thead td"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "date",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".reviews-post-table td b"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".reviews-text"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".reviews-text[id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comment"
+        }
+    ]
+}

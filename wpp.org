@@ -9,7 +9,8 @@ mocha tests --recursive --watch
 * TODO Timeouts
 * TODO IFrames
 * TODO User-Agents
-* TODO Implement actions
+* TODO Actions
+** TODO Screenshot action
 ** TODO Historyback
 ** TODO Store
 ** TODO Setting repeat
