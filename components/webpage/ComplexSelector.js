@@ -22,27 +22,25 @@ function ComplexSelector(simple_selector) {
     for (let selector of selectors) {
         let result = new SimpleSelector(selector);
 
-        result.selector = result.selector.replace(/^>/, function(_) {
+        result.selector = result.selector.replace(/^>/, function() {
             result.relative = true;
             return '';
         });
 
-        let eq_matches = result.selector.match(/:eq\((\d+)\)/);
-        if (eq_matches && eq_matches.length > 1) {
-            result.index = parseInt(eq_matches[1]);
-            result.selector = result.selector.replace(/:eq\((\d+)\)/, '');
-        }
-
-        result.selector = result.selector.replace(/:exclude\((.+?)\)/g, function(_, exclude_selector) {
-            result.excludes.push(exclude_selector);
+        result.selector = result.selector.replace(/:eq\((\d+)\)/, function(_, eq) {
+            result.index = parseInt(eq);
             return '';
         });
 
-        let sel_attr_list = result.selector.match(/(.*?)\[([a-zA-Z\-]+)\]/);
-        if (sel_attr_list) {
-            result.selector = sel_attr_list[1];
-            result.attribute = sel_attr_list[2];
-        }
+        result.selector = result.selector.replace(/:exclude\((.+?)\)/g, function(_, excl) {
+            result.excludes.push(excl);
+            return '';
+        });
+
+        result.selector = result.selector.replace(/(.*?)\[([a-zA-Z\-]+)\]/, function(_, sel, attr) {
+            result.attribute = attr;
+            return sel;
+        });
 
         if (result.attribute) {
             switch(result.attribute) {
