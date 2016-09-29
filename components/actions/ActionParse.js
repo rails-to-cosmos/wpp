@@ -16,11 +16,6 @@ function ActionParse() {
 
 ActionParse.prototype = new Action();
 
-ActionParse.prototype.clean_element_data = function(element_data) {
-    let dc = new DataCleaner();
-    return dc.clean(element_data);
-};
-
 ActionParse.prototype.main = function(subactions) {
     let ACTION = this;
 
