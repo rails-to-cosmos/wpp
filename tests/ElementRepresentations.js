@@ -9,79 +9,91 @@ let chai = require('chai'),
 
 describe('ElementRepresentations', function() {
     describe('#TextRepresentation', function() {
-        it('should be obtained from the factory', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>div');
-            let repr = ElementRepresentations.get_representation_by_selector(cs);
-            expect(new repr() instanceof ElementRepresentations.TextRepresentation).to.equal(true);
+        it('should be initialized in complex selector', function() {
+            let cs = new ComplexSelector('body>div');
+            let repr_type = cs.selectors[0].representation;
+            expect(new repr_type() instanceof ElementRepresentations.TextRepresentation).to.equal(true);
         });
 
         it('should extract text from element', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>div');
-            let $ = cheerio.load('<html><body><div>hello</div></body></html>');
-            let repr_type = ElementRepresentations.get_representation_by_selector(cs);
-            let element = $(cs.selector).get(cs.index);
-            let repr = new repr_type($, element, cs);
-            expect(repr.repr()).to.equal('hello');
+            let cs = new ComplexSelector('body>div'),
+                $ = cheerio.load('<html><body><div>hello</div></body></html>'),
+                repr_type = cs.selectors[0].representation,
+                element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
+                repr = new repr_type($, element, cs),
+                exp_vals = cs.apply_on_element($, element);
+
+            for (let exp_val of exp_vals) {
+                expect(exp_val).to.equal('hello');
+            }
         });
 
         it('should support exclude logic', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>span>div:exclude(span)');
-            let $ = cheerio.load('<html><body><span><div>hello<span>world</span></div></span></body></html>');
-            let repr_type = ElementRepresentations.get_representation_by_selector(cs);
-            let element = $(cs.selector).get(cs.index);
-            let repr = new repr_type($, element, cs);
-            expect(repr.repr()).to.equal('hello');
+            let cs = new ComplexSelector('body>span>div:exclude(span)'),
+                $ = cheerio.load('<html><body><span><div>hello<span>world</span></div></span></body></html>'),
+                repr_type = cs.selectors[0].representation,
+                element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
+                repr = new repr_type($, element, cs),
+                exp_vals = cs.apply_on_element($, element);
+
+            for (let exp_val of exp_vals) {
+                expect(exp_val).to.equal('hello');
+            }
         });
     });
 
     describe('#OuterHTMLRepresentation', function() {
-        it('should be obtained from the factory', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>div[outerHTML]');
-            let repr = ElementRepresentations.get_representation_by_selector(cs);
-            expect(new repr() instanceof ElementRepresentations.OuterHTMLRepresentation).to.equal(true);
+        it('should be initialized in complex selector', function() {
+            let cs = new ComplexSelector('body>div[outerHTML]');
+            let repr_type = cs.selectors[0].representation;
+            expect(new repr_type() instanceof ElementRepresentations.OuterHTMLRepresentation).to.equal(true);
         });
 
         it('should extract outer html from element', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>div[outerHTML]');
-            let $ = cheerio.load('<html><body><div>hello</div></body></html>');
-            let repr_type = ElementRepresentations.get_representation_by_selector(cs);
-            let element = $(cs.selector).get(cs.index);
-            let repr = new repr_type($, element, cs);
-            expect(repr.repr()).to.equal('<div>hello</div>');
+            let cs = new ComplexSelector('body>div[outerHTML]'),
+                $ = cheerio.load('<html><body><div>hello</div></body></html>'),
+                repr_type = cs.selectors[0].representation,
+                element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
+                repr = new repr_type($, element, cs),
+                exp_vals = cs.apply_on_element($, element);
+
+            for (let exp_val of exp_vals) {
+                expect(exp_val).to.equal('<div>hello</div>');
+            }
         });
 
         it('should support exclude logic', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>span>div[outerHTML]:exclude(span)');
-            let $ = cheerio.load('<html><body><span><div>hello<span>world</span></div></span></body></html>');
-            let repr_type = ElementRepresentations.get_representation_by_selector(cs);
-            let element = $(cs.selector).get(cs.index);
-            let repr = new repr_type($, element, cs);
-            expect(repr.repr()).to.equal('<div>hello</div>');
+            let cs = new ComplexSelector('body>span>div[outerHTML]:exclude(span)'),
+                $ = cheerio.load('<html><body><span><div>hello<span>world</span></div></span></body></html>'),
+                repr_type = cs.selectors[0].representation,
+                element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
+                repr = new repr_type($, element, cs),
+                exp_vals = cs.apply_on_element($, element);
+
+            for (let exp_val of exp_vals) {
+                expect(exp_val).to.equal('<div>hello</div>');
+            }
         });
     });
 
     describe('#AttributeRepresentation', function() {
-        it('should be obtained from the factory', function() {
-            let cs = new ComplexSelector();
-            cs.build('[hello]');
-            let repr = ElementRepresentations.get_representation_by_selector(cs);
-            expect(new repr() instanceof ElementRepresentations.AttributeRepresentation).to.equal(true);
+        it('should be initialized in complex selector', function() {
+            let cs = new ComplexSelector('[hello]');
+            let repr_type = cs.selectors[0].representation;
+            expect(new repr_type() instanceof ElementRepresentations.AttributeRepresentation).to.equal(true);
         });
 
         it('should extract attribute from element', function() {
-            let cs = new ComplexSelector();
-            cs.build('body>div[id]');
-            let $ = cheerio.load('<html><body><div id="my_id">hello</div></body></html>');
-            let repr_type = ElementRepresentations.get_representation_by_selector(cs);
-            let element = $(cs.selector).get(cs.index);
-            let repr = new repr_type($, element, cs);
-            expect(repr.repr()).to.equal('my_id');
+            let cs = new ComplexSelector('body>div[id]'),
+                $ = cheerio.load('<html><body><div id="my_id">hello</div></body></html>'),
+                repr_type = cs.selectors[0].representation,
+                element = $(cs.selectors[0].selector).get(cs.selectors[0].index),
+                repr = new repr_type($, element, cs),
+                exp_vals = cs.apply_on_element($, element);
+
+            for (let exp_val of exp_vals) {
+                expect(exp_val).to.equal('my_id');
+            }
         });
     });
 });

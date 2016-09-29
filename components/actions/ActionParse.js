@@ -16,31 +16,23 @@ function ActionParse() {
 
 ActionParse.prototype = new Action();
 
-ActionParse.prototype.build_selector = function(_sel) {
-    let selector = new ComplexSelector();
-    selector.build(_sel);
-    return selector;
-};
+ActionParse.prototype.get_elements_by_complex_selector = function($, selector) {
+    let elements = [];
 
-ActionParse.prototype.get_element_by_complex_selector = function($, selector) {
-    let result;
-    try {
-        result = $(selector.selector).get(selector.index);
-    } catch (exc) {
-        ACTION.logger.error(ACTION_PARSE_EXCEPTION, exc);
+    for (let sel of selector.selectors) {
+        try {
+            elements.push($(sel.selector).get(sel.index));
+        } catch (exc) {
+            ACTION.logger.error(ACTION_PARSE_EXCEPTION, exc);
+        }
     }
-    return result;
+
+    return elements;
 };
 
 ActionParse.prototype.clean_element_data = function(element_data) {
     let dc = new DataCleaner();
     return dc.clean(element_data);
-};
-
-ActionParse.prototype.get_element_data = function($, element, selector) {
-    let Representation = get_representation_by_selector(selector),
-        element_representation = new Representation($, element, selector);
-    return element_representation.repr();
 };
 
 ActionParse.prototype.get_relative_element_data = function($, selector) {
@@ -52,29 +44,29 @@ ActionParse.prototype.get_relative_element_data = function($, selector) {
         element = $(clean_selector).first();
     }
 
-    let element_data = this.get_element_data($, element, selector);
+    let element_data = selector.apply_on_element(element);
     element_data = this.clean_element_data(element_data);
     return element_data;
 };
 
 ActionParse.prototype.get_many_elements_by_cpx_selector = function($, selector) {
-    let result = [],
+    let elements = [],
         ACTION = this;
     try {
         $(selector.selector).each(function(id, el) {
-            let element_data = ACTION.get_element_data($, el, selector);
+            let element_data = selector.apply_on_element(element);
             element_data = ACTION.clean_element_data(element_data);
-            result.push(element_data);
+            elements.push(element_data);
         });
     } catch (exc) {
         this.logger.error(ACTION_PARSE_EXCEPTION, exc);
     }
-    return result;
+    return elements;
 };
 
 ActionParse.prototype.get_attr_from_current_element = function($, selector, content) {
     let element = $(content),
-        element_data = this.get_element_data($, element, selector);
+        element_data = selector.apply_on_element(element);
     element_data = this.clean_element_data(element_data);
     return element_data;
 };
@@ -88,7 +80,7 @@ ActionParse.prototype.main = function(subactions) {
         try {
             let selector;
             try {
-                selector = ACTION.build_selector(ACTION.config.data.selector);
+                selector = new ComplexSelector(ACTION.config.data.selector);
             } catch (exc) {
                 ACTION.logger.error(CPX_SELECTOR_EXCEPTION, exc);
             }
@@ -101,8 +93,7 @@ ActionParse.prototype.main = function(subactions) {
                         get_page_content(page, ACTION).then(function(content) {
                             try {
                                 let result = [],
-                                    $ = cheerio.load(content),
-                                    element, element_representation;
+                                    $ = cheerio.load(content);
 
                                 if (selector.selector[0] == '>' || selector.index > -1) {
                                     result.push(ACTION.get_relative_element_data($, selector));
