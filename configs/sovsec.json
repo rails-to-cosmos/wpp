@@ -8,14 +8,8 @@
             },
             "name": "webpage",
             "settings": {
-                "visible": true
-            }
-        },
-        {
-            "target": "webpage",
-            "type": "Screenshot",
-            "data": {
-                "path": "/tmp/sovsekretno.html"
+                "visible": true,
+                "screenshot": "/tmp/sovsekretno"
             }
         },
         {

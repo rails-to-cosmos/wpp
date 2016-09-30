@@ -40,6 +40,28 @@ Action.prototype.is_visible = function() {
   return this.config.settings && this.config.settings.visible;
 };
 
+Action.prototype.take_screenshot = function(page) {
+    let filename = '/tmp/' + page.target;
+
+    try {
+        filename = this.config.settings.screenshot;
+    } catch (exc) {
+
+    }
+
+    try {
+        page.render(filename + '.html');
+    } catch (exc) {
+        console.log('CANNOT RENDER PAGE:', exc);
+    }
+
+    try {
+        page.render(filename + '.png');
+    } catch (exc) {
+        console.log('CANNOT RENDER PAGE:', exc);
+    }
+};
+
 Action.prototype.finalize = function() {
   var ACTION = this;
 

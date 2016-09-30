@@ -70,47 +70,47 @@ function FilterFactory() {
 }
 
 function applyOnPage(page, filters) {
-  page.property('onResourceRequested', function(requestData, networkRequest, filters,
-                                                DEFAULT_WHITELIST, DEFAULT_BLACKLIST) {
-    const WHITELIST_URL_FILTER = 'WhitelistUrlfilter',
-          BLACKLIST_URL_FILTER = 'BlacklistUrlFilter';
+    page.property('onResourceRequested', function(requestData, networkRequest, filters,
+                                                  DEFAULT_WHITELIST, DEFAULT_BLACKLIST) {
+        const WHITELIST_URL_FILTER = 'WhitelistUrlfilter',
+              BLACKLIST_URL_FILTER = 'BlacklistUrlFilter';
 
-    if (!(WHITELIST_URL_FILTER in filters)) {
-      filters[WHITELIST_URL_FILTER] = {
-        urls: []
-      };
-    }
-
-    if (!(BLACKLIST_URL_FILTER in filters)) {
-      filters[BLACKLIST_URL_FILTER] = {
-        urls: []
-      };
-    }
-
-    Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
-    Array.prototype.push.apply(filters[WHITELIST_URL_FILTER].urls, DEFAULT_WHITELIST);
-
-    function url_in_list(url, list) {
-      for (var url_index in filters[list].urls) {
-        var re = new RegExp(filters[list].urls[url_index]);
-        if (re.test(url)) {
-          return true;
+        if (!(WHITELIST_URL_FILTER in filters)) {
+            filters[WHITELIST_URL_FILTER] = {
+                urls: []
+            };
         }
-      }
 
-      return false;
-    }
+        if (!(BLACKLIST_URL_FILTER in filters)) {
+            filters[BLACKLIST_URL_FILTER] = {
+                urls: []
+            };
+        }
 
-    if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
-        !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
-      networkRequest.abort();
-    } else {
-      // console.log('Accept', requestData.url);
-    }
-  }, filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST);
+        Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
+        Array.prototype.push.apply(filters[WHITELIST_URL_FILTER].urls, DEFAULT_WHITELIST);
+
+        function url_in_list(url, list) {
+            for (var url_index in filters[list].urls) {
+                var re = new RegExp(filters[list].urls[url_index]);
+                if (re.test(url)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
+            !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
+            networkRequest.abort();
+        } else {
+            console.log('Accept', requestData.url);
+        }
+    }, filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST);
 }
 
 
 module.exports = {
-  applyOnPage: applyOnPage
+    applyOnPage: applyOnPage
 };
