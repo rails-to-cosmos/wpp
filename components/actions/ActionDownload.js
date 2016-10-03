@@ -1,18 +1,17 @@
 'use strict';
 
-var Action = require('./Action'),
+var AbstractPageAction = require('./AbstractPageAction'),
     Webpage = require('../webpage/Webpage'),
     Filters = require('../webpage/Filters'),
 
     assert = require('assert'),
-    sleep = require('sleep-async')(),
     get_page_content = require('../webpage/Utils').get_page_content;
 
 function ActionDownload() {
-    Action.apply(this, Array.prototype.slice.call(arguments));
+    AbstractPageAction.apply(this, Array.prototype.slice.call(arguments));
 };
 
-ActionDownload.prototype = new Action();
+ActionDownload.prototype = new AbstractPageAction();
 
 // TODO refactor filters
 ActionDownload.prototype.get_filters = function() {
@@ -36,35 +35,6 @@ ActionDownload.prototype.close = function(page) {
     } catch (exc) {
         this.logger.error('Unable to close page:', exc);
     }
-};
-
-ActionDownload.prototype.scroll = function(page, scroll_height, tryout) {
-    let ACTION = this,
-        last_height = scroll_height,
-        maxtries = 20,
-        sleep_timeout = 1000;
-
-    if (tryout > maxtries) {
-        return new Promise(function(resolve, reject) {
-            resolve();
-        });
-    }
-
-    return new Promise(function(resolve, reject) {
-        page.evaluate(function() {
-            window.scrollTo(0, document.body.scrollHeight);
-            return document.body.scrollHeight;
-        }).then(function(new_height) {
-            if (new_height == last_height) {
-                sleep.sleep(sleep_timeout, resolve);
-            } else {
-                last_height = new_height;
-                ACTION.scroll(page, last_height, ++tryout).then(function() {
-                    sleep.sleep(sleep_timeout, resolve);
-                }, reject);
-            }
-        });
-    });
 };
 
 ActionDownload.prototype.main = function(subactions) {

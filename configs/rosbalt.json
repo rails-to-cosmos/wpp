@@ -1,0 +1,81 @@
+{
+    "actions": [
+        {
+            "data": {
+                "url": "http://www.rosbalt.ru/moscow/2016/10/03/1555091.html"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "ADownload",
+            "name": "webpage",
+            "target": ""
+        },
+        {
+            "data": {
+                "selector": ".btn-comment"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AClick",
+            "name": "comments",
+            "target": "webpage"
+        },
+        {
+            "data": {
+                "selector": "div[itemtype=\"http:\/\/schema.org\/Comment\"][outerHTML]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "comment",
+            "target": "comments"
+        },
+        {
+            "data": {
+                "selector": "span[itemprop=\"author\"]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": "meta[itemprop=\"dateCreated\"][content]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "date",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": "div[el=\"Text\"]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": "[id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comment"
+        }
+    ]
+}
