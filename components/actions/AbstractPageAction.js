@@ -1,6 +1,9 @@
 'use strict';
 
 var Action = require('./Action'),
+    get_page_content = require('../webpage/Utils.js').get_page_content,
+
+    fs = require('fs'),
     sleep = require('sleep-async')();
 
 function AbstractPageAction() {
@@ -8,6 +11,34 @@ function AbstractPageAction() {
 }
 
 AbstractPageAction.prototype = new Action();
+
+Action.prototype.take_screenshot = function(page, _filename) {
+    let filename;
+
+    try {
+        filename = _filename || this.config.settings.screenshot;
+    } catch (exc) {
+        return;
+    }
+
+    try {
+        page.render(filename + '.png');
+    } catch (exc) {
+        console.log('Cannot render page:', exc);
+    }
+
+    try {
+        get_page_content(page).then(function(content) {
+            fs.writeFile(filename + '.html', content, function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        });
+    } catch (exc) {
+        console.log('Cannot render page:', exc);
+    }
+};
 
 AbstractPageAction.prototype.scroll = function(page, scroll_height, tryout) {
     let ACTION = this,

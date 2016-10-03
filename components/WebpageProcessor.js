@@ -42,15 +42,11 @@ WebpageProcessor.prototype.run = function(actions, done) {
                     done(null, report.unique);
                 } catch (exc) {
                     done(exc);
-                } finally {
-                    WPP.free();
                 }
             }, function(exc) {
-                WPP.free();
                 done(exc);
             });
         } catch (exc) {
-            WPP.free();
             done(exc);
         }
     }, function(validator_report) {

@@ -1,0 +1,70 @@
+{
+    "actions": [
+        {
+            "target": "",
+            "type": "ADownload",
+            "data": {
+                "url": "http://novygorod.info/news/view/9897"
+            },
+            "name": "webpage",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "webpage",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemtype=\"http:\/\/schema.org\/Comment\"][outerHTML]"
+            },
+            "name": "comment",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[el=\"Time\"]"
+            },
+            "name": "date",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemprop=\"author\"]"
+            },
+            "name": "author",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemprop=\"text\"]"
+            },
+            "name": "body",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemtype=\"http:\/\/schema.org\/Comment\"][id]"
+            },
+            "name": "id",
+            "settings": {
+                "visible": true
+            }
+        }
+    ]
+}

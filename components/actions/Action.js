@@ -1,9 +1,7 @@
 'use strict';
 
 var assert = require('assert'),
-    is_array = require('../utils/TypeHints').is_array,
-    get_page_content = require('../webpage/Utils.js').get_page_content,
-    fs = require('fs');
+    is_array = require('../utils/TypeHints').is_array;
 
 function Action(factory, config, store, browser) {
     this.factory = factory;
@@ -40,34 +38,6 @@ Action.prototype.get_target = function() {
 
 Action.prototype.is_visible = function() {
     return this.config.settings && this.config.settings.visible;
-};
-
-Action.prototype.take_screenshot = function(page) {
-    let filename = '/tmp/' + page.target;
-
-    try {
-        filename = this.config.settings.screenshot;
-    } catch (exc) {
-
-    }
-
-    try {
-        page.render(filename + '.png');
-    } catch (exc) {
-        console.log('CANNOT RENDER PAGE:', exc);
-    }
-
-    try {
-        get_page_content(page).then(function(content) {
-            fs.writeFile(filename + '.html', content, function(err) {
-                if (err) {
-                    console.log(err);
-                }
-            });
-        });
-    } catch (exc) {
-        console.log('CANNOT RENDER PAGE:', exc);
-    }
 };
 
 Action.prototype.finalize = function() {

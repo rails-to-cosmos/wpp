@@ -37,6 +37,32 @@ ActionDownload.prototype.close = function(page) {
     }
 };
 
+ActionDownload.prototype.run_actions_on_page = function(page, actions) {
+    let ACTION = this;
+    return new Promise(function(resolve, reject) {
+        ACTION.scroll(page, 0, 0).then(function() {
+            get_page_content(page, ACTION).then(function(content) {
+                try {
+                    ACTION.write_to_store(page);
+                    ACTION.run_subactions(actions).then(function(result) {
+                        ACTION.close(page);
+                        resolve(result);
+                    }, function(exc) {
+                        ACTION.close(page);
+                        reject(exc);
+                    });
+                } catch (exc) {
+                    ACTION.close(page);
+                    reject(exc);
+                }
+            }, function(exc) {
+                ACTION.close(page);
+                reject(exc);
+            });
+        });
+    });
+};
+
 ActionDownload.prototype.main = function(subactions) {
     const ACTION = this;
 
@@ -52,34 +78,12 @@ ActionDownload.prototype.main = function(subactions) {
                     assert(url);
 
                     let context_transfered_to_main_thread = false;
+
                     page.open(url).then(function(status) {
                         try {
                             context_transfered_to_main_thread = true;
 
-                            ACTION.scroll(page, 0, 0).then(function() {
-                                if (ACTION.config.settings.screenshot) {
-                                    ACTION.take_screenshot(page);
-                                }
-
-                                get_page_content(page, ACTION).then(function(content) {
-                                    try {
-                                        ACTION.write_to_store(page);
-                                        ACTION.run_subactions(subactions).then(function(result) {
-                                            ACTION.close(page);
-                                            resolve(result);
-                                        }, function(exc) {
-                                            ACTION.close(page);
-                                            reject(exc);
-                                        });
-                                    } catch (exc) {
-                                        ACTION.close(page);
-                                        reject(exc);
-                                    }
-                                }, function(exc) {
-                                    ACTION.close(page);
-                                    reject(exc);
-                                });
-                            });
+                            ACTION.run_actions_on_page(page, subactions).then(resolve, reject);
                         } catch (exc) {
                             ACTION.close(page);
                             reject(exc);
@@ -92,8 +96,14 @@ ActionDownload.prototype.main = function(subactions) {
 
                     setTimeout(function() {
                         if (!context_transfered_to_main_thread) {
+                            // instead of
                             ACTION.close(page);
                             reject(new Error('PhantomJS process does not responding'));
+
+                            // TODO this:
+                            // page.stop().then(function() {
+                            //     ACTION.run_actions_on_page(page, subactions).then(resolve, reject);
+                            // });
                         }
                     }, 30000);
                 } catch (exc) {

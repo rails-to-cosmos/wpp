@@ -35,6 +35,7 @@ ActionClickMaster.prototype.main = function (subactions) {
                                         var xpel = window.__wpp__.xpath(elements[ei]);
                                         result.push(xpel);
                                     }
+
                                     return result;
                                 }, selector).then(function(buttons) {
                                     try {
