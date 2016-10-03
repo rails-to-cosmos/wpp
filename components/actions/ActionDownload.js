@@ -26,7 +26,6 @@ ActionDownload.prototype.get_filters = function() {
 };
 
 ActionDownload.prototype.close = function(page) {
-    this.logger.info('Close page ' + page.target);
     try {
         let __free__ = function() {
             page.stop();
@@ -42,9 +41,9 @@ ActionDownload.prototype.close = function(page) {
 ActionDownload.prototype.scroll = function(page, scroll_height, tryout) {
     let ACTION = this,
         last_height = scroll_height,
-        maxtries = 20;
+        maxtries = 20,
+        sleep_timeout = 1000;
 
-    console.log('tryout', tryout);
     if (tryout > maxtries) {
         return new Promise(function(resolve, reject) {
             resolve();
@@ -52,19 +51,16 @@ ActionDownload.prototype.scroll = function(page, scroll_height, tryout) {
     }
 
     return new Promise(function(resolve, reject) {
-        console.log('evaluating page...');
         page.evaluate(function() {
             window.scrollTo(0, document.body.scrollHeight);
             return document.body.scrollHeight;
         }).then(function(new_height) {
-            console.log('new', new_height);
-
             if (new_height == last_height) {
-                sleep.sleep(1000, resolve);
+                sleep.sleep(sleep_timeout, resolve);
             } else {
                 last_height = new_height;
                 ACTION.scroll(page, last_height, ++tryout).then(function() {
-                    sleep.sleep(1000, resolve);
+                    sleep.sleep(sleep_timeout, resolve);
                 }, reject);
             }
         });
@@ -92,7 +88,6 @@ ActionDownload.prototype.main = function(subactions) {
 
                             ACTION.scroll(page, 0, 0).then(function() {
                                 if (ACTION.config.settings.screenshot) {
-                                    console.log('taking screenshot:', ACTION.config.settings.screenshot);
                                     ACTION.take_screenshot(page);
                                 }
 

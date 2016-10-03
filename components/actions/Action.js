@@ -1,7 +1,9 @@
 'use strict';
 
 var assert = require('assert'),
-    is_array = require('../utils/TypeHints').is_array;
+    is_array = require('../utils/TypeHints').is_array,
+    get_page_content = require('../webpage/Utils.js').get_page_content,
+    fs = require('fs');
 
 function Action(factory, config, store, browser) {
   this.factory = factory;
@@ -50,13 +52,19 @@ Action.prototype.take_screenshot = function(page) {
     }
 
     try {
-        page.render(filename + '.html');
+        page.render(filename + '.png');
     } catch (exc) {
         console.log('CANNOT RENDER PAGE:', exc);
     }
 
     try {
-        page.render(filename + '.png');
+        get_page_content(page).then(function(content) {
+            fs.writeFile(filename + '.html', content, function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        });
     } catch (exc) {
         console.log('CANNOT RENDER PAGE:', exc);
     }

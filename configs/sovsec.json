@@ -2,23 +2,66 @@
     "actions": [
         {
             "target": "",
-            "type": "Download",
+            "type": "ADownload",
             "data": {
                 "url": "http://www.sovsekretno.ru/news/id/9398/"
             },
             "name": "webpage",
             "settings": {
-                "visible": true,
-                "screenshot": "/tmp/sovsekretno"
+                "visible": true
             }
         },
         {
             "target": "webpage",
-            "type": "Parse",
+            "type": "AParseBySelector",
             "data": {
-                "selector": "div[outerHTML]"
+                "selector": "[itemtype=\"http:\/\/schema.org\/Comment\"][outerHTML]"
             },
             "name": "comment",
+            "settings": {
+                "visible": false
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[el=\"Time\"]"
+            },
+            "name": "date",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemprop=\"author\"]"
+            },
+            "name": "author",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemprop=\"text\"]"
+            },
+            "name": "body",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[itemtype=\"http:\/\/schema.org\/Comment\"][id]"
+            },
+            "name": "id",
             "settings": {
                 "visible": true
             }
