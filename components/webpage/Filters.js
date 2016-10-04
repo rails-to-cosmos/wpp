@@ -112,7 +112,7 @@ function applyOnPage(page, filters) {
 
         if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
             !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
-            // console.log('Url in blacklist', requestData.url);
+            // console.log('Deny', requestData.url);
             networkRequest.abort();
         } else {
             // console.log('Accept', requestData.url);

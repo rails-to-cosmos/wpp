@@ -7,6 +7,8 @@ var AbstractPageAction = require('./AbstractPageAction'),
     assert = require('assert'),
     get_page_content = require('../webpage/Utils').get_page_content;
 
+const PAGE_TIMEOUT = 30000;
+
 function ActionDownload() {
     AbstractPageAction.apply(this, Array.prototype.slice.call(arguments));
 };
@@ -96,16 +98,10 @@ ActionDownload.prototype.main = function(subactions) {
 
                     setTimeout(function() {
                         if (!context_transfered_to_main_thread) {
-                            // instead of
                             ACTION.close(page);
                             reject(new Error('PhantomJS process does not responding'));
-
-                            // TODO this:
-                            // page.stop().then(function() {
-                            //     ACTION.run_actions_on_page(page, subactions).then(resolve, reject);
-                            // });
                         }
-                    }, 30000);
+                    }, PAGE_TIMEOUT);
                 } catch (exc) {
                     ACTION.close(page);
                     reject(exc);

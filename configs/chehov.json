@@ -1,0 +1,79 @@
+{
+    "actions": [
+        {
+            "target": "",
+            "type": "ADownload",
+            "data": {
+                "url": "http://chehov-vid.ru/news/prestupnost/ograbivshie-bank-v-chehove-muzhchinyi-zaklyuchenyi-pod-strazhu.html
+"
+            },
+            "name": "webpage",
+            "settings": {
+                "visible": true,
+                "filters": {
+                    "BlacklistUrlFilter": {
+                        "urls": []
+                    },
+                    "WhitelistUrlFilter": {
+                        "urls": []
+                    }
+                }
+            }
+        },
+        {
+            "target": "webpage",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".comments-area #mc-container .mc-comment[outerHTML]"
+            },
+            "name": "comments",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": " .mc-comment-username"
+            },
+            "name": "author",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".mc-comment-body"
+            },
+            "name": "body",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".mc-comment-time"
+            },
+            "name": "date",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[id]"
+            },
+            "name": "id",
+            "settings": {
+                "visible": true
+            }
+        }
+    ]
+}
