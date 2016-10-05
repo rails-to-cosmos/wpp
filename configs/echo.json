@@ -1,110 +1,112 @@
 {
-  "actions": [
-    {
-      "data": {
-        "url": "http://echo.msk.ru/blog/echomsk/1834242-echo/"
-      },
-      "settings": {
-        "visible": false,
-        "filters":  {
-          "WhitelistUrlFilter": {
-            "urls": [".*echo\\.msk\\.ru.*"]
-          },
-          "BlacklistUrlFilter": {
-            "urls": ["http:\\/\\/.+?\\.css",
-                     ".*banner.*",
-                     ".*ads.*",
-                     ".*videos.*",
-                     ".*mediatoday.*",
-                     ".*vkontakte.*",
-                     ".*widget.*",
-                     ".*facebook.*",
-                     ".*counters.*"]
-          },
-          "BlacklistContentTypeFilter": {
-            "content_types": ["text/css"]
-          }
+    "actions": [
+        {
+            "data": {
+                "url": "http://echo.msk.ru/blog/echomsk/1834242-echo/"
+            },
+            "settings": {
+                "visible": false,
+                "user_agent": false,
+                "filters":  {
+                    "whitelist": {
+                        "urls": [".*echo\\.msk\\.ru.*"]
+                    },
+                    "blacklist": {
+                        "urls": ["http:\\/\\/.+?\\.css",
+                                 ".*banner.*",
+                                 ".*ads.*",
+                                 ".*videos.*",
+                                 ".*mediatoday.*",
+                                 ".*vkontakte.*",
+                                 ".*widget.*",
+                                 ".*facebook.*",
+                                 ".*counters.*",
+                                 ".*data\\.24smi\\.net.*"]
+                    },
+                    "BlacklistContentTypeFilter": {
+                        "content_types": ["text/css"]
+                    }
+                }
+            },
+            "type": "ADownload",
+            "name": "article"
+        },
+        {
+            "data": {
+                "selector": "section.content .actionBlock a.comm"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AClick",
+            "name": "article_with_comments",
+            "target": "article"
+        },
+        {
+            "data": {
+                "selector": ".pager a.ajax[href^=\"#comments\"]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "APages",
+            "name": "pages",
+            "target": "article_with_comments"
+        },
+        {
+            "data": {
+                "selector": ".commBlock[outerHTML]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AParseBySelector",
+            "name": "comment",
+            "target": "pages"
+        },
+        {
+            "data": {
+                "selector": "[id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ">div.onecomm>p.author span.about>strong.name"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ">div.onecomm>p.commtext"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ">div.onecomm>p.author>span.datetime.right"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "date",
+            "target": "comment"
         }
-      },
-      "type": "ADownload",
-      "name": "article"
-    },
-    {
-      "data": {
-        "selector": "section.content .actionBlock a.comm"
-      },
-      "settings": {
-        "visible": false
-      },
-      "type": "AClick",
-      "name": "article_with_comments",
-      "target": "article"
-    },
-    {
-      "data": {
-        "selector": ".pager a.ajax[href^=\"#comments\"]"
-      },
-      "settings": {
-        "visible": false
-      },
-      "type": "APages",
-      "name": "pages",
-      "target": "article_with_comments"
-    },
-    {
-      "data": {
-        "selector": ".commBlock[outerHTML]"
-      },
-      "settings": {
-        "visible": false
-      },
-      "type": "AParseBySelector",
-      "name": "comment",
-      "target": "pages"
-    },
-    {
-      "data": {
-        "selector": "[id]"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "id",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ">div.onecomm>p.author span.about>strong.name"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "author",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ">div.onecomm>p.commtext"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "body",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ">div.onecomm>p.author>span.datetime.right"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "date",
-      "target": "comment"
-    }
-  ]
+    ]
 }

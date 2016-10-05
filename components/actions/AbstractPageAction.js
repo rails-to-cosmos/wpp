@@ -12,19 +12,18 @@ function AbstractPageAction() {
 
 AbstractPageAction.prototype = new Action();
 
-Action.prototype.take_screenshot = function(page, _filename) {
+Action.prototype.take_screenshot = function(page, alias) {
     let filename;
 
     try {
-        filename = _filename || this.config.settings.screenshot;
+        filename = this.config.settings.screenshot;
+        if (filename && alias) {
+            filename = [filename, alias].join('_');
+        } else {
+            return;
+        }
     } catch (exc) {
         return;
-    }
-
-    try {
-        page.render(filename + '.png');
-    } catch (exc) {
-        console.log('Cannot render page:', exc);
     }
 
     try {

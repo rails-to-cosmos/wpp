@@ -7,32 +7,32 @@ const os = require('os'),
       phantom_max_count = os.cpus().length;
 
 function Balancer(settings) {
-  this.bros = [];
-  this.bro_index = 0;
+    this.bros = [];
+    this.bro_index = 0;
 }
 
 Balancer.prototype.move_bro_index = function() {
-  if (++this.bro_index >= phantom_max_count) {
-    this.bro_index = 0;
-  }
+    if (++this.bro_index >= phantom_max_count) {
+        this.bro_index = 0;
+    }
 };
 
 Balancer.prototype.free = function() {
-  for (let bro of this.bros) {
-    bro.rip();
-  }
+    for (let bro of this.bros) {
+        bro.rip();
+    }
 };
 
 Balancer.prototype.acquire_phantom_instance = function(settings) {
-  if (!this.bros[this.bro_index]) {
-    let bro = new FaultTolerantBrowser(settings);
-    this.bros.push(bro);
-  }
+    if (!this.bros[this.bro_index]) {
+        let bro = new FaultTolerantBrowser(settings);
+        this.bros.push(bro);
+    }
 
-  let ph = this.bros[this.bro_index].acquire();
-  this.move_bro_index();
+    let ph = this.bros[this.bro_index].acquire();
+    this.move_bro_index();
 
-  return ph;
+    return ph;
 };
 
 module.exports = Balancer;

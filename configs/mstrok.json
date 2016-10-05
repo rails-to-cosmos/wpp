@@ -4,18 +4,17 @@
             "target": "",
             "type": "ADownload",
             "data": {
-                "url": "http://chehov-vid.ru/news/prestupnost/ograbivshie-bank-v-chehove-muzhchinyi-zaklyuchenyi-pod-strazhu.html"
+                "url": "https://mstrok.ru/avtorskie_kolonki/seryj-gorod/ohota-na-volkov.html"
             },
             "name": "webpage",
             "settings": {
-                "user_agent": false,
                 "visible": true,
                 "filters": {
-                    "BlacklistUrlFilter": {
+                    "blacklist": {
                         "urls": []
                     },
-                    "WhitelistUrlFilter": {
-                        "urls": []
+                    "whitelist": {
+                        "urls": [".*mstrok.*"]
                     }
                 }
             }
@@ -24,7 +23,7 @@
             "target": "webpage",
             "type": "AParseBySelector",
             "data": {
-                "selector": ".comments-area #mc-container .mc-comment[outerHTML]"
+                "selector": "#hc_messages[outerHTML]"
             },
             "name": "comments",
             "settings": {
@@ -35,7 +34,18 @@
             "target": "comments",
             "type": "AParseBySelector",
             "data": {
-                "selector": " .mc-comment-username"
+                "selector": ".hc_message[outerHTML]"
+            },
+            "name": "comment",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".hc_comments_nick"
             },
             "name": "author",
             "settings": {
@@ -43,10 +53,10 @@
             }
         },
         {
-            "target": "comments",
+            "target": "comment",
             "type": "AParseBySelector",
             "data": {
-                "selector": ".mc-comment-body"
+                "selector": ".hc_message_text"
             },
             "name": "body",
             "settings": {
@@ -54,10 +64,10 @@
             }
         },
         {
-            "target": "comments",
+            "target": "comment",
             "type": "AParseBySelector",
             "data": {
-                "selector": ".mc-comment-time"
+                "selector": ".hc_comments_time"
             },
             "name": "date",
             "settings": {
@@ -65,10 +75,10 @@
             }
         },
         {
-            "target": "comments",
+            "target": "comment",
             "type": "AParseBySelector",
             "data": {
-                "selector": "[id]"
+                "selector": ".hc_message[id]"
             },
             "name": "id",
             "settings": {
