@@ -6,7 +6,9 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
-* TODO Timeouts
+* CANCELLED Timeouts
+CLOSED: [2016-10-05 Wed 18:35]
+- State "CANCELLED"  from "TODO"       [2016-10-05 Wed 18:35]
 * TODO IFrames
 * TODO User-Agents
 * TODO Посмотреть, верно ли группируются id и author в эхе
