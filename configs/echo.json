@@ -1,7 +1,4 @@
 {
-    "defaults": {
-        "user_agent": "hello"
-    },
     "actions": [
         {
             "data": {

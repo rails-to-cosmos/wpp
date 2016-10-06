@@ -22,8 +22,6 @@ function Action(factory, config, store, browser, defaults) {
             }
         }
     }
-
-    console.log('Settings:', this.config.settings);
 };
 
 Action.prototype.get_browser = function() {
