@@ -88,6 +88,10 @@ ComplexSelector.prototype.apply = function($) {
                 result.push(repr.repr());
             }
         }
+
+        if (elements.length == 0) {
+            result.push('');
+        }
     }
 
     return result;

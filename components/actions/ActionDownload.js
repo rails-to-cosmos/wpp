@@ -77,11 +77,8 @@ ActionDownload.prototype.main = function(subactions) {
 
             try {
                 user_agent = ACTION.config.settings.user_agent;
-                if (!'user_agent' in ACTION.config.settings) {
-                    throw new Error('User Agent not found in download action settings');
-                }
             } catch (exc) {
-                user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/601.7.8 (KHTML, like Gecko) Version/9.1.3 Safari/537.86.7';
+
             }
 
             webpage.create(RESOURCE_TIMEOUT, user_agent).then(function(page) {

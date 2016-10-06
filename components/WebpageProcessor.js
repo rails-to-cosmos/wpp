@@ -12,6 +12,9 @@ const assert = require('assert'),
 function WebpageProcessor(phantom_instance, logger) {
     this.phantom_instance = phantom_instance;
     this.logger = logger;
+    this.defaults = {
+        user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/601.7.8 (KHTML, like Gecko) Version/9.1.3 Safari/537.86.7'
+    };
 }
 
 WebpageProcessor.prototype.run = function(actions, done) {
@@ -30,7 +33,7 @@ WebpageProcessor.prototype.run = function(actions, done) {
             WPP.logger.info('Create action tree');
 
             let storage = new ActionResultStore(),
-                factory = new ActionFactory(WPP.phantom_instance, storage),
+                factory = new ActionFactory(WPP.phantom_instance, storage, WPP.defaults),
                 action_tree = new ActionTree(actions, factory, WPP.logger);
 
             WPP.logger.info('Process action tree');

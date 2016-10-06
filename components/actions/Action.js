@@ -3,13 +3,27 @@
 var assert = require('assert'),
     is_array = require('../utils/TypeHints').is_array;
 
-function Action(factory, config, store, browser) {
+function Action(factory, config, store, browser, defaults) {
     this.factory = factory;
-    this.config = config;
+    this.config = config || {};
     this.store = store;
     this.browser = browser;
     this.history = new Map();
     this.logger = null;
+
+    if (defaults) {
+        if (!('settings' in this.config)) {
+            this.config.settings = {};
+        }
+
+        for (let key of Object.keys(defaults)) {
+            if (!(key in this.config.settings)) {
+                this.config.settings[key] = defaults[key];
+            }
+        }
+    }
+
+    console.log('Settings:', this.config.settings);
 };
 
 Action.prototype.get_browser = function() {

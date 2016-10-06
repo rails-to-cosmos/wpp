@@ -116,6 +116,8 @@ app.post('/', function(req, res) {
             return;
         }
 
+        wpp.defaults = req.body.defaults || {};
+
         try {
             wpp.run(actions, function(exc, data) {
                 if (exc) {

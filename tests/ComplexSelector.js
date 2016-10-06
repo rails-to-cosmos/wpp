@@ -102,4 +102,15 @@ describe('ComplexSelector', function() {
         }
     });
 
+    it('should return empty string when nothing found', function() {
+        let $ = cheerio.load('<div id="main"><a href="foo">foo</a><span id="bar">bar</div></div>'),
+            cs = new ComplexSelector('b[hello]'),
+            result = cs.apply($);
+
+        expect(result.length).to.equal(1);
+        for (let item of result) {
+            expect(item).to.equal('');
+        }
+    });
+
 });

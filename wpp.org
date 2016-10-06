@@ -6,6 +6,7 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
+* TODO Выводить список урлов с затраченным временем на них
 * CANCELLED Timeouts
 CLOSED: [2016-10-05 Wed 18:35]
 - State "CANCELLED"  from "TODO"       [2016-10-05 Wed 18:35]

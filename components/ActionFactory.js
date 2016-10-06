@@ -35,9 +35,10 @@ const ActionAssoc = {
     AHistoryBack: ActionHistoryBack
 };
 
-function ActionFactory(browser, storage) {
+function ActionFactory(browser, storage, defaults) {
     this.browser = browser;
     this.storage = storage;
+    this.defaults = defaults;
 };
 
 ActionFactory.prototype.inherit = function(child, parent) {
@@ -57,7 +58,7 @@ ActionFactory.prototype.create_action = function(config, parent) {
         throw new Error('Unknown action received: ' + config.name + ' (' + config.type + ').');
     }
 
-    let action = new ActionAssoc[config.type](this, config, this.storage, this.browser);
+    let action = new ActionAssoc[config.type](this, config, this.storage, this.browser, this.defaults);
     this.inherit(action, parent);
     return action;
 };
