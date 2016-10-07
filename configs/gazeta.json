@@ -18,7 +18,21 @@
                             ".*api\\.rnet\\.plus.*",
                             ".*adfox\\.asyn\\.code.*",
                             ".*jquery\\.cookie.*",
-                            ".*gazeta\\.media\\.query.*"
+                            ".*gazeta\\.media\\.query.*",
+                            ".*mediametrics.*",
+                            ".*rambler.*",
+                            ".*top100.*",
+                            ".*pingdom.*",
+                            ".*connect\\.ok\\.ru.*",
+                            ".*smi2.*",
+                            ".*facebook.*",
+                            ".*begun.*",
+                            ".*google.*",
+                            ".*finam.*",
+                            ".*criteo.*",
+                            ".*mail\\.ru.*",
+                            ".*onthe\\.io.*",
+                            ".*pushwoosh-web-notifications.*"
                         ]
                     }
                 }

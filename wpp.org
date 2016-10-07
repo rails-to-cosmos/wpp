@@ -6,6 +6,8 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
+* TODO Bugs
+** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
 * TODO Вывести время, сколько качалась статья
 * TODO Выводить список урлов с затраченным временем на них
 * CANCELLED Timeouts

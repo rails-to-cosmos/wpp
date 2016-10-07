@@ -78,9 +78,11 @@ ActionDownload.prototype.write_report = function(report) {
     let allowed_requests_filename = this.get_report_filename('requests_allowed', 'txt');
 
     let url_list = [];
+    let total_elapsed_time = 0;
     for (let url of Object.keys(report.requests.allowed)) {
         let elapsed_time = report.requests.allowed[url].elapsed_time;
         url_list.push([url, elapsed_time]);
+        total_elapsed_time += elapsed_time;
     }
 
     let comparator = function(a, b) {
@@ -88,7 +90,7 @@ ActionDownload.prototype.write_report = function(report) {
     };
     url_list.sort(comparator);
 
-    let allowed_requests_list = '';
+    let allowed_requests_list = total_elapsed_time + '\n';
     for (let url of url_list) {
         allowed_requests_list += [url[0], url[1], '\n'].join(' ');
     }
