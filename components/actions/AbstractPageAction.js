@@ -2,7 +2,7 @@
 
 var Action = require('./Action'),
     get_page_content = require('../webpage/Utils.js').get_page_content,
-
+    assert = require('assert'),
     fs = require('fs'),
     sleep = require('sleep-async')();
 
@@ -12,23 +12,43 @@ function AbstractPageAction() {
 
 AbstractPageAction.prototype = new Action();
 
-Action.prototype.take_screenshot = function(page, alias) {
-    let filename;
-
+AbstractPageAction.prototype.need_report = function() {
     try {
-        filename = this.config.settings.screenshot;
+        assert(this.config.settings.report);
+    } catch (exc) {
+        return false;
+    }
+
+    return true;
+};
+
+AbstractPageAction.prototype.get_report_filename = function(alias, ext) {
+    let filename = 'report';
+
+    alias = alias || '';
+    ext = ext || 'txt';
+
+    if (this.need_report) {
+        filename = this.config.settings.report;
         if (filename && alias) {
             filename = [filename, alias].join('_');
-        } else {
-            return;
         }
-    } catch (exc) {
+
+    }
+
+    return [filename, ext].join('.');
+};
+
+AbstractPageAction.prototype.take_screenshot = function(page, alias) {
+    if (!this.need_report()) {
         return;
     }
 
+    let filename = this.get_report_filename(alias, 'html');
+
     try {
         get_page_content(page).then(function(content) {
-            fs.writeFile(filename + '.html', content, function(err) {
+            fs.writeFile(filename, content, function(err) {
                 if (err) {
                     console.log(err);
                 }
