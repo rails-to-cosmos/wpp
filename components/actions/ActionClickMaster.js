@@ -44,7 +44,7 @@ ActionClickMaster.prototype.main = function (subactions) {
                                             for (var index in buttons) {
                                                 var click_config = deepcopy(ACTION.config);
                                                 click_config.type = SLAVE_ACTION_TYPE;
-                                                click_config.name = ACTION.get_name() + ' (' + index + ')';
+                                                click_config.name = ACTION.get_name() + '__' + index;
                                                 click_config.data = {
                                                     xpath: buttons[index]
                                                 };
@@ -67,7 +67,12 @@ ActionClickMaster.prototype.main = function (subactions) {
                                                     var slave_action = slaves.pop();
 
                                                     slave_action.main(subactions).then(function() {
-                                                        ACTION.take_screenshot(page, 'click_after_' + slave_action.config.name);
+                                                        try {
+                                                            ACTION.take_screenshot(page, 'click_after_' + slave_action.config.name);
+                                                        } catch(exc) {
+
+                                                        }
+
                                                         processSlaves(slaves).then(resolveSlave);
                                                     }, function(exc) {
                                                         rejectSlave(exc);
@@ -79,7 +84,12 @@ ActionClickMaster.prototype.main = function (subactions) {
                                         };
 
                                         ACTION.write_to_store(page);
-                                        ACTION.take_screenshot(page, 'click_before_click');
+                                        try {
+                                            ACTION.take_screenshot(page, 'click_before_click');
+                                        } catch(exc) {
+
+                                        }
+
                                         processSlaves(createSlaves()).then(function() {
                                             try {
                                                 ACTION.finalize().then(function(result) {

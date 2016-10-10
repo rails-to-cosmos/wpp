@@ -1,4 +1,7 @@
 {
+    "defaults": {
+        "report": "/tmp/echo"
+    },
     "actions": [
         {
             "data": {

@@ -1,10 +1,10 @@
 'use strict';
 
-const Action = require('./Action'),
-      ActionClickMaster = require('./ActionClickMaster'),
+const ActionClickMaster = require('./ActionClickMaster'),
       Webpage = require('../webpage/Webpage'),
       XPathInjection = require('../injections/XPathInjection'),
-      deepcopy = require('deepcopy');
+      deepcopy = require('deepcopy'),
+      DataCleaner = require('../webpage/DataCleaner');
 
 function ActionPaginate() {
     ActionClickMaster.apply(this, Array.prototype.slice.call(arguments));
@@ -20,7 +20,7 @@ ActionPaginate.prototype.main = function (subactions) {
     let pages = ACTION.get_from_store(ACTION.get_target()),
         visited = [];
 
-    Action.prototype.main.call(this, subactions);
+    ActionClickMaster.prototype.main.call(this, subactions);
 
     return new Promise(function(resolveAllPages, rejectAllPages) {
         try {
@@ -32,6 +32,7 @@ ActionPaginate.prototype.main = function (subactions) {
                     ACTION.write_to_store(page);
                     return new Promise(function(resolve, reject) {
                         try {
+                            ACTION.take_screenshot(page, 'page_before_page');
                             scanPaginationButtons();
                         } catch (exc) {
                             reject(exc);
@@ -59,11 +60,15 @@ ActionPaginate.prototype.main = function (subactions) {
                                             return;
                                         }
 
-                                        var found = false;
+                                        console.log('buttons:', buttons);
+
+                                        var found = false,
+                                            dc = new DataCleaner();
                                         for (var name in buttons) {
                                             if (visited.indexOf(name) > -1) {
                                                 continue;
                                             }
+
                                             found = true;
                                             break;
                                         }
@@ -75,7 +80,7 @@ ActionPaginate.prototype.main = function (subactions) {
 
                                         var click_config = deepcopy(ACTION.config);
                                         click_config.type = SLAVE_ACTION_TYPE;
-                                        click_config.name = ACTION.config.name + ' (' + name + ')';
+                                        click_config.name = ACTION.config.name + '__' + dc.clean(name);
                                         click_config.data = {
                                             xpath: buttons[name]
                                         };
@@ -90,9 +95,16 @@ ActionPaginate.prototype.main = function (subactions) {
                                             }
                                         }
 
-                                        var slave = ACTION.factory.create_action(click_config, ACTION);
-                                        slave.main(dependent_subactions).then(function() {
+                                        var slave_action = ACTION.factory.create_action(click_config, ACTION);
+                                        slave_action.main(dependent_subactions).then(function() {
                                             visited.push(name);
+                                            console.log('paginate name', slave_action.config.name);
+                                            try {
+                                                ACTION.take_screenshot(page, 'page_after_' + slave_action.config.name);
+                                            } catch (exc) {
+
+                                            }
+
                                             if (visited.length < PAGINATION_LIMIT) {
                                                 scanPaginationButtons();
                                             } else {

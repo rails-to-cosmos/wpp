@@ -47,7 +47,12 @@ ActionDownload.prototype.run_actions_on_page = function(page, actions) {
     let ACTION = this;
     return new Promise(function(resolve, reject) {
         ACTION.scroll(page, 0, 0).then(function() {
-            ACTION.take_screenshot(page, 'download_after_scroll');
+            try {
+                ACTION.take_screenshot(page, 'download_after_scroll');
+            } catch (exc) {
+
+            }
+
             get_page_content(page, ACTION).then(function(content) {
                 try {
                     ACTION.write_to_store(page);
@@ -135,7 +140,12 @@ ActionDownload.prototype.main = function(subactions) {
                     page.open(url).then(function(status) {
                         try {
                             context_transfered_to_main_thread = true;
-                            ACTION.take_screenshot(page, 'download_before_scroll');
+                            try {
+                                ACTION.take_screenshot(page, 'download_before_scroll');
+                            } catch (exc) {
+
+                            }
+
                             ACTION.run_actions_on_page(page, subactions).then(
                                 function(data) {
                                     ACTION.write_report(webpage.report);
@@ -153,7 +163,12 @@ ActionDownload.prototype.main = function(subactions) {
 
                     setTimeout(function() {
                         if (!context_transfered_to_main_thread) {
-                            ACTION.take_screenshot(page, 'download_timeout');
+                            try {
+                                ACTION.take_screenshot(page, 'download_timeout');
+                            } catch (exc) {
+
+                            }
+
                             ACTION.close(page);
                             reject(new Error('PhantomJS process does not responding'));
                         }
