@@ -10,10 +10,10 @@ API
 ---
 Webpage Processor API enables to call page automation tasks.
 
-You can start Webpage Processor by:
+You can start Webpage Processor by: ::
     $ node wpp
 
-Then call task by:
+Then call task by: ::
     $ curl -H "Content-Type: application/json" --data @config.json http://localhost:8283/ -o output.json
 
 Installation
@@ -24,4 +24,4 @@ Installation
 
 Requirements
 ------------
-Webpage Processor requires PhantomJS version 2.1+.
+Webpage Processor requires PhantomJS version 2.1+
