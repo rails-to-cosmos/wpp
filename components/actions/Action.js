@@ -5,7 +5,12 @@ var assert = require('assert'),
 
 function Action(factory, config, store, browser, defaults) {
     this.factory = factory;
-    this.config = config || {};
+    this.config = config || {
+        name: null,
+        target: null,
+        data: {},
+        settings: {}
+    };
     this.store = store;
     this.browser = browser;
     this.history = new Map();

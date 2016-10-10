@@ -28,7 +28,7 @@ AbstractPageAction.prototype.get_report_filename = function(alias, ext) {
     alias = alias || '';
     ext = ext || 'txt';
 
-    if (this.need_report) {
+    if (this.need_report()) {
         filename = this.config.settings.report;
         if (filename && alias) {
             filename = [filename, alias].join('_');
