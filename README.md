@@ -41,10 +41,10 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
 
 ```
 {
-    "defaults": {
-        "report": "/tmp/report"
+    defaults: {
+        report: "/tmp/report"
     },
-    "actions": [
+    actions: [
         {
             "target": "",
             "type": "Download",
