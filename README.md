@@ -85,7 +85,7 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
         },
         {
             "target": "comments",
-            "type": "AParseBySelector",
+            "type": "Parse",
             "data": {
                 "selector": ".rc-comment[outerHTML]"
             },
@@ -93,7 +93,7 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
         },
         {
             "target": "comment",
-            "type": "AParseBySelector",
+            "type": "Parse",
             "data": {
                 "selector": "[id]"
             },
