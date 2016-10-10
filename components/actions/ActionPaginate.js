@@ -60,8 +60,6 @@ ActionPaginate.prototype.main = function (subactions) {
                                             return;
                                         }
 
-                                        console.log('buttons:', buttons);
-
                                         var found = false,
                                             dc = new DataCleaner();
                                         for (var name in buttons) {
@@ -98,7 +96,7 @@ ActionPaginate.prototype.main = function (subactions) {
                                         var slave_action = ACTION.factory.create_action(click_config, ACTION);
                                         slave_action.main(dependent_subactions).then(function() {
                                             visited.push(name);
-                                            console.log('paginate name', slave_action.config.name);
+
                                             try {
                                                 ACTION.take_screenshot(page, 'page_after_' + slave_action.config.name);
                                             } catch (exc) {
