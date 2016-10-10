@@ -46,21 +46,21 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
     },
     actions: [
         {
-            "target": "",
-            "type": "Download",
-            "data": {
-                "url": "http://www.gazeta.ru/army/2016/08/06/9705023.shtml"
+            target: "",
+            type: "Download",
+            data: {
+                url: "http://www.gazeta.ru/army/2016/08/06/9705023.shtml"
             },
-            "name": "webpage",
-            "settings": {
-                "filters": {
-                    "blacklist": {
-                        "urls": [
+            name: "webpage",
+            settings: {
+                filters: {
+                    blacklist: {
+                        urls: [
                             ".*beacon\\.js.*",
                         ]
                     },
-                    "whitelist": {
-                        "urls": [
+                    whitelist: {
+                        urls: [
                             ".*c\\.rambler\\.ru.*",
                         ]
                     }
@@ -68,38 +68,38 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
             }
         },
         {
-            "target": "webpage",
-            "type": "Click",
-            "data": {
-                "selector": ".button_give_comments"
+            target: "webpage",
+            type: "Click",
+            data: {
+                selector: ".button_give_comments"
             },
-            "name": "click"
+            name: "click"
         },
         {
-            "target": "click",
-            "type": "Parse",
-            "data": {
-                "selector": ".rc-comments__list[outerHTML]"
+            target: "click",
+            type: "Parse",
+            data: {
+                selector: ".rc-comments__list[outerHTML]"
             },
-            "name": "comments"
+            name: "comments"
         },
         {
-            "target": "comments",
-            "type": "Parse",
-            "data": {
-                "selector": ".rc-comment[outerHTML]"
+            target: "comments",
+            type: "Parse",
+            data: {
+                selector: ".rc-comment[outerHTML]"
             },
-            "name": "comment"
+            name: "comment"
         },
         {
-            "target": "comment",
-            "type": "Parse",
-            "data": {
-                "selector": "[id]"
+            target: "comment",
+            type: "Parse",
+            data: {
+                selector: "[id]"
             },
-            "name": "id",
-            "settings": {
-                "visible": true
+            name: "id",
+            settings: {
+                visible: true
             }
         }
     ]
