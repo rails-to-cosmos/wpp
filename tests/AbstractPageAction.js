@@ -8,6 +8,7 @@ let chai = require('chai'),
 describe('AbstractPageAction', function() {
     it('should provide report logic', function() {
         let action = new AbstractPageAction();
+        expect(action.need_report()).to.equal(false);
         action.config.settings.report = '/tmp/report';
         expect(action.need_report()).to.equal(true);
         expect(action.get_report_filename('test', 'html')).to.equal('/tmp/report_test.html');

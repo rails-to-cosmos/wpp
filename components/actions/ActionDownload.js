@@ -71,7 +71,7 @@ ActionDownload.prototype.run_actions_on_page = function(page, actions) {
 };
 
 ActionDownload.prototype.write_report = function(report) {
-    if (!this.need_report) {
+    if (!this.need_report()) {
         return;
     }
 
