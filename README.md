@@ -33,3 +33,75 @@ Start wpp:
 Then call a task:
 
     $ curl -H "Content-Type: application/json" --data @config.json http://localhost:8283/ -o output.json
+
+Config Structure
+----------------
+
+Webpage Processor config uses JSON syntax to specify tree of page actions.
+
+```
+{
+    "defaults": {
+        "report": "/tmp/report"
+    },
+    "actions": [
+        {
+            "target": "",
+            "type": "Download",
+            "data": {
+                "url": "http://www.gazeta.ru/army/2016/08/06/9705023.shtml"
+            },
+            "name": "webpage",
+            "settings": {
+                "filters": {
+                    "blacklist": {
+                        "urls": [
+                            ".*beacon\\.js.*",
+                        ]
+                    },
+                    "whitelist": {
+                        "urls": [
+                            ".*c\\.rambler\\.ru.*",
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "target": "webpage",
+            "type": "Click",
+            "data": {
+                "selector": ".button_give_comments"
+            },
+            "name": "click"
+        },
+        {
+            "target": "click",
+            "type": "Parse",
+            "data": {
+                "selector": ".rc-comments__list[outerHTML]"
+            },
+            "name": "comments"
+        },
+        {
+            "target": "comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".rc-comment[outerHTML]"
+            },
+            "name": "comment"
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[id]"
+            },
+            "name": "id",
+            "settings": {
+                "visible": true
+            }
+        }
+    ]
+}
+```
