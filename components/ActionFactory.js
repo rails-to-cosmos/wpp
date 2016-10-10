@@ -5,9 +5,7 @@ let ActionDownload = require('./actions/ActionDownload'),
     ActionClickMaster = require('./actions/ActionClickMaster'),
     ActionPaginate = require('./actions/ActionPaginate'),
     ActionClickSlave = require('./actions/ActionClickSlave'),
-    ActionParse = require('./actions/ActionParse'),
-    ActionStore = require('./actions/ActionStore'),
-    ActionHistoryBack = require('./actions/ActionHistoryBack');
+    ActionParse = require('./actions/ActionParse');
 
 const ActionAssoc = {
     Download: ActionDownload,
@@ -15,7 +13,6 @@ const ActionAssoc = {
     Parse: ActionParse,
     Click: ActionClickMaster,
     Paginate: ActionPaginate,
-    Store: ActionStore,
 
     // Deprecated aliases:
     ADownload: ActionDownload,
@@ -28,11 +25,7 @@ const ActionAssoc = {
     APaginate: ActionPaginate,
     APages: ActionPaginate,
 
-    AClickSlave: ActionClickSlave,
-
-    AStoreParam: ActionStore,
-
-    AHistoryBack: ActionHistoryBack
+    AClickSlave: ActionClickSlave
 };
 
 function ActionFactory(browser, storage, defaults) {

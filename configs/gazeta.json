@@ -1,4 +1,7 @@
 {
+    "defaults": {
+        "report": "/tmp/gazeta"
+    },
     "actions": [
         {
             "target": "",

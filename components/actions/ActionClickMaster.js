@@ -67,6 +67,7 @@ ActionClickMaster.prototype.main = function (subactions) {
                                                     var slave_action = slaves.pop();
 
                                                     slave_action.main(subactions).then(function() {
+                                                        ACTION.take_screenshot(page, 'click_after_' + slave_action.config.name);
                                                         processSlaves(slaves).then(resolveSlave);
                                                     }, function(exc) {
                                                         rejectSlave(exc);
@@ -78,6 +79,7 @@ ActionClickMaster.prototype.main = function (subactions) {
                                         };
 
                                         ACTION.write_to_store(page);
+                                        ACTION.take_screenshot(page, 'click_before_click');
                                         processSlaves(createSlaves()).then(function() {
                                             try {
                                                 ACTION.finalize().then(function(result) {
