@@ -32,7 +32,16 @@
                             ".*criteo.*",
                             ".*mail\\.ru.*",
                             ".*onthe\\.io.*",
-                            ".*pushwoosh-web-notifications.*"
+                            ".*pushwoosh-web-notifications.*",
+                            ".*photo\\.js.*",
+                            ".*media\\.match.*",
+                            ".*resizeblock.*",
+                            ".*common\\..*",
+                            ".*main\\..*",
+                            ".*touch\\..*",
+                            ".*photorep.*",
+                            ".*ellipsis\\.js.*",
+                            ".*clean_mm_addition.*"
                         ]
                     }
                 }
