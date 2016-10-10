@@ -46,11 +46,8 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
     },
     actions: [
         {
-            target: "",
+            target: "http://www.gazeta.ru/army/2016/08/06/9705023.shtml",
             type: "Download",
-            data: {
-                url: "http://www.gazeta.ru/army/2016/08/06/9705023.shtml"
-            },
             name: "webpage",
             settings: {
                 filters: {
