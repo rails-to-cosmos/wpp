@@ -16,6 +16,12 @@ Requirements
 
   * PhantomJS version 2.1+
 
+Installation
+------------
+    $ git clone https://github.com/rails-to-cosmos/wpp
+    $ cd wpp
+    $ npm install
+
 API
 ---
 Webpage Processor API enables to call page automation tasks.
@@ -27,9 +33,3 @@ Start wpp:
 Then call a task:
 
     $ curl -H "Content-Type: application/json" --data @config.json http://localhost:8283/ -o output.json
-
-Installation
-------------
-    $ git clone https://github.com/rails-to-cosmos/wpp
-    $ cd wpp
-    $ npm install
