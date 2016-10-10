@@ -41,7 +41,17 @@
                             ".*touch\\..*",
                             ".*photorep.*",
                             ".*ellipsis\\.js.*",
-                            ".*clean_mm_addition.*"
+                            ".*clean_mm_addition.*",
+                            ".*yandex.*",
+                            ".*vk\\.com.*",
+                            ".*exnews\\.net.*",
+                            ".*css.*"
+                        ]
+                    },
+                    "whitelist": {
+                        "urls": [
+                            ".*c\\.rambler\\.ru.*",
+                            ".*cdn-comments\\.rambler\\.ru.*"
                         ]
                     }
                 }

@@ -139,6 +139,8 @@ Webpage.prototype.apply_filters = function(custom_filters) {
                 var re = new RegExp(filters[list].urls[url_index]);
                 if (re.test(url)) {
                     return true;
+                } else {
+
                 }
             }
 
