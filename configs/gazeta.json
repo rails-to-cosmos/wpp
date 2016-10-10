@@ -11,8 +11,6 @@
             },
             "name": "webpage",
             "settings": {
-                "report": "/tmp/gazeta",
-
                 "filters": {
                     "blacklist": {
                         "urls": [
@@ -85,7 +83,7 @@
             "name": "comment"
         },
         {
-            "target": "comments",
+            "target": "comment",
             "type": "AParseBySelector",
             "data": {
                 "selector": "[id]"
