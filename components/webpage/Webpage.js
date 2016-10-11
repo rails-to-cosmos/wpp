@@ -5,8 +5,6 @@ const DEFAULT_BLACKLIST = [
     '.*\.ttf.*',
     '.*\.svg.*',
 
-    '.*\.css.*',
-
     '.*yandex.*',
     '.*http.*:\/\/google.*',
     '.*http.*:\/\/facebook\.com.*',
@@ -21,7 +19,6 @@ const DEFAULT_BLACKLIST = [
     '.*http.*:\/\/adriver.*',
     '.*http.*:\/\/reklama.*',
 
-    '.*http.*://.*.css.*',
     '.*http.*:\/\/\.ads.*',
     '.*http.*:\/\/linkedin\.com.*',
 
@@ -157,9 +154,18 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             return false;
         }
 
-        // console.log('-');
+
         // for (var header in requestData.headers) {
-        //     console.log(requestData.headers[header].name, requestData.headers[header].value);
+        //     if (requestData.headers[header].name.indexOf('Accept') > -1) {
+        //         if(requestData.headers[header].value.indexOf('text/css') > -1) {
+        //             console.log('---', requestData.url);
+        //             console.log(requestData.id);
+        //             console.log(requestData.method);
+        //             console.log(requestData.headers, requestData.id, requestData.method, requestData.time);
+        //             console.log(networkRequest);
+        //             // networkRequest.abort();
+        //         }
+        //     }
         // }
 
         // if (requestData['Content-Type'] == 'text/css') {
