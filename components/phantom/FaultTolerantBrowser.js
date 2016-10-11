@@ -1,7 +1,7 @@
 'use strict';
 
 const phantom = require('phantom'),
-      MAX_USES_COUNT = 50;
+      MAX_USES_COUNT = 25;
 
 function PhFTWrapper(settings) {
     this.uses_count = 0;

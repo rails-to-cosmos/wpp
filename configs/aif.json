@@ -1,81 +1,84 @@
 {
-  "actions": [
-    {
-      "data": {
-        "url": "http://www.aif.ru/politics/gallery/storonnik_iskrenney_politiki_luchshie_citaty_aleksandra_lukashenko"
-      },
-      "settings": {
-        "visible": false
-      },
-      "type": "ADownload",
-      "name": "webpage",
-      "target": ""
+    "defaults": {
+        "report": "/tmp/aif"
     },
-    {
-      "data": {
-        "selector": "a.blue_link[href$=\"#all_comments\"]"
-      },
-      "settings": {
-        "visible": false
-      },
-      "type": "AClick",
-      "name": "all_comments",
-      "target": "webpage"
-    },
-    {
-      "data": {
-        "selector": ".simple_comment:not([id^=\"reply\"])[outerHTML]"
-      },
-      "settings": {
-        "visible": false
-      },
-      "type": "AParseBySelector",
-      "name": "comment",
-      "target": "all_comments"
-    },
-    {
-      "data": {
-        "selector": ".comment_text"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "body",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ".author_name"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "author",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ".author_time,.author_date"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "result_date",
-      "target": "comment"
-    },
-    {
-      "data": {
-        "selector": ".comment_author_info[id]"
-      },
-      "settings": {
-        "visible": true
-      },
-      "type": "AParseBySelector",
-      "name": "id",
-      "target": "comment"
-    }
-  ]
+    "actions": [
+        {
+            "data": {
+                "url": "http://www.aif.ru/politics/gallery/storonnik_iskrenney_politiki_luchshie_citaty_aleksandra_lukashenko"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "ADownload",
+            "name": "webpage",
+            "target": ""
+        },
+        {
+            "data": {
+                "selector": "a.blue_link[href$=\"#all_comments\"]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AClick",
+            "name": "all_comments",
+            "target": "webpage"
+        },
+        {
+            "data": {
+                "selector": ".simple_comment:not([id^=\"reply\"])[outerHTML]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AParseBySelector",
+            "name": "comment",
+            "target": "all_comments"
+        },
+        {
+            "data": {
+                "selector": ".comment_text"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".author_name"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".author_time,.author_date"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "result_date",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".comment_author_info[id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comment"
+        }
+    ]
 }

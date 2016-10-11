@@ -1,58 +1,43 @@
 'use strict';
 
 const DEFAULT_BLACKLIST = [
-    '.*\.woff',
-    '.*\.ttf.*',
-    '.*\.svg.*',
-
-    '.*yandex.*',
-    '.*http.*:\/\/google.*',
-    '.*http.*:\/\/facebook\.com.*',
-    '.*http.*:\/\/facebook\.net.*',
-    '.*http.*:\/\/odnoklassniki\.ru.*',
-
-    '.*http.*:\/\/pinterest\.com.*',
-    '.*http.*:\/\/vkontakte\.ru.*',
-    '.*http.*:\/\/vk\.com.*',
-    '.*http.*:\/\/ok\.ru.*',
-    '.*http.*:\/\/mail\.ru.*',
-    '.*http.*:\/\/adriver.*',
-    '.*http.*:\/\/reklama.*',
-
-    '.*http.*:\/\/\.ads.*',
-    '.*http.*:\/\/linkedin\.com.*',
-
-    '.*http.*:\/\/appspot\.com.*',
-    '.*http.*:\/\/index\.ru.*',
-    '.*http.*:\/\/mediametrics.*',
-    '.*http.*:\/\/visualdna.*',
-    '.*http.*:\/\/marketgid\.com.*',
-
-    '.*http.*:\/\/onthe\.io.*',
-    '.*http.*:\/\/price\.ru.*',
-    '.*http.*:\/\/rambler\.ru.*',
-    '.*http.*:\/\/begun\.ru.*',
-    '.*http.*:\/\/doubleclick\.net.*',
-    '.*http.*:\/\/adfox.*',
-    '.*http.*:\/\/top100\.ru.*',
-
-    '.*http.*:\/\/criteo\.com.*',
-    '.*http.*:\/\/pingdom\.net.*',
-    '.*http.*:\/\/scorecardresearch\.com.*',
-    '.*http.*:\/\/infographics\.gazeta\.ru.*',
-    '.*http.*:\/\/smi2\.ru.*',
-    '.*http.*:\/\/smi2\.net.*',
-    '.*http.*:\/\/exnews\.net.*',
-    '.*http.*:\/\/youtube\.com.*',
-    '.*http.*:\/\/openstat\.net.*',
-
-    '.*audio-player.*',
-    '.*wmvplayer.*',
-    '.*mediaplayer.*',
-    '.*flvscript\.js.*',
-
-    '.*cdn\.inaudium\.com\/js\/adtctr\.js.*',
-    'googleads.g.doubleclick.net',
+    '.woff', '.ttf', '.svg',
+    'doubleclick.net',
+    'googletagservices.com',
+    'googleapis',
+    'google-analytics',
+    'google.com',
+    'mail.ru',
+    'vk.com/js',
+    'vk.com/css',
+    'vk.com/share',
+    'facebook.com',
+    'facebook.net',
+    'chartbeat.com',
+    'static.aio.media',
+    '4smi.ru',
+    'lentainform.com',
+    'ria.ru//js/adriver',
+    'zarabotki.ru',
+    'smi2.ru',
+    'openstat.net',
+    'index.ru',
+    'contentinsights.com',
+    'ulogin.ru',
+    'vdna-assets',
+    'youtube',
+    'adwired.mobi',
+    'adriver.ru',
+    'mediametrics.ru',
+    'i-vengo.com',
+    'connect.ok.ru',
+    'twitter.com',
+    'riseteam.ru',
+    'yandex.ru',
+    'yandexad',
+    'marketgid',
+    'teads.tv',
+    'top100.ru',
 ], DEFAULT_WHITELIST = [
     '.*cdn-comments\.rambler\.ru.*',
     '.*c\.rambler\.ru.*',
@@ -141,6 +126,7 @@ Webpage.prototype.apply_filters = function(custom_filters) {
         Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
         Array.prototype.push.apply(filters[WHITELIST_URL_FILTER].urls, DEFAULT_WHITELIST);
 
+        // TODO optimize it in future
         function url_in_list(url, list) {
             for (var url_index in filters[list].urls) {
                 var re = new RegExp(filters[list].urls[url_index]);
@@ -153,7 +139,6 @@ Webpage.prototype.apply_filters = function(custom_filters) {
 
             return false;
         }
-
 
         // for (var header in requestData.headers) {
         //     if (requestData.headers[header].name.indexOf('Accept') > -1) {
@@ -181,7 +166,7 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             // console.log('Abort', requestData.url);
             networkRequest.abort();
         } else {
-            report.urls.allowed[requestData.url] = {};
+            report.requests.allowed[requestData.url] = {};
             // console.log('Allow', requestData.url);
         }
     }, custom_filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST, this.phantomjs_report);
