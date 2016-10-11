@@ -18,8 +18,6 @@ ActionHTTPRequest.prototype.get_url = function() {
 ActionHTTPRequest.prototype.main = function (subactions) {
     const ACTION = this;
 
-    Action.prototype.main.call(this, subactions);
-
     return new Promise(function(resolve, reject) {
         try {
             ACTION.console_info('ActionHTTPRequest started');

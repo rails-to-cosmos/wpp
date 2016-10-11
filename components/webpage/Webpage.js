@@ -1,62 +1,64 @@
 'use strict';
 
 const DEFAULT_BLACKLIST = [
-    // '.*\.woff',
-    // '.*\.ttf.*',
-    // '.*\.svg.*',
-    // '.*\.css.*',
+    '.*\.woff',
+    '.*\.ttf.*',
+    '.*\.svg.*',
 
-    // '.*yandex.*',
-    // '.*http.*:\/\/google.*',
-    // '.*http.*:\/\/facebook\.com.*',
-    // '.*http.*:\/\/facebook\.net.*',
-    // '.*http.*:\/\/odnoklassniki\.ru.*',
+    '.*\.css.*',
 
-    // '.*http.*:\/\/pinterest\.com.*',
-    // '.*http.*:\/\/vkontakte\.ru.*',
-    // '.*http.*:\/\/vk\.com.*',
-    // '.*http.*:\/\/ok\.ru.*',
-    // '.*http.*:\/\/mail\.ru.*',
-    // '.*http.*:\/\/adriver.*',
-    // '.*http.*:\/\/reklama.*',
+    '.*yandex.*',
+    '.*http.*:\/\/google.*',
+    '.*http.*:\/\/facebook\.com.*',
+    '.*http.*:\/\/facebook\.net.*',
+    '.*http.*:\/\/odnoklassniki\.ru.*',
 
-    // '.*http.*:\/\/\.css.*',
-    // '.*http.*:\/\/\.ads.*',
-    // '.*http.*:\/\/linkedin\.com.*',
+    '.*http.*:\/\/pinterest\.com.*',
+    '.*http.*:\/\/vkontakte\.ru.*',
+    '.*http.*:\/\/vk\.com.*',
+    '.*http.*:\/\/ok\.ru.*',
+    '.*http.*:\/\/mail\.ru.*',
+    '.*http.*:\/\/adriver.*',
+    '.*http.*:\/\/reklama.*',
 
-    // '.*http.*:\/\/appspot\.com.*',
-    // '.*http.*:\/\/index\.ru.*',
-    // '.*http.*:\/\/mediametrics.*',
-    // '.*http.*:\/\/visualdna.*',
-    // '.*http.*:\/\/marketgid\.com.*',
+    '.*http.*://.*.css.*',
+    '.*http.*:\/\/\.ads.*',
+    '.*http.*:\/\/linkedin\.com.*',
 
-    // '.*http.*:\/\/onthe\.io.*',
-    // '.*http.*:\/\/price\.ru.*',
-    // '.*http.*:\/\/rambler\.ru.*',
-    // '.*http.*:\/\/begun\.ru.*',
-    // '.*http.*:\/\/doubleclick\.net.*',
-    // '.*http.*:\/\/adfox.*',
-    // '.*http.*:\/\/top100\.ru.*',
+    '.*http.*:\/\/appspot\.com.*',
+    '.*http.*:\/\/index\.ru.*',
+    '.*http.*:\/\/mediametrics.*',
+    '.*http.*:\/\/visualdna.*',
+    '.*http.*:\/\/marketgid\.com.*',
 
-    // '.*http.*:\/\/criteo\.com.*',
-    // '.*http.*:\/\/pingdom\.net.*',
-    // '.*http.*:\/\/scorecardresearch\.com.*',
-    // '.*http.*:\/\/infographics\.gazeta\.ru.*',
-    // '.*http.*:\/\/smi2\.ru.*',
-    // '.*http.*:\/\/smi2\.net.*',
-    // '.*http.*:\/\/exnews\.net.*',
-    // '.*http.*:\/\/youtube\.com.*',
-    // '.*http.*:\/\/openstat\.net.*',
+    '.*http.*:\/\/onthe\.io.*',
+    '.*http.*:\/\/price\.ru.*',
+    '.*http.*:\/\/rambler\.ru.*',
+    '.*http.*:\/\/begun\.ru.*',
+    '.*http.*:\/\/doubleclick\.net.*',
+    '.*http.*:\/\/adfox.*',
+    '.*http.*:\/\/top100\.ru.*',
 
-    // '.*audio-player.*',
-    // '.*wmvplayer.*',
-    // '.*mediaplayer.*',
-    // '.*flvscript\.js.*',
+    '.*http.*:\/\/criteo\.com.*',
+    '.*http.*:\/\/pingdom\.net.*',
+    '.*http.*:\/\/scorecardresearch\.com.*',
+    '.*http.*:\/\/infographics\.gazeta\.ru.*',
+    '.*http.*:\/\/smi2\.ru.*',
+    '.*http.*:\/\/smi2\.net.*',
+    '.*http.*:\/\/exnews\.net.*',
+    '.*http.*:\/\/youtube\.com.*',
+    '.*http.*:\/\/openstat\.net.*',
 
-    // '.*cdn\.inaudium\.com\/js\/adtctr\.js.*',
+    '.*audio-player.*',
+    '.*wmvplayer.*',
+    '.*mediaplayer.*',
+    '.*flvscript\.js.*',
+
+    '.*cdn\.inaudium\.com\/js\/adtctr\.js.*',
+    'googleads.g.doubleclick.net',
 ], DEFAULT_WHITELIST = [
-    // '.*cdn-comments\.rambler\.ru.*',
-    // '.*c\.rambler\.ru.*',
+    '.*cdn-comments\.rambler\.ru.*',
+    '.*c\.rambler\.ru.*',
 ];
 
 
@@ -91,6 +93,14 @@ function Webpage(browser, config) {
 Webpage.prototype.apply_filters = function(custom_filters) {
     let phantomjs_report = this.phantomjs_report,
         report = this.report;
+
+    // this.page.on('onNavigationRequested', function(url, type, willNavigate, main) {
+    //     console.log('-');
+    //     console.log('Trying to navigate to: ' + url);
+    //     console.log('Caused by: ' + type);
+    //     console.log('Will actually navigate: ' + willNavigate);
+    //     console.log('Sent from the page\'s main frame: ' + main);
+    // });
 
     this.page.on('onResourceReceived', function(res) {
         phantomjs_report.property('requests').then(function(requests) {
@@ -137,7 +147,7 @@ Webpage.prototype.apply_filters = function(custom_filters) {
         function url_in_list(url, list) {
             for (var url_index in filters[list].urls) {
                 var re = new RegExp(filters[list].urls[url_index]);
-                if (re.test(url)) {
+                if (url == filters[list].urls[url_index] || url.indexOf(filters[list].urls[url_index]) > -1 || re.test(url)) {
                     return true;
                 } else {
 
@@ -147,18 +157,26 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             return false;
         }
 
-        if (requestData.headers['Content-Type'] == 'text/css') {
-            report.requests.rejected[requestData.url] = {};
-            networkRequest.abort();
-            return;
-        }
+        // console.log('-');
+        // for (var header in requestData.headers) {
+        //     console.log(requestData.headers[header].name, requestData.headers[header].value);
+        // }
+
+        // if (requestData['Content-Type'] == 'text/css') {
+        //     report.requests.rejected[requestData.url] = {};
+        //     networkRequest.abort();
+        //     console.log('Abort', requestData.url, '(css)');
+        //     return;
+        // }
 
         if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
             !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
             report.requests.rejected[requestData.url] = {};
+            // console.log('Abort', requestData.url);
             networkRequest.abort();
         } else {
             report.urls.allowed[requestData.url] = {};
+            // console.log('Allow', requestData.url);
         }
     }, custom_filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST, this.phantomjs_report);
 };
@@ -184,8 +202,13 @@ Webpage.prototype.create = function() {
                 // console.log('Response (#' + request.id + '): ' + JSON.stringify(request));
             });
 
-            page.on('onError', function() {});
-            page.on('onResourceError', function(msg, trace) {});
+            page.on('onError', function(err) {
+
+            });
+
+            page.on('onResourceError', function(msg, trace) {
+
+            });
 
             resolve(page);
         }, function(exc) {

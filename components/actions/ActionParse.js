@@ -19,8 +19,6 @@ ActionParse.prototype = new Action();
 ActionParse.prototype.main = function(subactions) {
     let ACTION = this;
 
-    Action.prototype.main.call(this, subactions);
-
     return new Promise(function(resolve, reject) {
         try {
             let selector;

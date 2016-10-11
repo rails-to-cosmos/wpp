@@ -30,7 +30,6 @@ PhFTWrapper.prototype.go_to_rest = function() {
 
 PhFTWrapper.prototype.acquire = function() {
     this.uses_count++;
-    console.log('USES_COUNT', this.uses_count);
     this.in_progress++;
     return this;
 };

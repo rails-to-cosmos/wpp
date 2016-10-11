@@ -32,7 +32,6 @@ ActionDownload.prototype.get_filters = function() {
 
 ActionDownload.prototype.close = function(page) {
     try {
-        console.log('Close page', page.target);
         page.invokeMethod('clearMemoryCache').then(page.close, page.close);
     } catch (exc) {
         this.logger.error('Unable to close page:', exc);

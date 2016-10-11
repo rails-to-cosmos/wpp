@@ -8,7 +8,32 @@
       },
       "name": "webpage",
       "settings": {
-        "visible": true
+          "visible": true,
+          "filters": {
+              "blacklist": {
+                  "urls": [
+                      "http://bk55.ru/typo3temp/stylesheet_379314d941.css?1455095499",
+                      "http://bk55.ru/fileadmin/templates/styles/style.css?1473745641",
+                      "http://bk55.ru/typo3conf/ext/bkinform/Templates/bkinform_news_shortlist_noframe.css?1467719335",
+                      "http://bk55.ru/fileadmin/jscript/zoom/zoom.css",
+                      "http://bk55.ru/fileadmin/templates/styles/gallery.css",
+                      "http://bk55.ru/fileadmin/templates/styles/jquery-ui.css",
+
+                      "http://bk55.ru/fileadmin/jscript/jcarousel/skins/bottom_see_also_v2/skin.css?20160330",
+                      "http://vjs.zencdn.net/5.8.8/video-js.css",
+                      "http://lk.omskrielt.com/css/partner/500x180.css",
+                      "https://vk.com/css/al/lite.css?37",
+                      "http://top55.info/typo3temp/stylesheet_670d0f71b2.css?1467014099",
+                      "http://top55.info/fileadmin/templates/styles/top55_to_bk55.css"
+                  ]
+              },
+              "whitelist": {
+                  "urls": [
+                      "www-embed-player-vflYmgEKH.css",
+                      "www-player-vflCg-ncy.css"
+                  ]
+              }
+          }
       }
     },
     {

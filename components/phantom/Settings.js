@@ -2,8 +2,8 @@
 
 function PhantomJSSettings() {
     let default_settings = new Map();
-    default_settings.set('--disk-cache', 'false');
-    // default_settings.set('--max-disk-cache-size', '1000000');
+    default_settings.set('--disk-cache', 'true');
+    default_settings.set('--max-disk-cache-size', '1000000');
     default_settings.set('--load-images', 'false');
     default_settings.set('--cookies-file', '/dev/null');
     default_settings.set('--ignore-ssl-errors', 'true');

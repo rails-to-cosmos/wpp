@@ -20,8 +20,6 @@ ActionPaginate.prototype.main = function (subactions) {
     let pages = ACTION.get_from_store(ACTION.get_target()),
         visited = [];
 
-    ActionClickMaster.prototype.main.call(this, subactions);
-
     return new Promise(function(resolveAllPages, rejectAllPages) {
         try {
             let dependent_subactions = [],
