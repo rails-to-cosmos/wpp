@@ -12,7 +12,7 @@ function ActionHTTPRequest() {
 ActionHTTPRequest.prototype = new Action();
 
 ActionHTTPRequest.prototype.get_url = function() {
-    return this.config.data.url;
+    return this.get_data().url;
 };
 
 ActionHTTPRequest.prototype.main = function (subactions) {

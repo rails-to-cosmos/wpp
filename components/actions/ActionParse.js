@@ -23,7 +23,7 @@ ActionParse.prototype.main = function(subactions) {
         try {
             let selector;
             try {
-                selector = new ComplexSelector(ACTION.config.data.selector);
+                selector = new ComplexSelector(ACTION.get_data().selector);
             } catch (exc) {
                 ACTION.logger.error(CPX_SELECTOR_EXCEPTION, exc);
             }

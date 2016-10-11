@@ -39,7 +39,7 @@ ActionPaginate.prototype.main = function (subactions) {
                         function scanPaginationButtons() {
                             let xpath_injection = new XPathInjection();
                             xpath_injection.apply(page).then(function() {
-                                const selector = ACTION.config.data.selector;
+                                const selector = ACTION.get_data().selector;
                                 page.evaluate(function(selector) {
                                     var result = {};
                                     var elements = document.querySelectorAll(selector);
@@ -76,14 +76,14 @@ ActionPaginate.prototype.main = function (subactions) {
 
                                         var click_config = deepcopy(ACTION.config);
                                         click_config.type = SLAVE_ACTION_TYPE;
-                                        click_config.name = ACTION.config.name + '__' + dc.clean(name);
+                                        click_config.name = ACTION.get_name() + '__' + dc.clean(name);
                                         click_config.data = {
                                             xpath: buttons[name]
                                         };
 
                                         if (dependent_subactions.length == 0 && independent_subactions.length == 0) {
                                             for (var subaction of subactions) {
-                                                if (subaction.config.target == ACTION.config.name) {
+                                                if (subaction.get_target() == ACTION.get_name()) {
                                                     dependent_subactions.push(subaction);
                                                 } else {
                                                     independent_subactions.push(subaction);
@@ -96,7 +96,7 @@ ActionPaginate.prototype.main = function (subactions) {
                                             visited.push(name);
 
                                             try {
-                                                ACTION.take_screenshot(page, 'page_after_' + slave_action.config.name);
+                                                ACTION.take_screenshot(page, 'page_after_' + slave_action.get_name());
                                             } catch (exc) {
 
                                             }
@@ -126,7 +126,7 @@ ActionPaginate.prototype.main = function (subactions) {
                 if (isl > 0) {
                     var iss = [];
                     for (var is of independent_subactions) {
-                        iss.push(is.config.name);
+                        iss.push(is.get_name());
                     }
                     ACTION.factory.inherit(independent_subactions[0], ACTION);
                     independent_subactions[0].main(independent_subactions.slice(1, isl)).then(function(result) {

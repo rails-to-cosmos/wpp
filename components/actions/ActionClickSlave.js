@@ -14,7 +14,7 @@ ActionClickSlave.prototype = new AbstractPageAction();
 
 ActionClickSlave.prototype.main = function (subactions) {
     const ACTION = this,
-          path = ACTION.config.data.xpath,
+          path = ACTION.get_data().xpath,
           pages = ACTION.get_from_store(ACTION.get_target());
 
     return new Promise(function(resolveAllPages, rejectAllPages) {

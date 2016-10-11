@@ -29,6 +29,14 @@ function Action(factory, config, store, browser, defaults) {
     }
 };
 
+Action.prototype.get_settings = function() {
+    return this.config.settings;
+};
+
+Action.prototype.get_data = function() {
+    return this.config.data;
+};
+
 Action.prototype.get_browser = function() {
     return this.browser;
 };
@@ -46,7 +54,7 @@ Action.prototype.push_to_store = function(value) {
 };
 
 Action.prototype.get_name = function() {
-    return this.config.name.replace(/\r?\n|\r/g, '').replace(/\s/g, '');
+    return this.config.name;
 };
 
 Action.prototype.get_target = function() {
@@ -114,7 +122,7 @@ Action.prototype.run_subactions = function(subactions) {
         return this.finalize();
     }
 
-    this.console_info('(' + this.get_name(), '(' + head.get_name(), '(' + head.config.target + ')))');
+    this.console_info('(' + this.get_name(), '(' + head.get_name(), '(' + head.get_target() + ')))');
     this.factory.inherit(head, this);
     return head.main(tail);
 };

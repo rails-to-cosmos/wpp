@@ -25,7 +25,7 @@ ActionClickMaster.prototype.main = function (subactions) {
                         let xpath_injection = new XPathInjection();
                         xpath_injection.apply(page).then(function() {
                             try {
-                                const selector = ACTION.config.data.selector;
+                                const selector = ACTION.get_data().selector;
                                 page.evaluate(function(selector) {
                                     var result = [];
                                     var elements = document.querySelectorAll(selector);
@@ -66,7 +66,7 @@ ActionClickMaster.prototype.main = function (subactions) {
 
                                                     slave_action.main(subactions).then(function() {
                                                         try {
-                                                            ACTION.take_screenshot(page, 'click_after_' + slave_action.config.name);
+                                                            ACTION.take_screenshot(page, 'click_after_' + slave_action.get_name());
                                                         } catch(exc) {
 
                                                         }

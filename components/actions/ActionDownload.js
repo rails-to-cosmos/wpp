@@ -21,7 +21,7 @@ ActionDownload.prototype.get_filters = function() {
     let filters = {};
 
     try {
-        filters = this.config.settings.filters;
+        filters = this.get_settings().filters;
         assert(filters);
     } catch (exc) {
         filters = {};
@@ -79,7 +79,7 @@ ActionDownload.prototype.main = function(subactions) {
                 user_agent;
 
             try {
-                user_agent = ACTION.config.settings.user_agent;
+                user_agent = ACTION.get_settings().user_agent;
             } catch (exc) {
 
             }
@@ -92,7 +92,7 @@ ActionDownload.prototype.main = function(subactions) {
 
             webpage.create().then(function(page) {
                 try {
-                    let url = ACTION.config.target || ACTION.config.data.url; // ACTION.config.data.url deprecated
+                    let url = ACTION.get_target() || ACTION.get_data().url; // ACTION.get_data().url is deprecated
                     assert(url);
 
                     let context_transfered_to_main_thread = false;

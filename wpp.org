@@ -12,3 +12,5 @@ mocha tests --recursive --watch
 * TODO User-Agents
 * TODO Actions
 ** TODO Setting repeat
+* TODO Config
+** Data and Settings are the same. Combine it to Meta

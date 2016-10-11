@@ -14,7 +14,7 @@ AbstractPageAction.prototype = new Action();
 
 AbstractPageAction.prototype.need_report = function() {
     try {
-        assert(this.config.settings.report);
+        assert(this.get_settings().report);
     } catch (exc) {
         return false;
     }
@@ -29,7 +29,7 @@ AbstractPageAction.prototype.get_report_filename = function(alias, ext) {
     ext = ext || 'txt';
 
     if (this.need_report()) {
-        filename = this.config.settings.report;
+        filename = this.get_settings().report;
         if (filename && alias) {
             filename = [filename, alias].join('_');
         }

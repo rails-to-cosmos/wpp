@@ -47,11 +47,12 @@ ActionFactory.prototype.inherit = function(child, parent) {
 };
 
 ActionFactory.prototype.create_action = function(config, parent) {
-    if (!(config.type in ActionAssoc)) {
+    let ctype = config.type.toLowerCase();
+    if (!(ctype in ActionAssoc)) {
         throw new Error('Unknown action received: ' + config.name + ' (' + config.type + ').');
     }
 
-    let action = new ActionAssoc[config.type.toLowerCase()](this, config, this.storage, this.browser, this.defaults);
+    let action = new ActionAssoc[ctype](this, config, this.storage, this.browser, this.defaults);
     this.inherit(action, parent);
     return action;
 };

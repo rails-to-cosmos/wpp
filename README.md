@@ -41,9 +41,6 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
 
 ```
 {
-    defaults: {
-        report: "/tmp/yc"
-    },
     actions: [
         {
             type: "download",
@@ -54,16 +51,19 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
             type: "parse",
             name: "item",
             target: "_webpage",
-            data: {
-                selector: ".athing"
-            },
-            structure: {
-                id: "[id]",
-                rank: "span.rank",
-                title: ".storylink",
-                site: ".sitestr"
+            meta: {
+                selector: ".athing",
+                structure: {
+                    id: "[id]",
+                    rank: "span.rank",
+                    title: ".storylink",
+                    site: ".sitestr"
+                }
             }
         }
-    ]
+    ],
+    defaults: {
+        report: "/tmp/yc"
+    }
 }
 ```
