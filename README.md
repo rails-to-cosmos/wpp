@@ -42,61 +42,26 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
 ```
 {
     defaults: {
-        report: "/tmp/report"
+        report: "/tmp/yc"
     },
     actions: [
         {
-            target: "http://www.gazeta.ru/army/2016/08/06/9705023.shtml",
-            type: "Download",
-            name: "webpage",
-            settings: {
-                filters: {
-                    blacklist: {
-                        urls: [
-                            ".*beacon\\.js.*",
-                        ]
-                    },
-                    whitelist: {
-                        urls: [
-                            ".*c\\.rambler\\.ru.*",
-                        ]
-                    }
-                }
-            }
+            type: "download",
+            name: "_webpage",
+            target: "https://news.ycombinator.com"
         },
         {
-            target: "webpage",
-            type: "Click",
+            type: "parse",
+            name: "item",
+            target: "_webpage",
             data: {
-                selector: ".button_give_comments"
+                selector: ".athing"
             },
-            name: "click"
-        },
-        {
-            target: "click",
-            type: "Parse",
-            data: {
-                selector: ".rc-comments__list[outerHTML]"
-            },
-            name: "comments"
-        },
-        {
-            target: "comments",
-            type: "Parse",
-            data: {
-                selector: ".rc-comment[outerHTML]"
-            },
-            name: "comment"
-        },
-        {
-            target: "comment",
-            type: "Parse",
-            data: {
-                selector: "[id]"
-            },
-            name: "id",
-            settings: {
-                visible: true
+            structure: {
+                id: "[id]",
+                rank: "span.rank",
+                title: ".storylink",
+                site: ".sitestr"
             }
         }
     ]

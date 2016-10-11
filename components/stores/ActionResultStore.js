@@ -31,11 +31,23 @@ ActionResultStore.prototype.get = function(key) {
 };
 
 ActionResultStore.prototype.push = function(key, value, visibility, repr) {
+    if (key[0] == '_') {
+        visibility = false;
+    } else {
+        visibility = true;
+    }
+
     this.set_flag(key, 'visibility', visibility);
     return CacheStore.prototype.push.call(this, key, value);
 };
 
 ActionResultStore.prototype.write = function(key, value, visibility, repr) {
+    if (key[0] == '_') {
+        visibility = false;
+    } else {
+        visibility = true;
+    }
+
     this.set_flag(key, 'visibility', visibility);
     return CacheStore.prototype.write.call(this, key, value);
 };

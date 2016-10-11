@@ -8,24 +8,24 @@ let ActionDownload = require('./actions/ActionDownload'),
     ActionParse = require('./actions/ActionParse');
 
 const ActionAssoc = {
-    Download: ActionDownload,
-    FastDownload: ActionHTTPRequest,
-    Parse: ActionParse,
-    Click: ActionClickMaster,
-    Paginate: ActionPaginate,
+    download: ActionDownload,
+    fastdownload: ActionHTTPRequest,
+    parse: ActionParse,
+    click: ActionClickMaster,
+    paginate: ActionPaginate,
 
     // Deprecated aliases:
-    ADownload: ActionDownload,
-    AFastDownload: ActionHTTPRequest,
+    adownload: ActionDownload,
+    afastdownload: ActionHTTPRequest,
 
-    AParse: ActionParse,
-    AParseBySelector: ActionParse,
+    aparse: ActionParse,
+    aparsebyselector: ActionParse,
 
-    AClick: ActionClickMaster,
-    APaginate: ActionPaginate,
-    APages: ActionPaginate,
+    aclick: ActionClickMaster,
+    apaginate: ActionPaginate,
+    apages: ActionPaginate,
 
-    AClickSlave: ActionClickSlave
+    aclickslave: ActionClickSlave
 };
 
 function ActionFactory(browser, storage, defaults) {
@@ -51,7 +51,7 @@ ActionFactory.prototype.create_action = function(config, parent) {
         throw new Error('Unknown action received: ' + config.name + ' (' + config.type + ').');
     }
 
-    let action = new ActionAssoc[config.type](this, config, this.storage, this.browser, this.defaults);
+    let action = new ActionAssoc[config.type.toLowerCase()](this, config, this.storage, this.browser, this.defaults);
     this.inherit(action, parent);
     return action;
 };

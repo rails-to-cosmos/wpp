@@ -18,7 +18,7 @@ function ActionTree(actions, factory, logger) {
             continue;
         }
 
-        if (action_config.target) {
+        if (action_config.target && action_config.target.indexOf('http') != 0) {
             if (!tree[action_config.target]) {
                 tree[action_config.target] = [];
             }

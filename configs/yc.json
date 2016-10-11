@@ -1,0 +1,26 @@
+{
+    "defaults": {
+        "report": "/tmp/yc"
+    },
+    "actions": [
+        {
+            "type": "download",
+            "name": "_webpage",
+            "target": "https://news.ycombinator.com"
+        },
+        {
+            "type": "parse",
+            "name": "item",
+            "target": "_webpage",
+            "data": {
+                "selector": ".athing"
+            },
+            "structure": {
+                "id": "[id]",
+                "rank": "span.rank",
+                "title": ".storylink",
+                "site": ".sitestr"
+            }
+        }
+    ]
+}

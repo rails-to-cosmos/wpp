@@ -59,6 +59,42 @@ AbstractPageAction.prototype.take_screenshot = function(page, alias) {
     }
 };
 
+AbstractPageAction.prototype.write_webpage_report = function(report) {
+    if (!this.need_report()) {
+        return;
+    }
+
+    let allowed_requests_filename = this.get_report_filename('requests_allowed', 'txt');
+
+    let url_list = [];
+    let total_elapsed_time = 0;
+    for (let url of Object.keys(report.requests.allowed)) {
+        let elapsed_time = report.requests.allowed[url].elapsed_time;
+        url_list.push([url, elapsed_time]);
+        total_elapsed_time += elapsed_time;
+    }
+
+    let comparator = function(a, b) {
+        return b[1] - a[1];
+    };
+    url_list.sort(comparator);
+
+    let allowed_requests_list = total_elapsed_time + '\n';
+    for (let url of url_list) {
+        allowed_requests_list += [url[0], url[1], '\n'].join(' ');
+    }
+
+    fs.writeFile(allowed_requests_filename, allowed_requests_list);
+
+    let rejected_requests_filename = this.get_report_filename('requests_rejected', 'txt');
+    let rejected_requests_list = '';
+    for (let url of Object.keys(report.requests.rejected)) {
+        rejected_requests_list += [url, '\n'].join('');
+    }
+    fs.writeFile(rejected_requests_filename, rejected_requests_list);
+};
+
+
 AbstractPageAction.prototype.scroll = function(page, scroll_height, tryout) {
     let ACTION = this,
         last_height = scroll_height,

@@ -70,41 +70,6 @@ ActionDownload.prototype.run_actions_on_page = function(page, actions) {
     });
 };
 
-ActionDownload.prototype.write_report = function(report) {
-    if (!this.need_report()) {
-        return;
-    }
-
-    let allowed_requests_filename = this.get_report_filename('requests_allowed', 'txt');
-
-    let url_list = [];
-    let total_elapsed_time = 0;
-    for (let url of Object.keys(report.requests.allowed)) {
-        let elapsed_time = report.requests.allowed[url].elapsed_time;
-        url_list.push([url, elapsed_time]);
-        total_elapsed_time += elapsed_time;
-    }
-
-    let comparator = function(a, b) {
-        return b[1] - a[1];
-    };
-    url_list.sort(comparator);
-
-    let allowed_requests_list = total_elapsed_time + '\n';
-    for (let url of url_list) {
-        allowed_requests_list += [url[0], url[1], '\n'].join(' ');
-    }
-
-    fs.writeFile(allowed_requests_filename, allowed_requests_list);
-
-    let rejected_requests_filename = this.get_report_filename('requests_rejected', 'txt');
-    let rejected_requests_list = '';
-    for (let url of Object.keys(report.requests.rejected)) {
-        rejected_requests_list += [url, '\n'].join('');
-    }
-    fs.writeFile(rejected_requests_filename, rejected_requests_list);
-};
-
 ActionDownload.prototype.main = function(subactions) {
     const ACTION = this;
 
@@ -127,7 +92,7 @@ ActionDownload.prototype.main = function(subactions) {
 
             webpage.create().then(function(page) {
                 try {
-                    let url = ACTION.config.data.url;
+                    let url = ACTION.config.target || ACTION.config.data.url; // ACTION.config.data.url deprecated
                     assert(url);
 
                     let context_transfered_to_main_thread = false;
@@ -145,7 +110,7 @@ ActionDownload.prototype.main = function(subactions) {
                             try {
                                 ACTION.run_actions_on_page(page, subactions).then(
                                     function(data) {
-                                        ACTION.write_report(webpage.report);
+                                        ACTION.write_webpage_report(webpage.report);
                                         resolve(data);
                                     }, reject);
                             } catch (exc) {
