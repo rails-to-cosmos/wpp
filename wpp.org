@@ -8,14 +8,8 @@ mocha tests --recursive --watch
 
 * TODO Bugs
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
-* TODO Вывести время, сколько качалась статья
-* TODO Выводить список урлов с затраченным временем на них
-* CANCELLED Timeouts
-CLOSED: [2016-10-05 Wed 18:35]
-- State "CANCELLED"  from "TODO"       [2016-10-05 Wed 18:35]
 * TODO IFrames
 * TODO User-Agents
-* TODO Посмотреть, верно ли группируются id и author в эхе
 * TODO Actions
 ** DONE Screenshot action
 CLOSED: [2016-10-05 Wed 14:42]

@@ -4,7 +4,7 @@ var Action = require('./Action'),
     get_page_content = require('../webpage/Utils.js').get_page_content,
     assert = require('assert'),
     fs = require('fs'),
-    sleep = require('sleep-async')();
+    sleep = require('sleep-async')().sleep;
 
 function AbstractPageAction() {
     Action.apply(this, Array.prototype.slice.call(arguments));
@@ -77,11 +77,11 @@ AbstractPageAction.prototype.scroll = function(page, scroll_height, tryout) {
             return document.body.scrollHeight;
         }).then(function(new_height) {
             if (new_height == last_height) {
-                sleep.sleep(sleep_timeout, resolve);
+                sleep(sleep_timeout, resolve);
             } else {
                 last_height = new_height;
                 ACTION.scroll(page, last_height, ++tryout).then(function() {
-                    sleep.sleep(sleep_timeout, resolve);
+                    sleep(sleep_timeout, resolve);
                 }, reject);
             }
         });

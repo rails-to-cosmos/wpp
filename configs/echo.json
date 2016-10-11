@@ -1,7 +1,4 @@
 {
-    "defaults": {
-        "report": "/tmp/echo"
-    },
     "actions": [
         {
             "data": {
@@ -25,9 +22,6 @@
                                  ".*facebook.*",
                                  ".*counters.*",
                                  ".*data\\.24smi\\.net.*"]
-                    },
-                    "BlacklistContentTypeFilter": {
-                        "content_types": ["text/css"]
                     }
                 }
             },

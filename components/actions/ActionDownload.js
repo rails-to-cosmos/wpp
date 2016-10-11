@@ -32,12 +32,8 @@ ActionDownload.prototype.get_filters = function() {
 
 ActionDownload.prototype.close = function(page) {
     try {
-        let __free__ = function() {
-            page.stop();
-            page.close();
-            page = null;
-        };
-        page.invokeMethod('clearMemoryCache').then(__free__, __free__);
+        console.log('Close page', page.target);
+        page.invokeMethod('clearMemoryCache').then(page.close, page.close);
     } catch (exc) {
         this.logger.error('Unable to close page:', exc);
     }
@@ -138,22 +134,28 @@ ActionDownload.prototype.main = function(subactions) {
                     let context_transfered_to_main_thread = false;
 
                     page.open(url).then(function(status) {
-                        try {
-                            context_transfered_to_main_thread = true;
+                        context_transfered_to_main_thread = true;
+
+                        if (status === "success") {
                             try {
                                 ACTION.take_screenshot(page, 'download_before_scroll');
                             } catch (exc) {
 
                             }
 
-                            ACTION.run_actions_on_page(page, subactions).then(
-                                function(data) {
-                                    ACTION.write_report(webpage.report);
-                                    resolve(data);
-                                }, reject);
-                        } catch (exc) {
+                            try {
+                                ACTION.run_actions_on_page(page, subactions).then(
+                                    function(data) {
+                                        ACTION.write_report(webpage.report);
+                                        resolve(data);
+                                    }, reject);
+                            } catch (exc) {
+                                ACTION.close(page);
+                                reject(exc);
+                            }
+                        } else {
                             ACTION.close(page);
-                            reject(exc);
+                            reject(new Error('Unable to open url: ' + url));
                         }
                     }, function(exc) {
                         context_transfered_to_main_thread = true;
