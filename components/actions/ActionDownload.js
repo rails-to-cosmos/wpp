@@ -15,122 +15,122 @@ function ActionDownload() {
 
 ActionDownload.prototype = new AbstractPageAction();
 
-// TODO refactor filters
-ActionDownload.prototype.get_filters = function() {
-    let filters = {};
-
-    try {
-        filters = this.get_settings().filters;
-        assert(filters);
-    } catch (exc) {
-        filters = {};
-    }
-
-    return filters;
-};
-
-ActionDownload.prototype.run_actions_on_page = function(page, actions) {
-    let ACTION = this;
-    return new Promise(function(resolve, reject) {
-        ACTION.scroll(page, 0, 0)
-            .then(ACTION.take_screenshot(page, 'download_after_scroll'))
-            .then(function() {
-                ACTION.write_to_store(page);
-                ACTION.run_subactions(actions).then(function(result) {
-                    ACTION.close(page).then(function() {
-                        resolve(result);
-                    });
-                }, function(exc) {
-                    ACTION.close(page).then(function() {
-                        reject(exc);
-                    });
-                });
-            }, function(exc) {
-                ACTION.close(page).then(function() {
-                    reject(exc);
-                });
-            });
-    });
-};
-
 ActionDownload.prototype.main = function(subactions) {
     const ACTION = this;
 
-    return new Promise(function(resolve, reject) {
-        try {
-            let webpage = new Webpage(ACTION.get_browser()),
-                user_agent;
+    return new Promise(function(resolve_main, reject_main) {
+        let webpage = new Webpage(ACTION.get_browser());
 
-            try {
-                user_agent = ACTION.get_settings().user_agent;
-            } catch (exc) {
+        webpage.settings = {
+            resource_timeout: RESOURCE_TIMEOUT,
+            user_agent: ACTION.get_settings().user_agent,
+            filters: ACTION.get_settings().filters
+        };
 
-            }
+        let $scope = {};
+        webpage.create()
+            .then(acquire_url)
+            .then(init_page_observer)
+            .then(open_page)
+            .then(release_page_observer)
+            .then(take_screenshot('download_before_scroll'))
+            .then(scroll_to_bottom)
+            .then(take_screenshot('download_after_scroll'))
+            .then(store_page)
+            .then(run_subactions)
+            .then(close_page)
+            .then(transfer_result)
+            .then(resolve_main)
+            .then(show_scope)
+            .catch(reject_main);
 
-            webpage.settings = {
-                resource_timeout: RESOURCE_TIMEOUT,
-                user_agent: user_agent,
-                filters: ACTION.get_filters()
-            };
-
-            webpage.create().then(function(page) {
-                try {
-                    let url = ACTION.get_target() || ACTION.get_data().url; // ACTION.get_data().url is deprecated
-                    assert(url);
-
-                    let context_transfered_to_main_thread = false;
-
-                    page.open(url).then(function(status) {
-                        context_transfered_to_main_thread = true;
-
-                        if (status === "success") {
-                            let promises = [
-                                ACTION.take_screenshot(page, 'download_before_scroll'),
-                            ];
-
-                            Promise.all(promises).then(function() {
-                                try {
-                                    ACTION.run_actions_on_page(page, subactions).then(
-                                        function(data) {
-                                            ACTION.write_webpage_report(webpage.report);
-                                            resolve(data);
-                                        }, reject);
-                                } catch (exc) {
-                                    ACTION.close(page).then(function() {
-                                        reject(exc);
-                                    });
-                                }
-                            }, reject);
-                        } else {
-                            ACTION.close(page).then(function() {
-                                reject(new Error('Unable to open url: ' + url));
-                            });
-                        }
-                    }, function(exc) {
-                        context_transfered_to_main_thread = true;
-                        ACTION.close(page).then(function() {
-                            reject(exc);
-                        });
-                    });
-
-                    setTimeout(function() {
-                        if (!context_transfered_to_main_thread) {
-                            ACTION.take_screenshot(page, 'download_timeout')
-                                .then(function() {
-                                    ACTION.close(page).then(function() {
-                                        reject(new Error('PhantomJS process does not responding'));
-                                    });
-                                });
-                        }
-                    }, PAGE_TIMEOUT);
-                } catch (exc) {
-                    ACTION.close(page);
-                    reject(exc);
-                }
-            }, reject);
-        } catch (exc) {
-            reject(exc);
+        function acquire_url(page) {
+            return new Promise(function(resolve) {
+                let url = ACTION.get_target() || ACTION.get_data().url;
+                $scope.page = page;
+                $scope.url = url;
+                resolve(url);
+            });
         }
+
+        function init_page_observer() {
+            return new Promise(function(resolve) {
+                $scope.page_observer = {
+                    context_transfered_to_main_thread: false
+                };
+
+                setTimeout(function() {
+                    if ($scope.page_observer.context_transfered_to_main_thread === false) {
+                        close_page().then(resolve_main);
+                    }
+                }, PAGE_TIMEOUT);
+
+                resolve();
+            });
+        }
+
+        function release_page_observer() {
+            return new Promise(function(resolve) {
+                $scope.page_observer.context_transfered_to_main_thread = true;
+                resolve();
+            });
+        }
+
+        function open_page(url) {
+            return new Promise(function(resolve, reject) {
+                $scope.page.open($scope.url).then(function(status) {
+                    assert(status);
+                    resolve(status);
+                }, reject);
+            });
+        }
+
+        function take_screenshot(alias) {
+            return function() {
+                return new Promise(function(resolve, reject) {
+                    ACTION.take_screenshot($scope.page, alias)
+                        .then(resolve, reject);
+                });
+            };
+        };
+
+        function scroll_to_bottom() {
+            return new Promise(function(resolve, reject) {
+                ACTION.scroll($scope.page, 0, 0).then(resolve, reject);
+            });
+        }
+
+        function store_page() {
+            return new Promise(function(resolve) {
+                ACTION.write_to_store($scope.page);
+                resolve();
+            });
+        }
+
+        function run_subactions() {
+            return new Promise(function(resolve, reject) {
+                ACTION.run_subactions(subactions).then(function(subactions_result) {
+                    $scope.result = subactions_result;
+                    resolve();
+                }, reject);
+            });
+        }
+
+        function close_page() {
+            return new Promise(function(resolve, reject) {
+                ACTION.close($scope.page).then(resolve, reject);
+            });
+        }
+
+        function transfer_result() {
+            return new Promise(function(resolve) {
+                resolve($scope.result);
+            });
+        }
+
+        function show_scope() {
+            console.log('scope:', $scope);
+        };
     });
 };
 
