@@ -61,9 +61,6 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
                 site: ".sitestr"
             }
         }
-    ],
-    defaults: {
-        report: "/tmp/yc"
-    }
+    ]
 }
 ```
