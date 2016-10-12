@@ -30,28 +30,26 @@ ActionResultStore.prototype.get = function(key) {
     return CacheStore.prototype.get.call(this, key);
 };
 
-ActionResultStore.prototype.push = function(key, value, visibility, repr) {
+ActionResultStore.prototype.auto_visibility = function(key, default_visibility) {
     if (key[0] == '_') {
-        visibility = false;
+        return false;
     } else {
-        visibility = true;
+        if (default_visibility === false) {
+            return default_visibility;
+        } else {
+            return true;
+        }
     }
+};
 
+ActionResultStore.prototype.push = function(key, value, visibility, repr) {
+    visibility = this.auto_visibility(key, visibility);
     this.set_flag(key, 'visibility', visibility);
     return CacheStore.prototype.push.call(this, key, value);
 };
 
 ActionResultStore.prototype.write = function(key, value, visibility, repr) {
-    if (key[0] == '_') {
-        visibility = false;
-    } else {
-        if (visibility === false) {
-
-        } else {
-            visibility = true;
-        }
-    }
-
+    visibility = this.auto_visibility(key, visibility);
     this.set_flag(key, 'visibility', visibility);
     return CacheStore.prototype.write.call(this, key, value);
 };
