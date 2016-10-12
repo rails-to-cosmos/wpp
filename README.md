@@ -7,9 +7,10 @@ Features
 --------
 
 * Manage PhantomJS behaviour by drawing trees of actions stored in JSON format
-* Crawl web resources and get text data from them
+* Crawl web resources for any text data
 * Simple navigation via jQuery selectors
 * Run with fault-tolerant PhantomJS cluster
+* Fast and simple AJAX-scraping
 
 Requirements
 ------------
