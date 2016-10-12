@@ -17,6 +17,16 @@ ActionClickMaster.prototype.main = function (subactions) {
 
     var pages = ACTION.get_from_store(ACTION.get_target());
 
+    // TODO: refactor
+    // pages.map(function(map) {
+    //     return new Promise(function (resolve_page, reject_page) {
+    //         inject_xpath(page)
+    //             .then(parse_buttons)
+    //             .then(create_slaves)
+    //             .then(process_slaves);
+    //     });
+    // });
+
     return new Promise(function(resolveAllPages, rejectAllPages) {
         try {
             var actions = pages.map(function(page) {
