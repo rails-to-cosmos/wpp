@@ -1,7 +1,8 @@
 'use strict';
 
 const phantom = require('phantom'),
-      MAX_USES_COUNT = 25;
+      MAX_USES_COUNT = 25,
+      RIP_INTERVAL = 60000;
 
 function PhFTWrapper(settings) {
     this.uses_count = 0;
@@ -22,6 +23,7 @@ PhFTWrapper.prototype.create = function() {
 };
 
 PhFTWrapper.prototype.go_to_rest = function() {
+    setInterval(this.rip, RIP_INTERVAL);
     this.release_when_noone_using_me = true;
     if (this.in_progress == 0) {
         this.rip();
@@ -43,10 +45,18 @@ PhFTWrapper.prototype.release = function() {
 };
 
 PhFTWrapper.prototype.rip = function() {
+    this.in_progress = 0;
+
+    try {
+        this.phantom.exit(1);
+    } catch (exc) {
+
+    }
+
     try {
         this.phantom.process.kill();
     } catch (exc) {
-        // cannot kill phantom, ignore
+
     }
 };
 
