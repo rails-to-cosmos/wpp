@@ -41,7 +41,6 @@ ActionDownload.prototype.main = function(subactions) {
             .then(close_page)
             .then(transfer_result)
             .then(resolve_main)
-            .then(show_scope)
             .catch(reject_main);
 
         function acquire_url(page) {
@@ -127,10 +126,6 @@ ActionDownload.prototype.main = function(subactions) {
                 resolve($scope.result);
             });
         }
-
-        function show_scope() {
-            console.log('scope:', $scope);
-        };
     });
 };
 
