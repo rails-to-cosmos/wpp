@@ -38,6 +38,7 @@ ActionDownload.prototype.main = function(subactions) {
             .then(take_screenshot('download_after_scroll'))
             .then(store_page)
             .then(run_subactions)
+            .then(write_report)
             .then(close_page)
             .then(transfer_result)
             .then(resolve_main)
@@ -112,6 +113,13 @@ ActionDownload.prototype.main = function(subactions) {
                     $scope.result = subactions_result;
                     resolve();
                 }, reject);
+            });
+        }
+
+        function write_report() {
+            return new Promise(function(resolve) {
+                ACTION.write_webpage_report(webpage.report);
+                resolve();
             });
         }
 

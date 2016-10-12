@@ -82,7 +82,7 @@ AbstractPageAction.prototype.write_webpage_report = function(report) {
     let url_list = [];
     let total_elapsed_time = 0;
     for (let url of Object.keys(report.requests.allowed)) {
-        let elapsed_time = report.requests.allowed[url].elapsed_time;
+        let elapsed_time = report.requests.allowed[url].elapsed_time || 0;
         url_list.push([url, elapsed_time]);
         total_elapsed_time += elapsed_time;
     }
