@@ -45,7 +45,11 @@ ActionResultStore.prototype.write = function(key, value, visibility, repr) {
     if (key[0] == '_') {
         visibility = false;
     } else {
-        visibility = true;
+        if (visibility === false) {
+
+        } else {
+            visibility = true;
+        }
     }
 
     this.set_flag(key, 'visibility', visibility);

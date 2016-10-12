@@ -31,10 +31,12 @@ ActionDownload.prototype.get_filters = function() {
 };
 
 ActionDownload.prototype.close = function(page) {
-    try {
-        page.invokeMethod('clearMemoryCache').then(page.close, page.close);
-    } catch (exc) {
-        this.logger.error('Unable to close page:', exc);
+    if (page) {
+        try {
+            page.invokeMethod('clearMemoryCache').then(page.close, page.close);
+        } catch (exc) {
+            this.logger.error('Unable to close page:', exc);
+        }
     }
 };
 

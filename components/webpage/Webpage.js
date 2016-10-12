@@ -95,12 +95,16 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             }
 
             if (res.stage == 'end') {
-                if (!report.requests.allowed[res.url].start) {
-                    report.requests.allowed[res.url].start = requests.allowed[res.url].start;
+                var allowed = report.requests.allowed[res.url] || {};
+
+                if (!allowed.start) {
+                    allowed.start = requests.allowed[res.url].start;
                 }
 
-                report.requests.allowed[res.url].end = new Date();
-                report.requests.allowed[res.url].elapsed_time = report.requests.allowed[res.url].end - report.requests.allowed[res.url].start;
+                allowed.end = new Date();
+                allowed.elapsed_time = allowed.end - allowed.start;
+
+                report.requests.allowed[res.url] = allowed;
             }
         });
     });
