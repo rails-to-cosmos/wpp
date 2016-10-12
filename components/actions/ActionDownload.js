@@ -4,8 +4,7 @@ var AbstractPageAction = require('./AbstractPageAction'),
     Webpage = require('../webpage/Webpage'),
 
     fs = require('fs'),
-    assert = require('assert'),
-    get_page_content = require('../webpage/Utils').get_page_content;
+    assert = require('assert');
 
 const PAGE_TIMEOUT = 60000,
       RESOURCE_TIMEOUT = 5000;
@@ -30,45 +29,27 @@ ActionDownload.prototype.get_filters = function() {
     return filters;
 };
 
-ActionDownload.prototype.close = function(page) {
-    if (page) {
-        try {
-            page.invokeMethod('clearMemoryCache').then(page.close, page.close);
-        } catch (exc) {
-            this.logger.error('Unable to close page:', exc);
-        }
-    }
-};
-
 ActionDownload.prototype.run_actions_on_page = function(page, actions) {
     let ACTION = this;
     return new Promise(function(resolve, reject) {
-        ACTION.scroll(page, 0, 0).then(function() {
-            try {
-                ACTION.take_screenshot(page, 'download_after_scroll');
-            } catch (exc) {
-
-            }
-
-            get_page_content(page, ACTION).then(function(content) {
-                try {
+        ACTION.scroll(page, 0, 0)
+            .then(ACTION.take_screenshot(page, 'download_after_scroll'))
+            .then(function() {
                     ACTION.write_to_store(page);
                     ACTION.run_subactions(actions).then(function(result) {
-                        ACTION.close(page);
-                        resolve(result);
+                        ACTION.close(page).then(function() {
+                            resolve(result);
+                        });
                     }, function(exc) {
-                        ACTION.close(page);
-                        reject(exc);
+                        ACTION.close(page).then(function() {
+                            reject(exc);
+                        });
                     });
-                } catch (exc) {
-                    ACTION.close(page);
-                    reject(exc);
-                }
             }, function(exc) {
-                ACTION.close(page);
-                reject(exc);
+                ACTION.close(page).then(function() {
+                    reject(exc);
+                });
             });
-        });
     });
 };
 
@@ -103,42 +84,43 @@ ActionDownload.prototype.main = function(subactions) {
                         context_transfered_to_main_thread = true;
 
                         if (status === "success") {
-                            try {
-                                ACTION.take_screenshot(page, 'download_before_scroll');
-                            } catch (exc) {
+                            let promises = [
+                                ACTION.take_screenshot(page, 'download_before_scroll'),
+                            ];
 
-                            }
-
-                            try {
-                                ACTION.run_actions_on_page(page, subactions).then(
-                                    function(data) {
-                                        ACTION.write_webpage_report(webpage.report);
-                                        resolve(data);
-                                    }, reject);
-                            } catch (exc) {
-                                ACTION.close(page);
-                                reject(exc);
-                            }
+                            Promise.all(promises).then(function() {
+                                try {
+                                    ACTION.run_actions_on_page(page, subactions).then(
+                                        function(data) {
+                                            ACTION.write_webpage_report(webpage.report);
+                                            resolve(data);
+                                        }, reject);
+                                } catch (exc) {
+                                    ACTION.close(page).then(function() {
+                                        reject(exc);
+                                    });
+                                }
+                            }, reject);
                         } else {
-                            ACTION.close(page);
-                            reject(new Error('Unable to open url: ' + url));
+                            ACTION.close(page).then(function() {
+                                reject(new Error('Unable to open url: ' + url));
+                            });
                         }
                     }, function(exc) {
                         context_transfered_to_main_thread = true;
-                        ACTION.close(page);
-                        reject(exc);
+                        ACTION.close(page).then(function() {
+                            reject(exc);
+                        });
                     });
 
                     setTimeout(function() {
                         if (!context_transfered_to_main_thread) {
-                            try {
-                                ACTION.take_screenshot(page, 'download_timeout');
-                            } catch (exc) {
-
-                            }
-
-                            ACTION.close(page);
-                            reject(new Error('PhantomJS process does not responding'));
+                            ACTION.take_screenshot(page, 'download_timeout')
+                                .then(function() {
+                                    ACTION.close(page).then(function() {
+                                        reject(new Error('PhantomJS process does not responding'));
+                                    });
+                                });
                         }
                     }, PAGE_TIMEOUT);
                 } catch (exc) {

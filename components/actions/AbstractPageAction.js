@@ -12,6 +12,19 @@ function AbstractPageAction() {
 
 AbstractPageAction.prototype = new Action();
 
+AbstractPageAction.prototype.close = function(page) {
+    if (!page) {
+        return Promise.resolve();
+    }
+
+    return new Promise(function(resolve, reject) {
+        page.invokeMethod('clearMemoryCache')
+            .then(page.close())
+            .then(resolve)
+            .catch(reject);
+    });
+};
+
 AbstractPageAction.prototype.need_report = function() {
     try {
         assert(this.get_settings().report);
@@ -41,22 +54,22 @@ AbstractPageAction.prototype.get_report_filename = function(alias, ext) {
 
 AbstractPageAction.prototype.take_screenshot = function(page, alias) {
     if (!this.need_report()) {
-        return;
+        return Promise.resolve();
     }
 
-    let filename = this.get_report_filename(alias, 'html');
-
-    try {
+    let ACTION = this;
+    return new Promise(function(resolve, reject) {
+        let filename = ACTION.get_report_filename(alias, 'html');
         get_page_content(page).then(function(content) {
             fs.writeFile(filename, content, function(err) {
                 if (err) {
-                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve();
                 }
             });
         });
-    } catch (exc) {
-        console.log('Cannot render page:', exc);
-    }
+    });
 };
 
 AbstractPageAction.prototype.write_webpage_report = function(report) {

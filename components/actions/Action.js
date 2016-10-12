@@ -67,16 +67,11 @@ Action.prototype.is_visible = function() {
 
 Action.prototype.finalize = function() {
     var ACTION = this;
-
     return new Promise(function(resolve, reject) {
-        try {
-            resolve({
-                data: ACTION.store.get_visible_data(),
-                history: ACTION.history
-            });
-        } catch (exc) {
-            reject(exc);
-        }
+        resolve({
+            data: ACTION.store.get_visible_data(),
+            history: ACTION.history
+        });
     });
 };
 
@@ -84,30 +79,18 @@ Action.prototype.console_info = function() {
     let args = Array.prototype.slice.call(arguments),
         msg = args.join(' ');
 
-    try {
-        this.logger.info(msg);
-    } catch (exc) {
-        console.log(msg);
-    }
+    this.logger.info(msg);
 };
 
 Action.prototype.console_debug = function() {
     let args = Array.prototype.slice.call(arguments),
         msg = args.join(' ');
 
-    try {
-        this.logger.debug(msg);
-    } catch (exc) {
-        console.log(msg);
-    }
+    this.logger.debug(msg);
 };
 
 Action.prototype.console_error = function(message, exception) {
-    try {
-        this.logger.error(message, exception);
-    } catch (exc) {
-        console.log(message, exception);
-    }
+    this.logger.error(message, exception);
 };
 
 Action.prototype.run_subactions = function(subactions) {

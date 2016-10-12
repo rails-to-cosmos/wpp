@@ -36,7 +36,7 @@ CacheStore.prototype.get_data = function() {
 
 CacheStore.prototype.free = function() {
     for (var key in this.data) {
-        // console.log(delete this.data[key]);
+        delete this.data[key];
     }
 };
 

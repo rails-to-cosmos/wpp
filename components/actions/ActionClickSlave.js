@@ -3,8 +3,7 @@
 var AbstractPageAction = require('./AbstractPageAction'),
     Webpage = require('../webpage/Webpage'),
     XPathInjection = require('../injections/XPathInjection'),
-    ClickInjection = require('../injections/ClickInjection'),
-    get_page_content = require('../webpage/Utils').get_page_content;
+    ClickInjection = require('../injections/ClickInjection');
 
 function ActionClickSlave() {
     AbstractPageAction.apply(this, Array.prototype.slice.call(arguments));
@@ -162,7 +161,9 @@ ActionClickSlave.prototype.main = function (subactions) {
             rejectAllPages(exc);
         }
 
-        Promise.all(actions).then(resolveAllPages, rejectAllPages);
+        Promise.all(actions)
+            .then(resolveAllPages)
+            .catch(rejectAllPages);
     });
 };
 

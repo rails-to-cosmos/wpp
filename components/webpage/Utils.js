@@ -4,9 +4,9 @@ var is_object = require('../utils/TypeHints').is_object,
 function get_page_content(page, ACTION) {
     return new Promise(function(resolve, reject) {
         if (is_object(page)) {
-            page.property('content').then(function(content) {
-                resolve(content);
-            });
+            page.property('content')
+                .then(resolve)
+                .catch(reject);
         } else if (is_string(page)) {
             resolve(page);
         } else {

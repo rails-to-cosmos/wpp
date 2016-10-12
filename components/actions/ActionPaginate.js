@@ -29,12 +29,8 @@ ActionPaginate.prototype.main = function (subactions) {
                 try {
                     ACTION.write_to_store(page);
                     return new Promise(function(resolve, reject) {
-                        try {
-                            ACTION.take_screenshot(page, 'page_before_page');
-                            scanPaginationButtons();
-                        } catch (exc) {
-                            reject(exc);
-                        }
+                        ACTION.take_screenshot(page, 'page_before_page')
+                            .then(scanPaginationButtons);
 
                         function scanPaginationButtons() {
                             let xpath_injection = new XPathInjection();
@@ -95,16 +91,13 @@ ActionPaginate.prototype.main = function (subactions) {
                                         slave_action.main(dependent_subactions).then(function() {
                                             visited.push(name);
 
-                                            try {
-                                                ACTION.take_screenshot(page, 'page_after_' + slave_action.get_name());
-                                            } catch (exc) {
-
-                                            }
-
                                             if (visited.length < PAGINATION_LIMIT) {
-                                                scanPaginationButtons();
+                                                ACTION.take_screenshot(page, 'page_after_' + slave_action.get_name())
+                                                    .then(scanPaginationButtons);
                                             } else {
-                                                ACTION.finalize().then(resolve, reject);
+                                                ACTION.take_screenshot(page, 'page_after_' + slave_action.get_name())
+                                                    .then(ACTION.finalize())
+                                                    .then(resolve, reject);
                                             }
                                         }, reject);
                                     } catch (exc) {

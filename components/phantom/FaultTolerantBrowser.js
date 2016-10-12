@@ -24,6 +24,7 @@ PhFTWrapper.prototype.create = function() {
 
 PhFTWrapper.prototype.go_to_rest = function() {
     setInterval(this.rip, RIP_INTERVAL);
+
     this.release_when_noone_using_me = true;
     if (this.in_progress == 0) {
         this.rip();
@@ -78,15 +79,15 @@ FaultTolerantBrowser.prototype.acquire = function() {
                 return;
             } else {
                 FTPh.wheelhorse.go_to_rest();
-                FTPh.wheelhorse.uses_count = 1;
                 FTPh.graveyard.push(FTPh.wheelhorse);
             }
         }
 
         FTPh.wheelhorse = new PhFTWrapper(FTPh.settings);
-        FTPh.wheelhorse.create().then(function() {
-            resolve(FTPh.wheelhorse.acquire());
-        }, reject);
+        FTPh.wheelhorse.create()
+            .then(function() {
+                resolve(FTPh.wheelhorse.acquire());
+            }, reject);
     });
 };
 

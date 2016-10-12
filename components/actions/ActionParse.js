@@ -48,11 +48,16 @@ ActionParse.prototype.main = function(subactions) {
                 });
             });
 
-            Promise.all(parse_actions).then(function() {
-                ACTION.run_subactions(subactions).then(function(result) {
+            let run_subactions = function() {
+                return ACTION.run_subactions(subactions).then(function(result) {
                     resolve(result);
-                }, reject);
-            }, reject);
+                });
+            };
+
+            Promise.all(parse_actions)
+                .then(run_subactions)
+                .then(resolve)
+                .catch(reject);
         } catch (exc) {
             reject(exc);
         }
