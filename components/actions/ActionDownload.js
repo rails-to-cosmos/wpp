@@ -79,8 +79,11 @@ ActionDownload.prototype.main = function(subactions) {
         function open_page(url) {
             return new Promise(function(resolve, reject) {
                 $scope.page.open($scope.url).then(function(status) {
-                    assert(status);
-                    resolve(status);
+                    if (status == 'success') {
+                        resolve(status);
+                    } else {
+                        reject();
+                    }
                 }, reject);
             });
         }
