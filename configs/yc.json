@@ -10,13 +10,13 @@
             "name": "item",
             "target": "_webpage",
             "meta": {
-                "selector": ".athing",
-                "structure": {
-                    "id": "[id]",
-                    "rank": "span.rank",
-                    "title": ".storylink",
-                    "site": ".sitestr"
-                }
+                "selector": ".athing"
+            },
+            "structure": {
+                "id": "[id]",
+                "rank": "span.rank",
+                "title": ".storylink",
+                "site": ".sitestr"
             }
         }
     ]

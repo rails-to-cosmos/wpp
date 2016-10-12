@@ -14,7 +14,10 @@ var express = require('express'),
     PhantomJSBalancer = require('./components/phantom/Balancer'),
     PhantomJSSettings = require('./components/phantom/Settings'),
 
-    phbalancer = new PhantomJSBalancer();
+    phbalancer = new PhantomJSBalancer(),
+
+    jobs_done = 0,
+    jobs_total = 0;
 
 
 require('epipebomb')();
@@ -38,6 +41,8 @@ app.post('/', function(req, res) {
     let logger = new Logger(),
         logger_conf;
 
+    jobs_total++;
+
     try {
         logger_conf = req.body.logging;
         assert(logger_conf);
@@ -53,9 +58,10 @@ app.post('/', function(req, res) {
     }
 
     let handle_exception = function (description, exc, req, res) {
+        jobs_done++;
         res.json({}).status(500);
         logger.error(description + ':', exc);
-        logger.info('Job done: FAILURE');
+        logger.info('Job ' + jobs_done + '/' + jobs_total + ' done: FAILURE');
     };
 
     let actions;
@@ -128,7 +134,8 @@ app.post('/', function(req, res) {
 
                 try {
                     res.json(data);
-                    logger.info('Job done: SUCCESS');
+                    jobs_done++;
+                    logger.info('Job ' + jobs_done + '/' + jobs_total + ' done: SUCCESS');
                 } catch (exc) {
                     handle_exception('Failed to build response', exc, req, res);
                 } finally {
