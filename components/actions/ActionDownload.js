@@ -35,16 +35,16 @@ ActionDownload.prototype.run_actions_on_page = function(page, actions) {
         ACTION.scroll(page, 0, 0)
             .then(ACTION.take_screenshot(page, 'download_after_scroll'))
             .then(function() {
-                    ACTION.write_to_store(page);
-                    ACTION.run_subactions(actions).then(function(result) {
-                        ACTION.close(page).then(function() {
-                            resolve(result);
-                        });
-                    }, function(exc) {
-                        ACTION.close(page).then(function() {
-                            reject(exc);
-                        });
+                ACTION.write_to_store(page);
+                ACTION.run_subactions(actions).then(function(result) {
+                    ACTION.close(page).then(function() {
+                        resolve(result);
                     });
+                }, function(exc) {
+                    ACTION.close(page).then(function() {
+                        reject(exc);
+                    });
+                });
             }, function(exc) {
                 ACTION.close(page).then(function() {
                     reject(exc);

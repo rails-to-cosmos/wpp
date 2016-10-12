@@ -10,7 +10,7 @@
             "name": "item",
             "target": "_webpage",
             "meta": {
-                "selector": ".athing"
+                "$": ".athing"
             },
             "structure": {
                 "id": "[id]",

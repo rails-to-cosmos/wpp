@@ -52,13 +52,13 @@ Webpage Processor config uses JSON syntax to specify tree of page actions.
             name: "item",
             target: "_webpage",
             meta: {
-                selector: ".athing",
-                structure: {
-                    id: "[id]",
-                    rank: "span.rank",
-                    title: ".storylink",
-                    site: ".sitestr"
-                }
+                $: ".athing",
+            },
+            structure: {
+                id: "[id]",
+                rank: "span.rank",
+                title: ".storylink",
+                site: ".sitestr"
             }
         }
     ],
