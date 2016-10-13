@@ -57,6 +57,10 @@ Action.prototype.get_name = function() {
     return this.config.name;
 };
 
+Action.prototype.get_selector = function() {
+    return this.get_data().$ || this.get_data().selector; // selector is deprecated
+};
+
 Action.prototype.get_target = function() {
     return this.config.target;
 };

@@ -35,7 +35,7 @@ ActionClickMaster.prototype.main = function (subactions) {
                         let xpath_injection = new XPathInjection();
                         xpath_injection.apply(page).then(function() {
                             try {
-                                const selector = ACTION.get_data().selector;
+                                const selector = ACTION.get_selector();
                                 page.evaluate(function(selector) {
                                     var result = [];
                                     var elements = document.querySelectorAll(selector);

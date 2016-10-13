@@ -11,9 +11,6 @@
                 "visible": false,
                 "user_agent": false,
                 "filters":  {
-                    "whitelist": {
-                        "urls": [".*echo\\.msk\\.ru.*"]
-                    },
                     "blacklist": {
                         "urls": ["http:\\/\\/.+?\\.css",
                                  ".*banner.*",
@@ -24,7 +21,23 @@
                                  ".*widget.*",
                                  ".*facebook.*",
                                  ".*counters.*",
-                                 ".*data\\.24smi\\.net.*"]
+                                 ".*data\\.24smi\\.net.*",
+                                 "relap.io",
+                                 "ads.adfox.ru",
+                                 "vk.com",
+                                 "ad.mail.ru",
+                                 "doc.echoban.ru",
+                                 "yandex.st",
+                                 "fonts",
+                                 "modernizr",
+                                 "extreme-dm",
+                                 "spylog",
+                                 "cloudflare.com",
+                                 "vengovision",
+                                 "ru451",
+                                 "medianetworks.ru",
+                                 "smi2.net",
+                                 "ddos-guard"]
                     }
                 }
             },
@@ -33,7 +46,7 @@
         },
         {
             "data": {
-                "selector": "section.content .actionBlock a.comm"
+                "$": "section.content .actionBlock a.comm"
             },
             "settings": {
                 "visible": false
@@ -44,7 +57,7 @@
         },
         {
             "data": {
-                "selector": ".pager a.ajax[href^=\"#comments\"]"
+                "$": ".pager a.ajax[href^=\"#comments\"]"
             },
             "settings": {
                 "visible": false
@@ -55,7 +68,7 @@
         },
         {
             "data": {
-                "selector": ".commBlock[outerHTML]"
+                "$": ".commBlock[outerHTML]"
             },
             "settings": {
                 "visible": false
@@ -66,7 +79,7 @@
         },
         {
             "data": {
-                "selector": "[id]"
+                "$": "[id]"
             },
             "settings": {
                 "visible": true
@@ -77,7 +90,7 @@
         },
         {
             "data": {
-                "selector": ">div.onecomm>p.author span.about>strong.name"
+                "$": ">div.onecomm>p.author span.about>strong.name"
             },
             "settings": {
                 "visible": true
@@ -88,7 +101,7 @@
         },
         {
             "data": {
-                "selector": ">div.onecomm>p.commtext"
+                "$": ">div.onecomm>p.commtext"
             },
             "settings": {
                 "visible": true
@@ -99,7 +112,7 @@
         },
         {
             "data": {
-                "selector": ">div.onecomm>p.author>span.datetime.right"
+                "$": ">div.onecomm>p.author>span.datetime.right"
             },
             "settings": {
                 "visible": true

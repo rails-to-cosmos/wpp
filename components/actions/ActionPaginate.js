@@ -35,7 +35,7 @@ ActionPaginate.prototype.main = function (subactions) {
                         function scanPaginationButtons() {
                             let xpath_injection = new XPathInjection();
                             xpath_injection.apply(page).then(function() {
-                                const selector = ACTION.get_data().selector;
+                                const selector = ACTION.get_selector();
                                 page.evaluate(function(selector) {
                                     var result = {};
                                     var elements = document.querySelectorAll(selector);
