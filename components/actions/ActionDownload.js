@@ -91,7 +91,6 @@ ActionDownload.prototype.main = function(subactions) {
         function take_screenshot(alias) {
             return function() {
                 return new Promise(function(resolve, reject) {
-                    console.log('screenshot');
                     ACTION.take_screenshot($scope.page, alias)
                         .then(resolve, reject);
                 });
@@ -100,7 +99,6 @@ ActionDownload.prototype.main = function(subactions) {
 
         function scroll_to_bottom() {
             return new Promise(function(resolve, reject) {
-                console.log('scroll');
                 ACTION.scroll($scope.page, 0, 0).then(resolve, reject);
             });
         }

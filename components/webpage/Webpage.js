@@ -84,36 +84,30 @@ Webpage.prototype.apply_filters = function(custom_filters) {
     //     console.log('Sent from the page\'s main frame: ' + main);
     // });
 
-    this.page.on('onResourceReceived', function(res) {
-        phantomjs_report.property('requests').then(function(requests) {
-            report.requests.rejected = requests.rejected;
+    // this.page.on('onResourceReceived', function(res) {
+    //     // phantomjs_report.property('requests').then(function(requests) {
+    //         // report.requests.rejected = requests.rejected;
 
-            if (res.stage == 'start') {
-                report.requests.allowed[res.url] = {
-                    start: new Date()
-                };
-            }
+    //         // if (res.stage == 'start') {
+    //         //     report.requests.allowed[res.url] = {
+    //         //         start: new Date()
+    //         //     };
+    //         // }
 
-            if (res.stage == 'end') {
-                setTimeout(set_end_time(new Date()), 500);
+    //         // if (res.stage == 'end') {
+    //         //     var allowed = report.requests.allowed[res.url];
+    //         //     if (!allowed || !allowed.start) {
+    //         //         return;
+    //         //     }
 
-                function set_end_time(time) {
-                    return function() {
-                        var allowed = report.requests.allowed[res.url];
-                        if (!allowed || !allowed.start) {
-                            return;
-                        }
-
-                        allowed.end = time;
-                        allowed.elapsed_time = allowed.end - allowed.start;
-                        report.requests.allowed[res.url] = allowed;
-                    };
-                }
-            }
-        }).catch(function(exc) {
-            console.log(exc);
-        });
-    });
+    //         //     allowed.end = new Date();
+    //         //     allowed.elapsed_time = allowed.end - allowed.start;
+    //         //     report.requests.allowed[res.url] = allowed;
+    //         // }
+    //     // }).catch(function(exc) {
+    //     //     console.log(exc);
+    //     // });
+    // });
 
     this.page.property('onResourceRequested', function(requestData, networkRequest, filters,
                                                        DEFAULT_WHITELIST, DEFAULT_BLACKLIST,
