@@ -1,7 +1,7 @@
 {
     "actions": [
         {
-            "type": "download",
+            "type": "FastDownload",
             "name": "_webpage",
             "target": "https://news.ycombinator.com"
         },

@@ -6,8 +6,28 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
+
 * Передача дел
+** Полезные ссылки
+*** [[http://phantomjs.org][Официальный сайт PhantomJS]]
+*** [[http://phantomjs.org/api/webpage/handler/on-load-finished.html][Официальная документация по PhantomJS Page]]
+*** [[https://github.com/amir20/phantomjs-node][PhantomJS Node]]
+** TODO Известные проблемы
+*** TODO Утечка памяти на продакшне
+**** TODO Если убиваем фантом, а потом обращаемся к его странице, падает wpp.
+**** TODO Проблема FaultTolerantBrowser
+**** TODO Проблема черных списков
+- Если блочим лишнее, то по ссылке может утечь очень много памяти
+- Различать две проблемы:
+  1. Зависает браузер при Download'e
+  2. Не все критичные компоненты покрыты тестами
+  3. Требуется рефакторинг (нормальная работа с Promise)
+  4. Зависает страница при Download'e
+Сейчас пытаемся закрыть страницу (components/ActionDownload.js:init_page_observer)
 ** TODO Говорить, что успешно запущен и слушает порт
+** TODO Развитие
+*** Автоматическое формирование фильтров (блеклистов)
+*** Асинхронные Click и Paginate
 ** DONE Поискать, как установить фантом
 CLOSED: [2016-10-13 Thu 10:20]
 - State "DONE"       from "TODO"       [2016-10-13 Thu 10:20]
@@ -24,6 +44,7 @@ CLOSED: [2016-10-13 Thu 10:20]
         sudo('ln -s /usr/local/sbin/phantomjs/bin/phantomjs /usr/local/bin/phantomjs')
 
 * TODO Bugs
+** FastDownload добавить url в target
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
 * TODO IFrames
 * TODO User-Agents

@@ -1,0 +1,92 @@
+{
+    "actions": [
+        {
+            "target": "",
+            "type": "ADownload",
+            "data": {
+                "url": "http://inosmi.ru/politic/20161013/238013491.html"
+            },
+            "name": "webpage",
+            "settings": {
+                "visible": false
+            }
+        },
+        {
+            "target": "webpage",
+            "type": "AClick",
+            "data": {
+                "selector": ".comments-more .input-button"
+            },
+            "name": "all_comments",
+            "settings": {
+                "visible": false
+            }
+        },
+        {
+            "target": "all_comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".comments-list.main[outerHTML]"
+            },
+            "name": "comments",
+            "settings": {
+                "visible": false
+            }
+        },
+        {
+            "target": "comments",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "li[itemtype=\"http:\/\/schema.org\/Comment\"][outerHTML]"
+            },
+            "name": "comment",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": "[data-id]"
+            },
+            "name": "id",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".datetime .time"
+            },
+            "name": "date",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".author"
+            },
+            "name": "author",
+            "settings": {
+                "visible": true
+            }
+        },
+        {
+            "target": "comment",
+            "type": "AParseBySelector",
+            "data": {
+                "selector": ".body"
+            },
+            "name": "body",
+            "settings": {
+                "visible": true
+            }
+        }
+    ]
+}

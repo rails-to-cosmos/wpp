@@ -1,0 +1,92 @@
+{
+    "actions": [
+        {
+            "data": {
+                "url": "https://www.ridus.ru/news/233713"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "ADownload",
+            "name": "webpage",
+            "target": ""
+        },
+        {
+            "data": {
+                "selector": ".bCommentMore a"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AClick",
+            "name": "click",
+            "target": "webpage"
+        },
+        {
+            "data": {
+                "selector": ".bCommentsCont[outerHTML]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AParseBySelector",
+            "name": "comments",
+            "target": "click"
+        },
+        {
+            "data": {
+                "selector": ".bComment[outerHTML],.bCommentReplies[outerHTML]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AParseBySelector",
+            "name": "comment",
+            "target": "comments"
+        },
+        {
+            "data": {
+                "selector": ".bCommentAuthor strong a"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".bCommentText p"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".comment_link"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "date",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".bComment[data-parent-id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comment"
+        }
+    ]
+}

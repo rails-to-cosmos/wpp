@@ -132,7 +132,7 @@ Webpage.prototype.apply_filters = function(custom_filters) {
         Array.prototype.push.apply(filters[BLACKLIST_URL_FILTER].urls, DEFAULT_BLACKLIST);
         Array.prototype.push.apply(filters[WHITELIST_URL_FILTER].urls, DEFAULT_WHITELIST);
 
-        // TODO optimize it in future
+        // TODO optimize it in future O(n)
         function url_in_list(url, list) {
             for (var url_index in filters[list].urls) {
                 var re = new RegExp(filters[list].urls[url_index]);
