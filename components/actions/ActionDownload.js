@@ -61,7 +61,7 @@ ActionDownload.prototype.main = function(subactions) {
 
                 setTimeout(function() {
                     if ($scope.page_observer.context_transfered_to_main_thread === false) {
-                        close_page().then(resolve_main);
+                        close_page().then(reject_main);
                     }
                 }, PAGE_TIMEOUT);
 
