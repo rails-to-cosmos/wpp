@@ -98,14 +98,16 @@ Webpage.prototype.apply_filters = function(custom_filters) {
                 setTimeout(set_end_time(new Date()), 500);
 
                 function set_end_time(time) {
-                    var allowed = report.requests.allowed[res.url];
-                    if (!allowed || !allowed.start) {
-                        return;
-                    }
+                    return function() {
+                        var allowed = report.requests.allowed[res.url];
+                        if (!allowed || !allowed.start) {
+                            return;
+                        }
 
-                    allowed.end = time;
-                    allowed.elapsed_time = allowed.end - allowed.start;
-                    report.requests.allowed[res.url] = allowed;
+                        allowed.end = time;
+                        allowed.elapsed_time = allowed.end - allowed.start;
+                        report.requests.allowed[res.url] = allowed;
+                    };
                 }
             }
         }).catch(function(exc) {
