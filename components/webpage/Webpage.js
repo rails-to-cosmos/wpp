@@ -108,6 +108,8 @@ Webpage.prototype.apply_filters = function(custom_filters) {
                     report.requests.allowed[res.url] = allowed;
                 }
             }
+        }).catch(function(exc) {
+            console.log(exc);
         });
     });
 
@@ -208,9 +210,7 @@ Webpage.prototype.create = function() {
             });
 
             resolve(page);
-        }, function(exc) {
-            reject(exc);
-        });
+        }).catch(reject);
     });
 };
 
