@@ -13,15 +13,11 @@ function AbstractPageAction() {
 AbstractPageAction.prototype = new Action();
 
 AbstractPageAction.prototype.close = function(page) {
-    if (!page) {
-        return Promise.resolve();
-    }
-
     return new Promise(function(resolve, reject) {
         page.invokeMethod('clearMemoryCache')
-            .then(page.close())
+            .then(page.close)
             .then(resolve)
-            .catch(reject);
+            .catch(resolve);
     });
 };
 
@@ -68,7 +64,7 @@ AbstractPageAction.prototype.take_screenshot = function(page, alias) {
                     resolve();
                 }
             });
-        });
+        }).catch(reject);
     });
 };
 
@@ -115,9 +111,7 @@ AbstractPageAction.prototype.scroll = function(page, scroll_height, tryout) {
         sleep_timeout = 1000;
 
     if (tryout > maxtries) {
-        return new Promise(function(resolve, reject) {
-            resolve();
-        });
+        return Promise.resolve();
     }
 
     return new Promise(function(resolve, reject) {
@@ -131,9 +125,9 @@ AbstractPageAction.prototype.scroll = function(page, scroll_height, tryout) {
                 last_height = new_height;
                 ACTION.scroll(page, last_height, ++tryout).then(function() {
                     sleep(sleep_timeout, resolve);
-                }, reject);
+                }).catch(reject);
             }
-        });
+        }).catch(reject);
     });
 };
 

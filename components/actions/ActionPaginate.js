@@ -31,7 +31,6 @@ ActionPaginate.prototype.main = function (subactions) {
                     return new Promise(function(resolve, reject) {
                         ACTION.take_screenshot(page, 'page_before_page')
                             .then(scanPaginationButtons);
-
                         function scanPaginationButtons() {
                             let xpath_injection = new XPathInjection();
                             xpath_injection.apply(page).then(function() {
