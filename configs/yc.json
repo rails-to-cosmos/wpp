@@ -7,16 +7,26 @@
         },
         {
             "type": "parse",
-            "name": "item",
+            "name": "_item",
             "target": "_webpage",
-            "meta": {
-                "$": ".athing"
-            },
-            "structure": {
-                "id": "[id]",
-                "rank": "span.rank",
-                "title": ".storylink",
-                "site": ".sitestr"
+            "data": {
+                "$": ".athing[outerHTML]"
+            }
+        },
+        {
+            "type": "parse",
+            "name": "id",
+            "target": "_item",
+            "data": {
+                "$": "[id]"
+            }
+        },
+        {
+            "type": "parse",
+            "name": "title",
+            "target": "_item",
+            "data": {
+                "$": ">.title>.storylink"
             }
         }
     ]

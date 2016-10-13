@@ -14,7 +14,8 @@ Features
 
 Requirements
 ------------
-
+  * [Node v6](https://nodejs.org/en/download/package-manager/)
+  * NPM
   * PhantomJS version 2.1+
 
 Installation

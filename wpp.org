@@ -6,6 +6,23 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
+* Передача дел
+** TODO Говорить, что успешно запущен и слушает порт
+** DONE Поискать, как установить фантом
+CLOSED: [2016-10-13 Thu 10:20]
+- State "DONE"       from "TODO"       [2016-10-13 Thu 10:20]
+    with settings(warn_only=True), cd('/usr/local/sbin/'):
+        sudo('wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2')
+        sudo('tar xvfj phantomjs-2.1.1-linux-x86_64.tar.bz2')
+        sudo('rm phantomjs-2.1.1-linux-x86_64.tar.bz2')
+        sudo('rm /usr/bin/phantomjs_old')
+        sudo('rm /usr/local/bin/phantomjs_old')
+        sudo('mv phantomjs-2.1.1-linux-x86_64 phantomjs')
+        sudo('mv /usr/bin/phantomjs /usr/bin/phantomjs_old')
+        sudo('mv /usr/local/bin/phantomjs /usr/local/bin/phantomjs_old')
+        sudo('ln -s /usr/local/sbin/phantomjs/bin/phantomjs /usr/bin/phantomjs')
+        sudo('ln -s /usr/local/sbin/phantomjs/bin/phantomjs /usr/local/bin/phantomjs')
+
 * TODO Bugs
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
 * TODO IFrames

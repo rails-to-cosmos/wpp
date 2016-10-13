@@ -10,7 +10,9 @@ var express = require('express'),
 
     Logger = require('./components/loggers/Logger'),
     LogstashLogger = require('./components/loggers/LogstashLogger'),
+
     WebpageProcessor = require('./components/WebpageProcessor'),
+
     PhantomJSBalancer = require('./components/phantom/Balancer'),
     PhantomJSSettings = require('./components/phantom/Settings'),
 

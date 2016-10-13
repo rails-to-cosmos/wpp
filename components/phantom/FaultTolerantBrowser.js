@@ -23,7 +23,7 @@ PhFTWrapper.prototype.create = function() {
 };
 
 PhFTWrapper.prototype.go_to_rest = function() {
-    setInterval(this.rip, RIP_INTERVAL);
+    setTimeout(this.rip, RIP_INTERVAL);
 
     this.release_when_noone_using_me = true;
     if (this.in_progress == 0) {
