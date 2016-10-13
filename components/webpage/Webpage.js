@@ -170,7 +170,9 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             // console.log('Abort', requestData.url);
             networkRequest.abort();
         } else {
-            report.requests.allowed[requestData.url] = {};
+            report.requests.allowed[requestData.url] = {
+                start: new Date()
+            };
             // console.log('Allow', requestData.url);
         }
     }, custom_filters, DEFAULT_WHITELIST, DEFAULT_BLACKLIST, this.phantomjs_report);
