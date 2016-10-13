@@ -18,7 +18,7 @@ ActionClickMaster.prototype.main = function (subactions) {
     var pages = ACTION.get_from_store(ACTION.get_target());
 
     // TODO: refactor
-    // pages.map(function(map) {
+    // pages.map(function(page) {
     //     return new Promise(function (resolve_page, reject_page) {
     //         inject_xpath(page)
     //             .then(parse_buttons)
