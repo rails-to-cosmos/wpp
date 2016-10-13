@@ -95,16 +95,18 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             }
 
             if (res.stage == 'end') {
-                var allowed = report.requests.allowed[res.url] || {};
+                setTimeout(set_end_time(new Date()), 500);
 
-                if (!allowed.start) {
-                    allowed.start = requests.allowed[res.url].start;
+                function set_end_time(time) {
+                    var allowed = report.requests.allowed[res.url];
+                    if (!allowed || !allowed.start) {
+                        return;
+                    }
+
+                    allowed.end = time;
+                    allowed.elapsed_time = allowed.end - allowed.start;
+                    report.requests.allowed[res.url] = allowed;
                 }
-
-                allowed.end = new Date();
-                allowed.elapsed_time = allowed.end - allowed.start;
-
-                report.requests.allowed[res.url] = allowed;
             }
         });
     });
