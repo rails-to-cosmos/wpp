@@ -40,7 +40,23 @@
                             ".*ridus\\.ru\\/assets.*",
                             ".*yandex\\.ru.*",
                             ".*yandex\\.net.*",
-                            ".*google.*"
+                            ".*google.*",
+
+                            "woff",
+                            ".css",
+                            "24smi.info",
+                            "24smi.net",
+                            "buzzoola.com",
+                            "nr-data.net",
+                            "rambler.ru",
+                            "seedr.ru",
+                            "yastatic.net",
+                            "weborama.fr",
+                            "seedr.com",
+                            "w.com",
+                            "newrelic.com",
+                            "luxadv.com",
+                            "adlabs.com"
                         ]
                     }
                 }
