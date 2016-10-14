@@ -58,17 +58,18 @@ function Webpage(browser, config) {
             height: 600
         }
     };
-    this.report = {
-        requests: {
-            rejected: {},
-            allowed: {}
-        }
-    };
 
     this.phantomjs_report = browser.createOutObject();
     this.phantomjs_report.requests = {
-        rejected: {},
+        rejected: [],
         allowed: {}
+    };
+    this.report = {
+        phantom: this.phantomjs_report,
+        requests: {
+            rejected: [],
+            allowed: {}
+        }
     };
 };
 
@@ -76,38 +77,19 @@ Webpage.prototype.apply_filters = function(custom_filters) {
     let phantomjs_report = this.phantomjs_report,
         report = this.report;
 
-    // this.page.on('onNavigationRequested', function(url, type, willNavigate, main) {
-    //     console.log('-');
-    //     console.log('Trying to navigate to: ' + url);
-    //     console.log('Caused by: ' + type);
-    //     console.log('Will actually navigate: ' + willNavigate);
-    //     console.log('Sent from the page\'s main frame: ' + main);
-    // });
+    this.page.on('onResourceReceived', function(res) {
+        if (res.stage == 'start') {
+            report.requests.allowed[res.url] = {
+                start: new Date()
+            };
+        }
 
-    // this.page.on('onResourceReceived', function(res) {
-    //     // phantomjs_report.property('requests').then(function(requests) {
-    //         // report.requests.rejected = requests.rejected;
-
-    //         // if (res.stage == 'start') {
-    //         //     report.requests.allowed[res.url] = {
-    //         //         start: new Date()
-    //         //     };
-    //         // }
-
-    //         // if (res.stage == 'end') {
-    //         //     var allowed = report.requests.allowed[res.url];
-    //         //     if (!allowed || !allowed.start) {
-    //         //         return;
-    //         //     }
-
-    //         //     allowed.end = new Date();
-    //         //     allowed.elapsed_time = allowed.end - allowed.start;
-    //         //     report.requests.allowed[res.url] = allowed;
-    //         // }
-    //     // }).catch(function(exc) {
-    //     //     console.log(exc);
-    //     // });
-    // });
+        if (res.stage == 'end') {
+            var allowed = report.requests.allowed[res.url] || {};
+            allowed.end = new Date();
+            report.requests.allowed[res.url] = allowed;
+        }
+    });
 
     this.page.property('onResourceRequested', function(requestData, networkRequest, filters,
                                                        DEFAULT_WHITELIST, DEFAULT_BLACKLIST,
@@ -166,7 +148,7 @@ Webpage.prototype.apply_filters = function(custom_filters) {
 
         if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
             !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
-            report.requests.rejected[requestData.url] = {};
+            report.requests.rejected.push(requestData.url);
             // console.log('Abort', requestData.url);
             networkRequest.abort();
         } else {

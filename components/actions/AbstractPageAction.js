@@ -70,37 +70,106 @@ AbstractPageAction.prototype.take_screenshot = function(page, alias) {
 
 AbstractPageAction.prototype.write_webpage_report = function(report) {
     if (!this.need_report()) {
-        return;
+        return Promise.resolve();
     }
 
-    let allowed_requests_filename = this.get_report_filename('requests_allowed', 'txt');
+    let ACTION = this;
+    return new Promise(function(resolve_report, reject_report) {
+        let allowed_requests_filename = ACTION.get_report_filename('requests_allowed', 'txt');
+        let rejected_requests_filename = ACTION.get_report_filename('requests_rejected', 'txt');
 
-    let url_list = [];
-    let total_elapsed_time = 0;
-    for (let url of Object.keys(report.requests.allowed)) {
-        let elapsed_time = report.requests.allowed[url].elapsed_time || 0;
-        url_list.push([url, elapsed_time]);
-        total_elapsed_time += elapsed_time;
-    }
+        let $scope = {
+            total_elapsed_time: 0,
+            report: report
+        };
+        report.phantom.property('requests')
+            .then(consider_phantom_report)
 
-    let comparator = function(a, b) {
-        return b[1] - a[1];
-    };
-    url_list.sort(comparator);
+            .then(allowed_requests_list)
+            .then(sort_requests)
+            .then(allowed_build_report)
+            .then(save_to_file(allowed_requests_filename))
 
-    let allowed_requests_list = total_elapsed_time + '\n';
-    for (let url of url_list) {
-        allowed_requests_list += [url[0], url[1], '\n'].join(' ');
-    }
+            .then(rejected_build_report)
+            .then(save_to_file(rejected_requests_filename))
 
-    fs.writeFile(allowed_requests_filename, allowed_requests_list);
+            .then(resolve_report)
+            .catch(reject_report);
 
-    let rejected_requests_filename = this.get_report_filename('requests_rejected', 'txt');
-    let rejected_requests_list = '';
-    for (let url of Object.keys(report.requests.rejected)) {
-        rejected_requests_list += [url, '\n'].join('');
-    }
-    fs.writeFile(rejected_requests_filename, rejected_requests_list);
+        function consider_phantom_report(phantom_requests) {
+            return new Promise(function(resolve, reject) {
+                // merge allowed requests
+                for (let url of Object.keys(phantom_requests.allowed)) {
+                    if ($scope.report.requests.allowed[url]) {
+                        $scope.report.requests.allowed[url].start = new Date(phantom_requests.allowed[url].start);
+                    }
+                }
+
+                // merge rejected requests
+                $scope.report.requests.rejected = [];
+                for (let url of phantom_requests.rejected) {
+                    $scope.report.requests.rejected.push(url);
+                }
+
+                console.log($scope.report.requests.rejected);
+
+                resolve();
+            });
+        }
+
+        function allowed_requests_list() {
+            return new Promise(function(resolve, reject) {
+                let url_list = [];
+                for (let url of Object.keys(report.requests.allowed)) {
+                    if (url) {
+                        let elapsed_time = (report.requests.allowed[url].end - report.requests.allowed[url].start) || 0;
+                        url_list.push([url, elapsed_time]);
+                        $scope.total_elapsed_time += elapsed_time;
+                    }
+                }
+
+                resolve(url_list);
+            });
+        }
+
+        function sort_requests(url_list) {
+            return new Promise(function(resolve, reject) {
+                let comparator = function(a, b) {
+                    return b[1] - a[1];
+                };
+                url_list.sort(comparator);
+                resolve(url_list);
+            });
+        }
+
+        function allowed_build_report(url_list) {
+            return new Promise(function(resolve, reject) {
+                let allowed_requests_report = $scope.total_elapsed_time + '\n';
+                for (let url of url_list) {
+                    allowed_requests_report += [url[0], url[1], '\n'].join(' ');
+                }
+                resolve(allowed_requests_report);
+            });
+        }
+
+        function rejected_build_report() {
+            return new Promise(function(resolve, reject) {
+                let rejected_requests_report = '';
+                for (let url of $scope.report.requests.rejected) {
+                    rejected_requests_report += [url, '\n'].join('');
+                }
+                resolve(rejected_requests_report);
+            });
+        }
+
+        function save_to_file(filename) {
+            return function(report) {
+                return new Promise(function(resolve, reject) {
+                    resolve(fs.writeFile(filename, report));
+                });
+            };
+        }
+    });
 };
 
 

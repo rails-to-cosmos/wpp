@@ -120,9 +120,10 @@ ActionDownload.prototype.main = function(subactions) {
         }
 
         function write_report() {
-            return new Promise(function(resolve) {
-                ACTION.write_webpage_report(webpage.report);
-                resolve();
+            return new Promise(function(resolve, reject) {
+                ACTION.write_webpage_report(webpage.report)
+                    .then(resolve)
+                    .catch(reject);
             });
         }
 
