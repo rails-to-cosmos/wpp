@@ -114,8 +114,6 @@ AbstractPageAction.prototype.write_webpage_report = function(report) {
                     $scope.report.requests.rejected.push(url);
                 }
 
-                console.log($scope.report.requests.rejected);
-
                 resolve();
             });
         }
