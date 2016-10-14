@@ -1,4 +1,7 @@
 {
+    "defaults": {
+        "report": "/tmp/ycombinator"
+    },
     "actions": [
         {
             "type": "FastDownload",
@@ -11,6 +14,12 @@
             "target": "_webpage",
             "data": {
                 "$": ".athing[outerHTML]"
+            },
+            "settings": {
+
+            },
+            "meta": {
+
             }
         },
         {

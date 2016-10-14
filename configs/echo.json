@@ -1,6 +1,6 @@
 {
     "defaults": {
-        "report": "/tmp/echo"
+        "report": "/tmp/reports/echo"
     },
     "actions": [
         {

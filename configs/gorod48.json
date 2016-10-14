@@ -1,0 +1,94 @@
+{
+    "defaults": {
+        "report": "/tmp/gorod48"
+    },
+    "actions": [
+        {
+            "data": {
+                "url": "http://gorod48.ru/news/410245/"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "ADownload",
+            "name": "webpage"
+        },
+        {
+            "data": {
+                "selector": "a.allnews"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "AClick",
+            "name": "allnews",
+            "target": "webpage"
+        },
+        {
+            "data": {
+                "selector": ".news-pagenav a"
+            },
+            "type": "Paginate",
+            "name": "allpages",
+            "target": "allnews",
+            "settings": {
+                "visible": false
+            }
+        },
+        {
+            "name": "comment",
+            "data": {
+                "selector": ".news-comments .comments-item[outerHTML]"
+            },
+            "settings": {
+                "visible": false
+            },
+            "type": "Parse",
+            "target": "allpages"
+        },
+        {
+            "data": {
+                "selector": ".datetime"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "date",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".author"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".text"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": "[id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comments"
+        }
+    ]
+}
