@@ -15,6 +15,16 @@ function ActionDownload() {
 
 ActionDownload.prototype = new AbstractPageAction();
 
+ActionDownload.prototype.create_webpage = function(webpage) {
+    let ACTION = this;
+    return new Promise(function(resolve, reject) {
+        webpage.create().then(function(page) {
+            ACTION.$scope.page = page;
+            resolve(page);
+        });
+    });
+};
+
 ActionDownload.prototype.main = function(subactions) {
     const ACTION = this;
 
@@ -27,8 +37,7 @@ ActionDownload.prototype.main = function(subactions) {
             filters: ACTION.get_settings().filters
         };
 
-        let $scope = {};
-        webpage.create()
+        create_webpage()
             .then(acquire_url)
             .then(init_page_observer)
             .then(open_page)
@@ -44,23 +53,24 @@ ActionDownload.prototype.main = function(subactions) {
             .then(resolve_main)
             .catch(reject_main);
 
-        function acquire_url(page) {
+        function create_webpage() { return ACTION.create_webpage(webpage); }
+
+        function acquire_url() {
             return new Promise(function(resolve) {
                 let url = ACTION.get_target() || ACTION.get_data().url;
-                $scope.page = page;
-                $scope.url = url;
+                ACTION.$scope.url = url;
                 resolve(url);
             });
         }
 
         function init_page_observer() {
             return new Promise(function(resolve) {
-                $scope.page_observer = {
+                ACTION.$scope.page_observer = {
                     context_transfered_to_main_thread: false
                 };
 
                 setTimeout(function() {
-                    if ($scope.page_observer.context_transfered_to_main_thread === false) {
+                    if (ACTION.$scope.page_observer.context_transfered_to_main_thread === false) {
                         close_page().then(reject_main);
                     }
                 }, PAGE_TIMEOUT);
@@ -71,14 +81,14 @@ ActionDownload.prototype.main = function(subactions) {
 
         function release_page_observer() {
             return new Promise(function(resolve) {
-                $scope.page_observer.context_transfered_to_main_thread = true;
+                ACTION.$scope.page_observer.context_transfered_to_main_thread = true;
                 resolve();
             });
         }
 
         function open_page(url) {
             return new Promise(function(resolve, reject) {
-                $scope.page.open($scope.url).then(function(status) {
+                ACTION.$scope.page.open(ACTION.$scope.url).then(function(status) {
                     if (status == 'success') {
                         resolve(status);
                     } else {
@@ -90,22 +100,17 @@ ActionDownload.prototype.main = function(subactions) {
 
         function take_screenshot(alias) {
             return function() {
-                return new Promise(function(resolve, reject) {
-                    ACTION.take_screenshot($scope.page, alias)
-                        .then(resolve, reject);
-                });
+                return ACTION.take_screenshot(ACTION.$scope.page, alias);
             };
         };
 
         function scroll_to_bottom() {
-            return new Promise(function(resolve, reject) {
-                ACTION.scroll($scope.page, 0, 0).then(resolve, reject);
-            });
+            return ACTION.scroll(ACTION.$scope.page, 0, 0);
         }
 
         function store_page() {
             return new Promise(function(resolve) {
-                ACTION.write_to_store($scope.page);
+                ACTION.write_to_store(ACTION.$scope.page);
                 resolve();
             });
         }
@@ -113,29 +118,23 @@ ActionDownload.prototype.main = function(subactions) {
         function run_subactions() {
             return new Promise(function(resolve, reject) {
                 ACTION.run_subactions(subactions).then(function(subactions_result) {
-                    $scope.result = subactions_result;
+                    ACTION.$scope.result = subactions_result;
                     resolve();
                 }, reject);
             });
         }
 
         function write_report() {
-            return new Promise(function(resolve, reject) {
-                ACTION.write_webpage_report(webpage.report)
-                    .then(resolve)
-                    .catch(reject);
-            });
+            return ACTION.write_webpage_report(webpage.report);
         }
 
         function close_page() {
-            return new Promise(function(resolve, reject) {
-                ACTION.close($scope.page).then(resolve, reject);
-            });
+            return ACTION.close(ACTION.$scope.page);
         }
 
         function transfer_result() {
             return new Promise(function(resolve) {
-                resolve($scope.result);
+                resolve(ACTION.$scope.result);
             });
         }
     });

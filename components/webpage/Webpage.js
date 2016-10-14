@@ -59,11 +59,18 @@ function Webpage(browser, config) {
         }
     };
 
-    this.phantomjs_report = browser.createOutObject();
-    this.phantomjs_report.requests = {
-        rejected: [],
-        allowed: {}
+    this.default_phantomjs_report = {
+        requests: {
+            rejected: [],
+            allowed: {}
+        }
     };
+    this.phantomjs_report = browser.createOutObject();
+
+    for (let key of Object.keys(this.default_phantomjs_report)) {
+        this.phantomjs_report[key] = this.default_phantomjs_report[key];
+    }
+
     this.report = {
         phantom: this.phantomjs_report,
         requests: {

@@ -1,92 +1,106 @@
 {
+    "defaults": {
+        "report": "/tmp/ridus"
+    },
     "actions": [
         {
-            "data": {
-                "url": "https://www.ridus.ru/news/233713"
-            },
-            "settings": {
-                "visible": false
-            },
             "type": "ADownload",
-            "name": "webpage",
-            "target": ""
+            "name": "_webpage",
+            "target": "https://www.ridus.ru/news/233713",
+            "settings": {
+                "filters": {
+                    "whitelist": {
+                        "urls": [
+                            "https:\\/\\/www\\.ridus\\.ru.*",
+                            "http:\\/\\/www\\.ridus\\.ru.*",
+                            "https:\\/\\/ridus\\.ru.*",
+                            "http:\\/\\/ridus\\.ru.*"
+                        ]
+                    },
+                    "blacklist": {
+                        "urls": [
+                            "http:\\/\\/.+?\\.css",
+                            "https:\\/\\/.+?\\.css",
+                            "https:\\/\\//.+?\\.woff",
+                            "http:\\/\\//.+?\\.woff",
+                            "https:\\/\\//.+?\\.js",
+                            "http:\\/\\//.+?\\.js",
+                            ".*banner.*",
+                            ".*ads.*",
+                            ".*videos.*",
+                            ".*mediatoday.*",
+                            ".*vkontakte.*",
+                            ".*vk\\.com.*",
+                            ".*ok\\.ru.*",
+                            ".*nnn\\.ru.*",
+                            ".*widget.*",
+                            ".*facebook.*",
+                            ".*counters.*",
+                            ".*data\\.24smi\\.net.*",
+                            ".*ridus\\.ru\\/assets.*",
+                            ".*yandex\\.ru.*",
+                            ".*yandex\\.net.*",
+                            ".*google.*"
+                        ]
+                    }
+                }
+            }
         },
         {
             "data": {
-                "selector": ".bCommentMore a"
-            },
-            "settings": {
-                "visible": false
+                "$": ".bCommentMore a"
             },
             "type": "AClick",
-            "name": "click",
-            "target": "webpage"
+            "name": "_click",
+            "target": "_webpage"
         },
         {
             "data": {
-                "selector": ".bCommentsCont[outerHTML]"
-            },
-            "settings": {
-                "visible": false
+                "$": ".bCommentsCont[outerHTML]"
             },
             "type": "AParseBySelector",
-            "name": "comments",
-            "target": "click"
+            "name": "_comments",
+            "target": "_click"
         },
         {
             "data": {
-                "selector": ".bComment[outerHTML],.bCommentReplies[outerHTML]"
-            },
-            "settings": {
-                "visible": false
+                "$": ".bComment[outerHTML],.bCommentReplies[outerHTML]"
             },
             "type": "AParseBySelector",
-            "name": "comment",
-            "target": "comments"
+            "name": "_comment",
+            "target": "_comments"
         },
         {
             "data": {
-                "selector": ".bCommentAuthor strong a"
-            },
-            "settings": {
-                "visible": true
+                "$": ".bCommentAuthor strong a"
             },
             "type": "AParseBySelector",
             "name": "author",
-            "target": "comment"
+            "target": "_comment"
         },
         {
             "data": {
-                "selector": ".bCommentText p"
-            },
-            "settings": {
-                "visible": true
+                "$": ".bCommentText p"
             },
             "type": "AParseBySelector",
             "name": "body",
-            "target": "comment"
+            "target": "_comment"
         },
         {
             "data": {
-                "selector": ".comment_link"
-            },
-            "settings": {
-                "visible": true
+                "$": ".comment_link"
             },
             "type": "AParseBySelector",
             "name": "date",
-            "target": "comment"
+            "target": "_comment"
         },
         {
             "data": {
-                "selector": ".bComment[data-parent-id]"
-            },
-            "settings": {
-                "visible": true
+                "$": ".bComment[data-parent-id]"
             },
             "type": "AParseBySelector",
             "name": "id",
-            "target": "comment"
+            "target": "_comment"
         }
     ]
 }

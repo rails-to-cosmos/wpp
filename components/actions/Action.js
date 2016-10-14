@@ -15,6 +15,7 @@ function Action(factory, config, store, browser, defaults) {
     this.browser = browser;
     this.history = new Map();
     this.logger = null;
+    this.$scope = {};
 
     if (defaults) {
         if (!('settings' in this.config)) {

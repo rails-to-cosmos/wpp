@@ -86,6 +86,7 @@ AbstractPageAction.prototype.write_webpage_report = function(report) {
         };
 
         report.phantom.property('requests')
+            .catch(ignore_phantom_report)
             .then(consider_phantom_report)
 
             .then(allowed_requests_list)
@@ -98,6 +99,15 @@ AbstractPageAction.prototype.write_webpage_report = function(report) {
 
             .then(resolve_report)
             .catch(reject_report);
+
+        function ignore_phantom_report() {
+            return new Promise(function(resolve, reject) {
+                resolve({
+                    allowed: {},
+                    rejected: []
+                });
+            });
+        }
 
         function consider_phantom_report(phantom_requests) {
             return new Promise(function(resolve, reject) {
@@ -184,20 +194,31 @@ AbstractPageAction.prototype.scroll = function(page, scroll_height, tryout) {
         return Promise.resolve();
     }
 
-    return new Promise(function(resolve, reject) {
-        page.evaluate(function() {
-            window.scrollTo(0, document.body.scrollHeight);
-            return document.body.scrollHeight;
-        }).then(function(new_height) {
-            if (new_height == last_height) {
-                sleep(sleep_timeout, resolve);
-            } else {
-                last_height = new_height;
-                ACTION.scroll(page, last_height, ++tryout).then(function() {
+    return new Promise(function(resolve_scroll, reject_scroll) {
+        scroll_page()
+            .then(check_height)
+            .then(resolve_scroll)
+            .catch(reject_scroll);
+
+        function scroll_page() {
+            return page.evaluate(function() {
+                window.scrollTo(0, document.body.scrollHeight);
+                return document.body.scrollHeight;
+            });
+        }
+
+        function check_height(new_height) {
+            return new Promise(function(resolve, reject) {
+                if (new_height == last_height) {
                     sleep(sleep_timeout, resolve);
-                }).catch(reject);
-            }
-        }).catch(reject);
+                } else {
+                    last_height = new_height;
+                    ACTION.scroll(page, last_height, ++tryout).then(function() {
+                        sleep(sleep_timeout, resolve);
+                    }).catch(reject);
+                }
+            });
+        };
     });
 };
 
