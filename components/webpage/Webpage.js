@@ -126,26 +126,6 @@ Webpage.prototype.apply_filters = function(custom_filters) {
             return false;
         }
 
-        // for (var header in requestData.headers) {
-        //     if (requestData.headers[header].name.indexOf('Accept') > -1) {
-        //         if(requestData.headers[header].value.indexOf('text/css') > -1) {
-        //             console.log('---', requestData.url);
-        //             console.log(requestData.id);
-        //             console.log(requestData.method);
-        //             console.log(requestData.headers, requestData.id, requestData.method, requestData.time);
-        //             console.log(networkRequest);
-        //             // networkRequest.abort();
-        //         }
-        //     }
-        // }
-
-        // if (requestData['Content-Type'] == 'text/css') {
-        //     report.requests.rejected[requestData.url] = {};
-        //     networkRequest.abort();
-        //     console.log('Abort', requestData.url, '(css)');
-        //     return;
-        // }
-
         if (url_in_list(requestData.url, BLACKLIST_URL_FILTER) &&
             !url_in_list(requestData.url, WHITELIST_URL_FILTER)) {
             report.requests.rejected.push(requestData.url);

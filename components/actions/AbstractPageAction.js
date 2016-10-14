@@ -42,7 +42,6 @@ AbstractPageAction.prototype.get_report_filename = function(alias, ext) {
         if (filename && alias) {
             filename = [filename, alias].join('_');
         }
-
     }
 
     return [filename, ext].join('.');
@@ -54,17 +53,20 @@ AbstractPageAction.prototype.take_screenshot = function(page, alias) {
     }
 
     let ACTION = this;
-    return new Promise(function(resolve, reject) {
-        let filename = ACTION.get_report_filename(alias, 'html');
-        get_page_content(page).then(function(content) {
-            fs.writeFile(filename, content, function(err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        }).catch(reject);
+    return new Promise(function(resolve_screenshot, reject_screenshot) {
+        let screenshot_filename = ACTION.get_report_filename(alias, 'html');
+        get_page_content(page)
+            .then(save_to_file(screenshot_filename))
+            .then(resolve_screenshot)
+            .catch(reject_screenshot);
+
+        function save_to_file(filename) { // FIXME copy-paste from AbstractPageAction
+            return function(content) {
+                return new Promise(function(resolve, reject) {
+                    resolve(fs.writeFile(filename, content));
+                });
+            };
+        }
     });
 };
 
@@ -82,6 +84,7 @@ AbstractPageAction.prototype.write_webpage_report = function(report) {
             total_elapsed_time: 0,
             report: report
         };
+
         report.phantom.property('requests')
             .then(consider_phantom_report)
 
@@ -163,9 +166,9 @@ AbstractPageAction.prototype.write_webpage_report = function(report) {
         }
 
         function save_to_file(filename) {
-            return function(report) {
+            return function(content) {
                 return new Promise(function(resolve, reject) {
-                    resolve(fs.writeFile(filename, report));
+                    resolve(fs.writeFile(filename, content));
                 });
             };
         }

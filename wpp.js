@@ -37,6 +37,8 @@ process.on('SIGTERM', function(code) {
     process.exit();
 });
 
+console.log('Welcome to Webpage Processor Utility.\nPost your jobs to me at the port', port);
+
 app.use(BodyParser.json());
 
 app.post('/', function(req, res) {
