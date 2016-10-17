@@ -12,7 +12,7 @@ Logger.prototype.get_default_params = function() {
     let def_params = {
         '@version': '1',
         '@timestamp': new Date(),
-        'level': 'INFO'
+        'severity': 'INFO'
     };
 
     for (let slot of this.__slots__) {
@@ -27,14 +27,14 @@ Logger.prototype.get_default_params = function() {
 Logger.prototype.info = function(message) {
     let _package = this.get_default_params();
     _package.message = message;
-    _package.level = 'INFO';
+    _package.severity = 'INFO';
     this.send_message(_package);
 };
 
 Logger.prototype.error = function(message, exception) {
     let _package = this.get_default_params();
     _package.message = message + ' ' + exception.message;
-    _package.level = 'ERROR';
+    _package.severity = 'ERROR';
     _package.path = exception.fileName;
     _package.stack_trace = exception.trace;
     _package.lineno = exception.lineNumber;
@@ -45,7 +45,7 @@ Logger.prototype.error = function(message, exception) {
 Logger.prototype.debug = function(message) {
     let _package = this.get_default_params();
     _package.message = message;
-    _package.level = 'DEBUG';
+    _package.severity = 'DEBUG';
     this.send_message(_package);
 };
 
