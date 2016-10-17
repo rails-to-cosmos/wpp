@@ -1,7 +1,7 @@
 'use strict';
 
 function Logger() {
-    this.__slots__ = ['url'];
+    this.__slots__ = ['url', 'severity', 'message'];
 }
 
 Logger.prototype.send_message = function(message) {
@@ -12,7 +12,8 @@ Logger.prototype.get_default_params = function() {
     let def_params = {
         '@version': '1',
         '@timestamp': new Date(),
-        'severity': 'INFO'
+        'severity': 'INFO',
+        'message': ''
     };
 
     for (let slot of this.__slots__) {

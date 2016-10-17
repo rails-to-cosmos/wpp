@@ -7,6 +7,7 @@ var express = require('express'),
     BodyParser = require('body-parser'),
 
     assert = require('assert'),
+    v8 = require('v8'),
 
     Logger = require('./components/loggers/Logger'),
     LogstashLogger = require('./components/loggers/LogstashLogger'),
@@ -61,6 +62,14 @@ app.post('/', function(req, res) {
     } catch (exc) {
         logger.info('Using default logger');
     }
+
+    logger.info('New job received at ' + new Date());
+
+    let heap_stats = v8.getHeapStatistics();
+    Object.keys(heap_stats).map(function(key) {
+        heap_stats[key] = heap_stats[key] / 1000 + ' Mb';
+    });
+    logger.info(heap_stats);
 
     let handle_exception = function (description, exc, req, res) {
         jobs_done++;
