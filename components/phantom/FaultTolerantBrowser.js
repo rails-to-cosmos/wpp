@@ -1,7 +1,7 @@
 'use strict';
 
 const phantom = require('phantom'),
-      MAX_USES_COUNT = 25,
+      MAX_USES_COUNT = 10,
       RIP_INTERVAL = 60000;
 
 function PhFTWrapper(settings) {
