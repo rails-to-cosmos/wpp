@@ -67,3 +67,5 @@ CLOSED: [2016-10-13 Thu 10:20]
 ** Data and Settings are the same. Combine it to Meta
 * TODO Testing
 ** http://taylor.fausak.me/2013/02/17/testing-a-node-js-http-server-with-mocha/
+* Research
+** https://github.com/johntitus/node-horseman
