@@ -1,0 +1,78 @@
+{
+    "actions": [
+        {
+            "settings": {
+                "visible": true
+            },
+            "type": "ADownload",
+            "name": "webpage",
+            "target": "http://zrpress.ru/health/v-rossii_07.07.2016_78702_medsestry-i-njanechki-massovo-ukhodjat-iz-bolnits.html"
+        },
+        {
+            "data": {
+                "selector": ".glass[outerHTML]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "comments",
+            "target": "webpage"
+        },
+        {
+            "data": {
+                "selector": "li[class^=\"glass_level\"][outerHTML]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "comment",
+            "target": "comments"
+        },
+        {
+            "data": {
+                "selector": ".nic"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "author",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".comment_body p"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "body",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": ".comment_data"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "date",
+            "target": "comment"
+        },
+        {
+            "data": {
+                "selector": "li[class^=\"glass_level\"][id]"
+            },
+            "settings": {
+                "visible": true
+            },
+            "type": "AParseBySelector",
+            "name": "id",
+            "target": "comment"
+        }
+    ]
+}
