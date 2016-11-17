@@ -10,7 +10,6 @@ var express = require('express'),
     v8 = require('v8'),
 
     Logger = require('./components/loggers/Logger'),
-    LogstashLogger = require('./components/loggers/LogstashLogger'),
 
     WebpageProcessor = require('./components/WebpageProcessor'),
 
@@ -48,20 +47,6 @@ app.post('/', function(req, res) {
         logger_conf;
 
     jobs_total++;
-
-    try {
-        logger_conf = req.body.logging;
-        assert(logger_conf);
-
-        logger = new LogstashLogger(logger_conf.host, logger_conf.port);
-        logger.project_name = 'WPP';
-        logger.type = logger_conf.type;
-        logger.job_type = logger_conf.job_type;
-        logger.job_id = logger_conf.job_id;
-        logger.url = logger_conf.url;
-    } catch (exc) {
-        logger.info('Using default logger');
-    }
 
     logger.info('New job received at ' + new Date());
 
