@@ -18,6 +18,16 @@ Requirements
   * NPM
   * PhantomJS version 2.1+
 
+PhantomJS Installation
+----------------------
+
+    $ cd /usr/local/sbin/
+    $ wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+    $ tar xvfj phantomjs-2.1.1-linux-x86_64.tar.bz2
+    $ rm -rf phantomjs-2.1.1-linux-x86_64.tar.bz2
+    $ mv phantomjs-2.1.1-linux-x86_64 phantomjs
+    $ sudo ln -s /usr/local/sbin/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+
 Installation
 ------------
     $ git clone https://github.com/rails-to-cosmos/wpp
