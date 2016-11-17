@@ -13,7 +13,8 @@ mocha tests --recursive --watch
 *** [[http://phantomjs.org/api/webpage/handler/on-load-finished.html][Официальная документация по PhantomJS Page]]
 *** [[https://github.com/amir20/phantomjs-node][PhantomJS Node]]
 ** TODO Известные проблемы
-*** TODO Утечка памяти на продакшне
+*** TODO Утечки памяти
+**** TODO Logstash logger жрёт память, убрать
 **** TODO Если убиваем фантом, а потом обращаемся к его странице, падает wpp.
 **** TODO Проблема FaultTolerantBrowser
 **** TODO Проблема черных списков
