@@ -8,13 +8,12 @@ mocha tests --recursive --watch
 
 Install PhantomJS on Ubuntu:
 
-* Передача дел
-** TODO Известные проблемы
-*** TODO Утечки памяти
-**** TODO Logstash logger жрёт память, убрать
-**** TODO Если убиваем фантом, а потом обращаемся к его странице, падает wpp.
-**** TODO Проблема FaultTolerantBrowser
-**** TODO Проблема черных списков
+* TODO Известные проблемы
+** TODO Утечки памяти
+*** TODO Logstash logger жрёт память, убрать
+*** TODO Если убиваем фантом, а потом обращаемся к его странице, падает wpp.
+*** TODO Проблема FaultTolerantBrowser
+*** TODO Проблема черных списков
 - Если блочим лишнее, то по ссылке может утечь очень много памяти
 - Различать две проблемы:
   1. Зависает браузер при Download'e
@@ -22,20 +21,20 @@ Install PhantomJS on Ubuntu:
   3. Требуется рефакторинг (нормальная работа с Promise)
   4. Зависает страница при Download'e
 Сейчас пытаемся закрыть страницу (components/ActionDownload.js:init_page_observer)
-** TODO Развитие
-*** [#A] Автоматическое формирование фильтров (блеклистов)
-*** [#A] Обложить тестами все действия
-*** [#B] Асинхронные Click и Paginate?
-*** TODO CLI
-** TODO Изменения в синтаксисе конфигов
-*** Download
-**** data.url = target
-*** Parse, Click, Paginate
-**** selector = $
-*** Если имя действия начинается с подчеркивания, visible = false по умолчанию, иначе true.
-*** Future
-**** Meta-настройки: объединение data и settings
-**** Structure?
+* TODO Развитие
+** [#A] Автоматическое формирование фильтров (блеклистов)
+** [#A] Обложить тестами все действия
+** [#B] Асинхронные Click и Paginate?
+** TODO CLI
+* TODO Изменения в синтаксисе конфигов
+** Download
+*** data.url = target
+** Parse, Click, Paginate
+*** selector = $
+** Если имя действия начинается с подчеркивания, visible = false по умолчанию, иначе true.
+** Future
+*** Meta-настройки: объединение data и settings
+*** Structure?
 * TODO Bugs
 ** FastDownload добавить url в target
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
