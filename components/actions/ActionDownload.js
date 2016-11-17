@@ -53,7 +53,9 @@ ActionDownload.prototype.main = function(subactions) {
             .then(resolve_main)
             .catch(reject_main);
 
-        function create_webpage() { return ACTION.create_webpage(webpage); }
+        function create_webpage() {
+            return ACTION.create_webpage(webpage);
+        }
 
         function acquire_url() {
             return new Promise(function(resolve) {

@@ -1,0 +1,20 @@
+{
+    "defaults": {
+        "report": "/tmp/ycombinator"
+    },
+    "actions": [
+        {
+            "type": "Download",
+            "name": "_webpage",
+            "target": "http://www.e-chords.com/chords/depeche-mode/enjoy-the-silence"
+        },
+        {
+            "name": "chords",
+            "type": "Parse",
+            "data": {
+                "$": "#core"
+            },
+            "target": "_webpage"
+        }
+    ]
+}
