@@ -7,55 +7,6 @@ watch 'sudo ps aux | grep phantom | wc -l'
 mocha tests --recursive --watch
 
 
-* Передача дел
-** Полезные ссылки
-*** [[http://phantomjs.org][Официальный сайт PhantomJS]]
-*** [[http://phantomjs.org/api/webpage/handler/on-load-finished.html][Официальная документация по PhantomJS Page]]
-*** [[https://github.com/amir20/phantomjs-node][PhantomJS Node]]
-** TODO Известные проблемы
-*** TODO Утечка памяти на продакшне
-**** TODO Если убиваем фантом, а потом обращаемся к его странице, падает wpp.
-**** TODO Проблема FaultTolerantBrowser
-**** TODO Проблема черных списков
-- Если блочим лишнее, то по ссылке может утечь очень много памяти
-- Различать две проблемы:
-  1. Зависает браузер при Download'e
-  2. Не все критичные компоненты покрыты тестами
-  3. Требуется рефакторинг (нормальная работа с Promise)
-  4. Зависает страница при Download'e
-Сейчас пытаемся закрыть страницу (components/ActionDownload.js:init_page_observer)
-** DONE Говорить, что успешно запущен и слушает порт
-CLOSED: [2016-10-14 Fri 13:51]
-- State "DONE"       from "TODO"       [2016-10-14 Fri 13:51]
-** TODO Развитие
-*** [#A] Автоматическое формирование фильтров (блеклистов)
-*** [#A] Обложить тестами все действия
-*** [#B] Асинхронные Click и Paginate?
-*** TODO CLI
-** Изменения в синтаксисе конфигов
-*** Download
-**** data.url = target
-*** Parse, Click, Paginate
-**** selector = $
-*** Если имя действия начинается с подчеркивания, visible = false по умолчанию, иначе true.
-*** Future
-**** Meta-настройки: объединение data и settings
-**** Structure?
-** DONE Поискать, как установить фантом
-CLOSED: [2016-10-13 Thu 10:20]
-- State "DONE"       from "TODO"       [2016-10-13 Thu 10:20]
-    with settings(warn_only=True), cd('/usr/local/sbin/'):
-        sudo('wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2')
-        sudo('tar xvfj phantomjs-2.1.1-linux-x86_64.tar.bz2')
-        sudo('rm phantomjs-2.1.1-linux-x86_64.tar.bz2')
-        sudo('rm /usr/bin/phantomjs_old')
-        sudo('rm /usr/local/bin/phantomjs_old')
-        sudo('mv phantomjs-2.1.1-linux-x86_64 phantomjs')
-        sudo('mv /usr/bin/phantomjs /usr/bin/phantomjs_old')
-        sudo('mv /usr/local/bin/phantomjs /usr/local/bin/phantomjs_old')
-        sudo('ln -s /usr/local/sbin/phantomjs/bin/phantomjs /usr/bin/phantomjs')
-        sudo('ln -s /usr/local/sbin/phantomjs/bin/phantomjs /usr/local/bin/phantomjs')
-
 * TODO Bugs
 ** FastDownload добавить url в target
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
