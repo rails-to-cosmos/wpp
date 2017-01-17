@@ -8,8 +8,6 @@ mocha tests --recursive --watch
 
 Install PhantomJS on Ubuntu:
 
-<<<<<<< HEAD
-=======
 * TODO Известные проблемы
 ** TODO Утечки памяти
 *** TODO Logstash logger жрёт память, убрать
@@ -37,7 +35,6 @@ Install PhantomJS on Ubuntu:
 ** Future
 *** Meta-настройки: объединение data и settings
 *** Structure?
->>>>>>> db7a20ba696fdb974ca035fe90e2eff0e2545b44
 * TODO Bugs
 ** FastDownload добавить url в target
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
