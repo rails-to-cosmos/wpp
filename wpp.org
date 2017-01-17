@@ -6,7 +6,38 @@ watch 'sudo ps aux | grep phantom | wc -l'
 
 mocha tests --recursive --watch
 
+Install PhantomJS on Ubuntu:
 
+<<<<<<< HEAD
+=======
+* TODO Известные проблемы
+** TODO Утечки памяти
+*** TODO Logstash logger жрёт память, убрать
+*** TODO Если убиваем фантом, а потом обращаемся к его странице, падает wpp.
+*** TODO Проблема FaultTolerantBrowser
+*** TODO Проблема черных списков
+- Если блочим лишнее, то по ссылке может утечь очень много памяти
+- Различать две проблемы:
+  1. Зависает браузер при Download'e
+  2. Не все критичные компоненты покрыты тестами
+  3. Требуется рефакторинг (нормальная работа с Promise)
+  4. Зависает страница при Download'e
+Сейчас пытаемся закрыть страницу (components/ActionDownload.js:init_page_observer)
+* TODO Развитие
+** [#A] Автоматическое формирование фильтров (блеклистов)
+** [#A] Обложить тестами все действия
+** [#B] Асинхронные Click и Paginate?
+** TODO CLI
+* TODO Изменения в синтаксисе конфигов
+** Download
+*** data.url = target
+** Parse, Click, Paginate
+*** selector = $
+** Если имя действия начинается с подчеркивания, visible = false по умолчанию, иначе true.
+** Future
+*** Meta-настройки: объединение data и settings
+*** Structure?
+>>>>>>> db7a20ba696fdb974ca035fe90e2eff0e2545b44
 * TODO Bugs
 ** FastDownload добавить url в target
 ** (node:3512) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2554): Error: Error reading from stdin: Error: read ECONNRESET
